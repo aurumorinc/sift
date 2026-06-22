@@ -1,6 +1,6 @@
 defaultTs: bun
-includes:
-  - f/**
+includes: 
+  - "f/sift/**"
 excludes: []
 codebases: []
 skipVariables: false
