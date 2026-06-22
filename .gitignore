@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Mutagen
+mutagen.*
+
+# Agents
+plans/
+
+# Windmill
+*.resource.yaml
