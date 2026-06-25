@@ -1,0 +1,24 @@
+[runemodule ".agents/skills/dspy/modules/dspy"]
+	url = https://github.com/stanfordnlp/dspy/tree/main
+	path = .agents/skills/dspy/modules/dspy
+[runemodule ".agents/skills/langfuse/modules/langfuse"]
+	url = https://github.com/langfuse/langfuse/tree/main
+	path = .agents/skills/langfuse/modules/langfuse
+[runemodule ".agents/skills/langfuse/modules/langfuse-python"]
+	url = https://github.com/langfuse/langfuse-python/tree/main
+	path = .agents/skills/langfuse/modules/langfuse-python
+[runemodule ".agents/skills/langfuse/modules/langfuse-docs"]
+	url = https://github.com/langfuse/langfuse-docs/tree/main
+	path = .agents/skills/langfuse/modules/langfuse-docs
+[runemodule ".agents/skills/lume-python/modules/lume-python"]
+	url = https://github.com/aurumorinc/lume-python/tree/main
+	path = .agents/skills/lume-python/modules/lume-python
+[runemodule ".agents/skills/litellm/modules/litellm"]
+	url = https://github.com/BerriAI/litellm/tree/litellm_internal_staging
+	path = .agents/skills/litellm/modules/litellm
+[runemodule ".agents/skills/litellm/modules/litellm-docs"]
+	url = https://github.com/BerriAI/litellm-docs/tree/main
+	path = .agents/skills/litellm/modules/litellm-docs
+[runemodule ".agents/skills/windmill/modules/windmill"]
+	url = https://github.com/windmill-labs/windmill/tree/main
+	path = .agents/skills/windmill/modules/windmill
