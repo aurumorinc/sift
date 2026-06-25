@@ -225,3 +225,16 @@ plans/
 
 # Windmill
 *.resource.yaml
+
+# Rune
+.rune/*
+!.rune/config
+!.rune/index
+.agents/skills/dspy/modules/dspy
+.agents/skills/langfuse/modules/langfuse
+.agents/skills/langfuse/modules/langfuse-python
+.agents/skills/langfuse/modules/langfuse-docs
+.agents/skills/lume-python/modules/lume-python
+.agents/skills/litellm/modules/litellm
+.agents/skills/litellm/modules/litellm-docs
+.agents/skills/windmill/modules/windmill
