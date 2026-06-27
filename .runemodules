@@ -22,3 +22,6 @@
 [runemodule ".agents/skills/windmill/modules/windmill"]
 	url = https://github.com/windmill-labs/windmill/tree/main
 	path = .agents/skills/windmill/modules/windmill
+[runemodule ".agents/skills/worldline-python/modules/worldline-python"]
+	url = https://github.com/aurumorinc/worldline-python/tree/main
+	path = .agents/skills/worldline-python/modules/worldline-python
