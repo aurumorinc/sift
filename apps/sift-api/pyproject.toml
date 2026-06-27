@@ -1,0 +1,36 @@
+[project]
+name = "sift-api"
+version = "0.1.0"
+
+description = "Sift is an API-driven platform for defining, managing, and executing DSPy-based AI agents."
+authors = [
+    {name = "Aryan Singh", email = "aryan.singh@aurumor.com"},
+]
+
+requires-python = "<3.14,>=3.11"
+dependencies = [
+    "sift",
+    "httpx>=0.28.1",
+]
+
+[tool.pdm]
+distribution = false
+
+[tool.uv.sources]
+sift = { workspace = true }
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
+search_path = ["../../packages/sift/src"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "../../packages/sift/src"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-mock>=3.15.1",
+]
