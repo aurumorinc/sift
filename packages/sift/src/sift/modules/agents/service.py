@@ -1,0 +1,185 @@
+import dspy
+from typing import Any, Dict
+from worldline import structlog
+
+logger = structlog.get_logger(__name__)
+
+
+class AgentModule(dspy.Module):
+    def __init__(self, state_dict: Dict[str, Any]):
+        super().__init__()
+        for key, pred_state in state_dict.items():
+            if not isinstance(pred_state, dict):
+                continue
+
+            sig_state = pred_state.get("signature", {})
+            instructions = sig_state.get("instructions", "")
+            fields = sig_state.get("fields", [])
+
+            # Reconstruct a generic signature string based on the fields.
+            inputs = []
+            outputs = []
+
+            # fields can be a dict (name -> info) or list (if serialized differently)
+            if isinstance(fields, dict):
+                field_items = fields.items()
+            else:
+                field_items = [(f.get("name", ""), f) for f in fields]
+
+            for f_name, f_info in field_items:
+                if not f_name:
+                    continue
+                extra = f_info.get("json_schema_extra", {})
+                field_type = extra.get("__dspy_field_type")
+                if field_type == "input":
+                    inputs.append(f_name)
+                elif field_type == "output":
+                    outputs.append(f_name)
+                else:
+                    # Fallback logic
+                    if (
+                        "response" in f_name.lower()
+                        or "output" in f_name.lower()
+                        or "answer" in f_name.lower()
+                    ):
+                        outputs.append(f_name)
+                    else:
+                        inputs.append(f_name)
+
+            # If we couldn't parse inputs/outputs, default to something sensible
+            if not inputs:
+                inputs = ["messages"]
+            if not outputs:
+                outputs = ["response"]
+
+            sig_string = f"{', '.join(inputs)} -> {', '.join(outputs)}"
+
+            # Create the predictor
+            predictor = dspy.Predict(sig_string)
+
+            # Attempt to set the exact instructions
+            if instructions:
+                predictor.signature.__doc__ = instructions
+
+            setattr(self, key, predictor)
+
+    def forward(self, **kwargs):
+        # We assume the first predictor is the main entry point
+        # For a generic agent, we just pass the kwargs to the first predictor.
+        predictors = [
+            v for k, v in self.__dict__.items() if isinstance(v, dspy.Predict)
+        ]
+        if not predictors:
+            raise ValueError("No predictors found in agent state.")
+
+        main_predictor = predictors[0]
+        return main_predictor(**kwargs)
+
+
+def compile_and_save_agent(payload: Dict[str, Any]) -> None:
+    from sift.modules.agents.schema import Agent, DSPyPredictorState, DSPySignatureState
+    from dspy.teleprompt import BootstrapFewShot
+    from sift.modules.agents.repository.langfuse import save_agent
+
+    # 1. Instantiate Agent from updated schema
+    agent = Agent(**payload)
+
+    # 2. Extract litellm_params and initialize LM
+    litellm_params = agent.litellm_params.copy()
+    lm = dspy.LM(**litellm_params)
+    dspy.settings.configure(lm=lm)
+
+    # 3. Hydrate module
+    raw_state = {k: v.model_dump() for k, v in agent.dspy_params.state.items()}
+    module = AgentModule(raw_state)
+
+    import copy
+
+    loadable_state = copy.deepcopy(raw_state)
+    for key, pred_state in loadable_state.items():
+        if "signature" in pred_state and "fields" in pred_state["signature"]:
+            dspy_fields = []
+            sig_fields = pred_state["signature"]["fields"]
+
+            if isinstance(sig_fields, dict):
+                field_items = sig_fields.items()
+            else:
+                field_items = [(f.get("name", ""), f) for f in sig_fields]
+
+            for f_name, f_info in field_items:
+                extra = f_info.get("json_schema_extra", {})
+                dspy_fields.append(
+                    {
+                        "prefix": extra.get("prefix", f"{f_name}:"),
+                        "description": extra.get("desc", f"${{{f_name}}}"),
+                    }
+                )
+            pred_state["signature"]["fields"] = dspy_fields
+
+    module.load_state(loadable_state)
+
+    # Convert trainset dictionaries into dspy.Examples
+    trainset = []
+    for key, pred_state in raw_state.items():
+        for example_dict in pred_state.get("train", []):
+            filtered_dict = {k: v for k, v in example_dict.items() if k != "trace_id"}
+
+            # Determine inputs vs labels
+            sig_fields = pred_state.get("signature", {}).get("fields", [])
+            inputs = []
+
+            if isinstance(sig_fields, dict):
+                field_items = sig_fields.items()
+            else:
+                field_items = [(f.get("name", ""), f) for f in sig_fields]
+
+            for f_name, f_info in field_items:
+                if not f_name:
+                    continue
+                extra = f_info.get("json_schema_extra", {})
+                if extra.get("__dspy_field_type") == "input":
+                    inputs.append(f_name)
+                elif (
+                    "response" not in f_name.lower()
+                    and "output" not in f_name.lower()
+                    and "answer" not in f_name.lower()
+                ):
+                    inputs.append(f_name)
+
+            if not inputs:
+                inputs = ["messages"]
+
+            trainset.append(dspy.Example(**filtered_dict).with_inputs(*inputs))
+
+    # Recompile module using a basic optimizer if we have a trainset
+    if trainset:
+        logger.info("compiling_agent_started", trainset_size=len(trainset))
+
+        def dummy_metric(*args, **kwargs):
+            return True
+
+        optimizer = BootstrapFewShot(metric=dummy_metric)
+        compiled_module = optimizer.compile(module, trainset=trainset)
+        logger.info("compiling_agent_finished")
+    else:
+        logger.info("compiling_agent_skipped_no_trainset")
+        compiled_module = module
+
+    # 4. Versioned Persistence
+    new_state = compiled_module.dump_state()
+    for key, pred_state in new_state.items():
+        if key in agent.dspy_params.state:
+            original_fields = agent.dspy_params.state[key].signature.fields
+            optimized_instructions = pred_state.get("signature", {}).get(
+                "instructions", ""
+            )
+
+            merged_signature = DSPySignatureState(
+                instructions=optimized_instructions,
+                fields=original_fields,
+            )
+
+            agent.dspy_params.state[key] = DSPyPredictorState(**pred_state)
+            agent.dspy_params.state[key].signature = merged_signature
+
+    save_agent(agent)
