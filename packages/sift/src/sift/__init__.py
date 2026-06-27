@@ -1,3 +1,5 @@
+__version__ = "0.1.0"
+
 from sift import client
 from sift import config
 from sift import integrations
@@ -43,6 +45,7 @@ from sift.utils import (
 )
 
 __all__ = [
+    "__version__",
     "Agent",
     "AgentModule",
     "AgentRequest",
