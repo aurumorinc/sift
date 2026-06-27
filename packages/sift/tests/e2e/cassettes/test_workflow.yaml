@@ -1,0 +1,65 @@
+interactions:
+- request:
+    body: '{"name":"e2e-test-gemini-agent","prompt":"Given the fields `messages`,
+      produce the fields `answer`.","config":{"agent_name":"e2e-test-gemini-agent","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite","temperature":0.0},"object_permission":null,"dspy_params":{"optimizer":null,"state":{"predict":{"traces":[],"train":[],"demos":[],"signature":{"instructions":"Given
+      the fields `messages`, produce the fields `answer`.","fields":[{"prefix":"Messages:","description":"${messages}"},{"prefix":"Answer:","description":"${answer}"}]},"lm":null}}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '641'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: '{"message":"Invalid credentials. Confirm that you''ve configured the
+        correct host.","error":"UnauthorizedError"}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '111'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Sat, 27 Jun 2026 10:20:29 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"t5cz9gcsax33"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 401
+      message: Unauthorized
+version: 1
