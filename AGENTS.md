@@ -1358,3 +1358,1431 @@ ALTER TABLE users RENAME COLUMN full_name TO first_name;
 ALTER TABLE users ADD COLUMN last_name VARCHAR(255) NOT NULL;
 ```
 
+# Repository Map
+
+```python
+
+.agents/rules/architecture-application.md
+
+.agents/rules/architecture-business.md
+
+.agents/rules/architecture-data.md
+
+.agents/rules/architecture-integration.md
+
+.agents/rules/architecture-technology.md
+
+.agents/rules/language-python/architecture-and-structure.md
+
+.agents/rules/language-python/code-style-and-formatting.md
+
+.agents/rules/language-python/configuration-and-environment.md
+
+.agents/rules/language-python/dependency-management.md
+
+.agents/rules/language-python/documentation-and-comments.md
+
+.agents/rules/language-python/error-handling.md
+
+.agents/rules/language-python/logging-and-observability.md
+
+.agents/rules/language-python/naming-conventions.md
+
+.agents/rules/language-python/security-and-validation.md
+
+.agents/rules/language-python/type-safety.md
+
+.agents/skills/dspy/SKILL.md
+
+.agents/skills/langfuse/SKILL.md
+
+.agents/skills/litellm/SKILL.md
+
+.agents/skills/windmill/SKILL.md
+
+.agents/skills/worldline-python/SKILL.md
+
+.github/pull_request_template.md
+
+.github/workflows/release.yaml
+
+.github/workflows/sync.yaml
+
+.rune/index
+
+.runemodules
+
+AGENTS.md
+
+CHANGELOG.md
+
+LICENSE
+
+README.md
+
+apps/sift-api/.claude/skills/cli-commands/SKILL.md
+
+apps/sift-api/.claude/skills/raw-app/SKILL.md
+
+apps/sift-api/.claude/skills/resources/SKILL.md
+
+apps/sift-api/.claude/skills/schedules/SKILL.md
+
+apps/sift-api/.claude/skills/triggers/SKILL.md
+
+apps/sift-api/.claude/skills/write-flow/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-bash/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-bigquery/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-bun/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-bunnative/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-csharp/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-deno/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-duckdb/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-go/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-graphql/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-java/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-mssql/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-mysql/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-nativets/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-php/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-postgresql/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-powershell/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-python3/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-rust/SKILL.md
+
+apps/sift-api/.claude/skills/write-script-snowflake/SKILL.md
+
+apps/sift-api/AGENTS.md
+
+apps/sift-api/CLAUDE.md
+
+apps/sift-api/f/sift/agents.py:
+⋮
+│@webhook_dispatch
+│def main(request: AgentRequest) -> AgentResponse:
+⋮
+
+apps/sift-api/f/sift/folder.meta.yaml
+
+apps/sift-api/f/sift/responses.py:
+⋮
+│@webhook_dispatch
+│def main(request: ResponseRequest) -> ResponseResponse:
+⋮
+
+apps/sift-api/rt.d.ts:
+⋮
+│  type Ably = {
+│    apiKye: string
+⋮
+│  type Abstractapi = {
+│    apiKey: string
+⋮
+│  type Accelo = {
+│    clientId: string,
+│    deployment: string,
+│    clientSecret: string
+⋮
+│  type Actimo = {
+│    apiKey: string
+⋮
+│  type Acumbamail = {
+│    authToken: string
+⋮
+│  type Adhook = {
+│    token: string
+⋮
+│  type Adrapid = {
+│    apiToken: string
+⋮
+│  type AeroWorkflow = {
+│    apiKey: string
+⋮
+│  type AgentInstructions = any
+│
+│  type Ai21 = {
+│    apiKey: string
+⋮
+│  type Airtable = {
+│    apiKey: string
+⋮
+│  type AirtableTable = {
+│    baseId: string,
+│    tableName: string
+⋮
+│  type AnsibleInventory = {
+│    content: string
+⋮
+│  type Anthropic = {
+│    apiKey: string,
+│    base_url: string,
+│    platform: string,
+│    enable_1M_context: boolean
+⋮
+│  type Apify = {
+│    token: string
+⋮
+│  type ApifyApiKey = {
+│    api_key: string
+⋮
+│  type ApifyWebhookConfig = {
+│    url: string,
+│    token: string
+⋮
+│  type ApiKeyAuth = {
+│    api_key_header: string,
+│    api_key_secret: string
+⋮
+│  type Apollo = {
+│    apiKey: string
+⋮
+│  type Appwrite = {
+│    key: string,
+│    project: string,
+│    endpoint: string,
+│    self_signed: boolean
+⋮
+│  type ArcgisAccount = {
+│    password: string,
+│    username: string
+⋮
+│  type Asana = {
+│    token: string
+⋮
+│  type Assemblyai = {
+│    apiKey: string
+⋮
+│  type Attio = {
+│    token: string
+⋮
+│  type Aws = {
+│    region: string,
+│    awsAccessKeyId: string,
+│    awsSecretAccessKey: string
+⋮
+│  type AwsBedrock = {
+│    apiKey: string,
+│    region: string,
+│    awsAccessKeyId: string,
+│    awsSessionToken: string,
+│    awsSecretAccessKey: string
+⋮
+│  type AwsOidc = {
+│    region: string,
+│    roleArn: string
+⋮
+│  type Azure = {
+│    azureClientId: string,
+│    azureTenantId: string,
+│    azureClientSecret: string
+⋮
+│  type AzureBlob = {
+│    useSSL: boolean,
+│    endpoint: string,
+│    accessKey: string,
+│    accountName: string,
+│    containerName: string
+⋮
+│  type AzureOauth = {
+│    token: string
+⋮
+│  type AzureOpenai = {
+│    apiKey: string,
+│    baseUrl: string
+⋮
+│  type AzureWorkloadIdentity = {
+│    useSSL: boolean,
+│    accountName: string,
+│    containerName: string
+⋮
+│  type BambooHr = {
+│    apiKey: string,
+│    companyDomain: string
+⋮
+│  type Baremetrics = {
+│    apiKey: string
+⋮
+│  type Baserow = {
+│    token: string,
+│    base_url: string
+⋮
+│  type BaserowTable = {
+│    table_id: number,
+│    database_id: number
+⋮
+│  type BasicHttpAuth = {
+│    password: string,
+│    username: string
+⋮
+│  type BasisTheory = {
+│    apiKey: string
+⋮
+│  type Beamer = {
+│    apiKey: string
+⋮
+│  type Bigquery = {
+│    type: string,
+│    auth_uri: string,
+│    client_id: string,
+│    token_uri: string,
+│    project_id: string,
+│    private_key: string,
+│    client_email: string,
+│    private_key_id: string,
+│    client_x509_cert_url: string,
+⋮
+│  type Bitbucket = {
+│    password: string,
+│    username: string
+⋮
+│  type Bitly = {
+│    token: string
+⋮
+│  type Bluesky = {
+│    password: string,
+│    username: string
+⋮
+│  type Botify = {
+│    token: string
+⋮
+│  type Box = {
+│    token: string
+⋮
+│  type Brevo = {
+│    apiKey: string
+⋮
+│  type Brex = {
+│    token: string
+⋮
+│  type Buttondown = {
+│    token: string
+⋮
+│  type Cacertificate = {
+│    certificate: string
+⋮
+│  type Calendly = {
+│    token: string
+⋮
+│  type Campayn = {
+│    apiKey: string
+⋮
+│  type Certopus = {
+│    apiKey: string
+⋮
+│  type Chromadb = {
+│    ssl: boolean,
+│    host: string,
+│    port: number,
+│    tenant: string,
+│    database: string
+⋮
+│  type Circleci = {
+│    token: string
+⋮
+│  type Clerk = {
+│    apiKey: string
+⋮
+│  type Clickhouse = {
+│    host: string,
+│    password: string,
+│    username: string
+⋮
+│  type Clickup = {
+│    token: string
+⋮
+│  type Cloudflare = {
+│    key: string,
+│    email: string,
+│    token: string
+⋮
+│  type Cockroachdb = {
+│    token: string
+⋮
+│  type Codat = {
+│    encodedKey: string
+⋮
+│  type Cohere = {
+│    apiKey: string
+⋮
+│  type ComapeoServer = {
+│    server_url: string,
+│    access_token: string
+⋮
+│  type Confluence = {
+│    email: string,
+│    baseUrl: string,
+│    apiToken: string
+⋮
+│  type Contentful = {
+│    spaceId: string,
+│    accessToken: string,
+│    environment: string
+⋮
+│  type Contiguity = {
+│    token: string
+⋮
+│  type Convertkit = {
+│    apiSecret: string
+⋮
+│  type Currencyapi = {
+│    apiKey: string
+⋮
+│  type Customai = {
+│    api_key: string,
+│    base_url: string
+⋮
+│  type Datadog = {
+│    apiKey: string,
+│    appKey: string,
+│    apiBase: string
+⋮
+│  type Datocms = {
+│    apiKey: string
+⋮
+│  type Deel = {
+│    apiKey: string
+⋮
+│  type DeepInfra = {
+│    token: string
+⋮
+│  type Deepl = {
+│    apiKey: string,
+│    baseUrl: string
+⋮
+│  type Deepseek = {
+│    api_key: string,
+│    base_url: string
+⋮
+│  type Digitalocean = {
+│    token: string
+⋮
+│  type DiscordBotConfiguration = {
+│    public_key: string,
+│    application_id: string
+⋮
+│  type DiscordWebhook = {
+│    webhook_url: string
+⋮
+│  type Discourse = {
+│    apiKey: string,
+│    apiUsername: string,
+│    defaultHost: string
+⋮
+│  type Docspring = {
+│    tokenId: string,
+│    tokenSecret: string
+⋮
+│  type Dust = {
+│    apiKey: string,
+│    workspaceId: string
+⋮
+│  type Dynatrace = {
+│    accessToken: string,
+│    environmentId: string,
+│    environmentUrl: string
+⋮
+│  type Edgedb = {
+│    dsn: string,
+│    host: string,
+│    port: number,
+│    user: string,
+│    database: string,
+│    password: string,
+│    secretKey: string,
+│    instanceName: string
+⋮
+│  type Enode = {
+│    token: string
+⋮
+│  type Exa = {
+│    apiKey: string
+⋮
+│  type Faunadb = {
+│    region: string,
+│    secret: string
+⋮
+│  type Figma = {
+│    token: string
+⋮
+│  type Firebase = {
+│    appId: string,
+│    apiKey: string,
+│    projectId: string,
+│    authDomain: string,
+│    measurementId: string,
+│    storageBucket: string,
+│    messagingSenderId: string
+⋮
+│  type Fly = {
+│    token: string
+⋮
+│  type Formstack = {
+│    token: string
+⋮
+│  type Foxentry = {
+│    apiKey: string
+⋮
+│  type Freshdesk = {
+│    apiKey: string,
+│    baseUrl: string
+⋮
+│  type Funkwhale = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Gcal = {
+│    token: string
+⋮
+│  type Gcloud = {
+│    type: string,
+│    auth_uri: string,
+│    client_id: string,
+│    token_uri: string,
+│    project_id: string,
+│    private_key: string,
+│    client_email: string,
+│    private_key_id: string,
+│    client_x509_cert_url: string,
+⋮
+│  type GcloudStorage = {
+│    bucket: string,
+│    serviceAccountKey: any
+⋮
+│  type GcpServiceAccount = {
+│    type: string,
+│    auth_uri: string,
+│    client_id: string,
+│    token_uri: string,
+│    project_id: string,
+│    private_key: string,
+│    client_email: string,
+│    private_key_id: string,
+│    client_x509_cert_url: string,
+⋮
+│  type Gdocs = {
+│    token: string
+⋮
+│  type Gdrive = {
+│    token: string
+⋮
+│  type Gforms = {
+│    token: string
+⋮
+│  type Gfw = {
+│    api_key: string
+⋮
+│  type Ghostcms = {
+│    apiKey: string,
+│    apiUrl: string
+⋮
+│  type Gitbook = {
+│    token: string
+⋮
+│  type Github = {
+│    token: string
+⋮
+│  type Gitlab = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type GitRepository = {
+│    url: string,
+│    branch: string,
+│    folder: string,
+│    gpg_key: any,
+│    is_github_app: boolean
+⋮
+│  type Gmail = {
+│    token: string
+⋮
+│  type Googleai = {
+│    api_key: string,
+│    base_url: string
+⋮
+│  type Gorgias = {
+│    apiKey: string,
+│    domain: string,
+│    username: string
+⋮
+│  type GpgKey = {
+│    email: string,
+│    passphrase: string,
+│    private_key: string
+⋮
+│  type Graphql = {
+│    base_url: string,
+│    bearer_token: string,
+│    custom_headers: any
+⋮
+│  type Greip = {
+│    apiKey: string
+⋮
+│  type Grist = {
+│    host: string,
+│    apiKey: string
+⋮
+│  type Groq = {
+│    api_key: string,
+│    base_url: string
+⋮
+│  type Groqai = {
+│    api_key: string
+⋮
+│  type Gsheets = {
+│    token: string
+⋮
+│  type Gworkspace = {
+│    token: string
+⋮
+│  type Holded = {
+│    apiKey: string
+⋮
+│  type Hubspot = {
+│    token: string
+⋮
+│  type IfsCloudOidc = {
+│    server: string,
+│    clientId: string,
+│    oidcPath: string,
+│    clientSecret: string
+⋮
+│  type Intercom = {
+│    token: string,
+│    apiVersion: string
+⋮
+│  type Ipinfo = {
+│    token: string
+⋮
+│  type Jira = {
+│    domain: string,
+│    password: string,
+│    username: string
+⋮
+│  type Jotform = {
+│    apiKey: string,
+│    baseUrl: string
+⋮
+│  type JsonSchema = {
+│    schema: any
+⋮
+│  type Kafka = {
+│    brokers: string[],
+│    security: any
+⋮
+│  type Klaviyo = {
+│    apiKey: string
+⋮
+│  type Kobotoolbox = {
+│    api_key: string,
+│    server_url: string
+⋮
+│  type Kustomer = {
+│    apiKey: string
+⋮
+│  type Langfuse = {
+│    base_url: string,
+│    public_key: string,
+│    secret_key: string
+⋮
+│  type Ldap = {
+│    server: string,
+│    use_ssl: boolean,
+│    bind_user: string,
+│    ssl_validate: boolean,
+│    bind_password: string
+⋮
+│  type Leonardoai = {
+│    apiKey: string
+⋮
+│  type Linear = {
+│    apiKey: string
+⋮
+│  type Linkding = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Linkedin = {
+│    token: string
+⋮
+│  type Linode = {
+│    token: string
+⋮
+│  type Localcontexts = {
+│    api_key: string,
+│    project_id: string,
+│    server_url: string
+⋮
+│  type Lumaai = {
+│    apiKey: string
+⋮
+│  type Magento = {
+│    accessToken: string,
+│    consumerKey: string,
+│    consumerSecret: string,
+│    accessTokenSecret: string
+⋮
+│  type Mailchimp = {
+│    server: string,
+│    api_key: string
+⋮
+│  type Mailerlite = {
+│    apiToken: string
+⋮
+│  type Mailgun = {
+│    api_key: string
+⋮
+│  type Mapbox = {
+│    username: string,
+│    access_token: string
+⋮
+│  type Mastodon = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Matrix = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Matteroom = {
+│    base_url: string,
+│    password: string,
+│    username: string
+⋮
+│  type Mcp = {
+│    url: string,
+│    name: string,
+│    token: string,
+│    headers: any
+⋮
+│  type Meteosource = {
+│    tier: string,
+│    apiKey: string
+⋮
+│  type Mezmo = {
+│    apiKey: string
+⋮
+│  type Miro = {
+│    token: string
+⋮
+│  type Mistral = {
+│    apiKey: string,
+│    base_url: string
+⋮
+│  type Mollie = {
+│    token: string
+⋮
+│  type Mongodb = {
+│    db: string,
+│    tls: boolean,
+│    servers: any,
+│    credential: any
+⋮
+│  type MongodbRest = {
+│    api_key: string,
+│    endpoint: string
+⋮
+│  type Motimate = {
+│    token: string
+⋮
+│  type Mqtt = {
+│    tls: {
+│    enabled: boolean,
+│    ca_certificate: string,
+│    pkcs12_client_certificate: string,
+│    pkcs12_certificate_password: string
+│  },
+│    port: number,
+│    broker: string,
+│    credentials: {
+⋮
+│  type MsSqlServer = {
+│    host: string,
+│    port: number,
+│    user: string,
+│    dbname: string,
+│    ca_cert: string,
+│    encrypt: boolean,
+│    password: string,
+│    aad_token: any,
+│    trust_cert: boolean,
+⋮
+│  type MsTeamsWebhook = {
+│    webhook_url: string
+⋮
+│  type Mysql = {
+│    ssl: boolean,
+│    host: string,
+│    port: number,
+│    user: string,
+│    database: string,
+│    password: string,
+│    root_certificate_pem: string
+⋮
+│  type Nats = {
+│    auth: any,
+│    servers: string[],
+│    require_tls: boolean
+⋮
+│  type Neondb = {
+│    apiKey: string
+⋮
+│  type Netbox = {
+│    url: string,
+│    token: string
+⋮
+│  type Netlify = {
+│    token: string
+⋮
+│  type Newsapi = {
+│    apiKey: string
+⋮
+│  type Nextcloud = {
+│    token: string,
+│    userId: string,
+│    baseUrl: string,
+│    password: string,
+│    username: string
+⋮
+│  type Nocodb = {
+│    table: string,
+│    apiUrl: string,
+│    xc_token: string,
+│    workspace: string
+⋮
+│  type Notion = {
+│    token: string
+⋮
+│  type OauthClientCredentials = {
+│    domain: string,
+│    client_id: string,
+│    client_secret: string
+⋮
+│  type Odk = {
+│    base_url: string,
+│    password: string,
+│    username: string,
+│    default_project_id: number
+⋮
+│  type Openai = {
+│    api_key: string,
+│    base_url: string,
+│    organization_id: string
+⋮
+│  type Openrouter = {
+│    api_key: string,
+│    base_url: string
+⋮
+│  type Oracledb = {
+│    user: string,
+│    database: string,
+│    password: string
+⋮
+│  type Pandadoc = {
+│    apiKey: string
+⋮
+│  type Paychex = {
+│    client_id: string,
+│    client_secret: string
+⋮
+│  type Paylocity = {
+│    token: string
+⋮
+│  type Paypal = {
+│    clientId: string,
+│    clientSecret: string
+⋮
+│  type Persona = {
+│    apiKey: string
+⋮
+│  type Personio = {
+│    clientId: string,
+│    clientSecret: string
+⋮
+│  type Phrase = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Pinecone = {
+│    apiKey: string,
+│    environment: string
+⋮
+│  type Pinterest = {
+│    token: string
+⋮
+│  type Pipedrive = {
+│    apiToken: string
+⋮
+│  type Planetscale = {
+│    serviceToken: string,
+│    serviceTokenId: string
+⋮
+│  type Postgresql = {
+│    host: string,
+│    port: number,
+│    user: string,
+│    dbname: string,
+│    sslmode: string,
+│    password: string,
+│    root_certificate_pem: string
+⋮
+│  type Pushover = {
+│    user: string,
+│    token: string
+⋮
+│  type Qovery = {
+│    apiKey: string
+⋮
+│  type Quickbooks = {
+│    token: string,
+│    realmId: string,
+│    isSandBox: boolean
+⋮
+│  type Readme = {
+│    apiKey: string
+⋮
+│  type Recraft = {
+│    apiKey: string
+⋮
+│  type Reddit = {
+│    clientId: string,
+│    password: string,
+│    username: string,
+│    userAgent: string,
+│    clientSecret: string
+⋮
+│  type Render = {
+│    apiKey: string
+⋮
+│  type Replicate = {
+│    token: string
+⋮
+│  type Resend = {
+│    token: string
+⋮
+│  type Rss = {
+│    url: string
+⋮
+│  type S3 = {
+│    port: number,
+│    bucket: string,
+│    region: string,
+│    useSSL: boolean,
+│    endPoint: string,
+│    accessKey: string,
+│    pathStyle: boolean,
+│    secretKey: string
+⋮
+│  type S3AwsOidc = {
+│    bucket: string,
+│    region: string,
+│    roleArn: string
+⋮
+│  type SageIntacct = {
+│    token: string
+⋮
+│  type Salesflare = {
+│    apiKey: string
+⋮
+│  type Segment = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Sendgrid = {
+│    token: string
+⋮
+│  type Sensortower = {
+│    base_url: string,
+│    auth_token: string
+⋮
+│  type Sentry = {
+│    token: string,
+│    region: string,
+│    organizationSlug: string
+⋮
+│  type Shopify = {
+│    token: string,
+│    store_name: string
+⋮
+│  type Shutterstock = {
+│    token: string
+⋮
+│  type SignatureAuth = {
+│    secret_key: string,
+│    signature_provider: string,
+│    authentication_config: {
+│    encoding: string,
+│    algorithm: string,
+│    signature_prefix: string,
+│    signature_header_name: string
+│  }
+⋮
+│  type Signoz = {
+│    apiKey: string,
+│    baseUrl: string
+⋮
+│  type Slack = {
+│    token: string
+⋮
+│  type Smartsheet = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Smtp = {
+│    host: string,
+│    port: number,
+│    user: string,
+│    password: string
+⋮
+│  type Snowflake = {
+│    role: string,
+│    schema: string,
+│    database: string,
+│    username: string,
+│    warehouse: string,
+│    public_key: string,
+│    private_key: string,
+│    account_identifier: string
+⋮
+│  type Speechify = {
+│    token: string
+⋮
+│  type Spotify = {
+│    token: string
+⋮
+│  type Square = {
+│    token: string
+⋮
+│  type Stripe = {
+│    token: string
+⋮
+│  type Supabase = {
+│    key: string,
+│    url: string
+⋮
+│  type Surrealdb = {
+│    url: string,
+│    token: string
+⋮
+│  type Taskade = {
+│    token: string
+⋮
+│  type Telegram = {
+│    token: string
+⋮
+│  type Telnyx = {
+│    apiKey: string
+⋮
+│  type Terra = {
+│    devId: string,
+│    apiKey: string
+⋮
+│  type TheirStack = {
+│    apiKey: string
+⋮
+│  type Todoist = {
+│    token: string
+⋮
+│  type Togetherai = {
+│    api_key: string,
+│    base_url: string
+⋮
+│  type Toggl = {
+│    token: string
+⋮
+│  type Tomorrow = {
+│    apiKey: string
+⋮
+│  type Trello = {
+│    key: string,
+│    token: string
+⋮
+│  type Tripadvisor = {
+│    apiKey: string
+⋮
+│  type Turso = {
+│    apiToken: string
+⋮
+│  type Twilio = {
+│    token: string,
+│    accountSid: string
+⋮
+│  type TwilioMessageTemplate = {
+│    auth_token: string,
+│    recipients: string[],
+│    account_sid: string,
+│    content_sid: string,
+│    origin_number: string,
+│    message_service_sid: string
+⋮
+│  type Typeform = {
+│    token: string,
+│    baseUrl: string
+⋮
+│  type Ultravox = {
+│    apiKey: string
+⋮
+│  type Vectara = {
+│    apiKey: string
+⋮
+│  type Vercel = {
+│    token: string
+⋮
+│  type Visma = {
+│    token: string
+⋮
+│  type Weatherapi = {
+│    apiKey: string
+⋮
+│  type Webflow = {
+│    token: string
+⋮
+│  type Webscrapingai = {
+│    apiKey: string
+⋮
+│  type Woocommerce = {
+│    url: string,
+│    version: string,
+│    consumerKey: string,
+│    consumerSecret: string,
+│    queryStringAuth: boolean
+⋮
+│  type Xata = {
+│    apiKey: string
+⋮
+│  type Xero = {
+│    token: string
+⋮
+│  type Yelp = {
+│    apiKey: string
+⋮
+│  type Ynab = {
+│    token: string
+⋮
+│  type Zendesk = {
+│    password: string,
+│    username: string,
+│    subdomain: string
+⋮
+│  type Zixflow = {
+│    apiKey: string
+⋮
+│  type Zoho = {
+│    token: string
+⋮
+│  type Zoom = {
+│    accountId: string,
+│    oauthClientId: string,
+│    oauthClientSecret: string,
+│    webhookSecretToken: string
+⋮
+│  type Zuplo = {
+│    apiKey: string
+⋮
+
+apps/sift-api/tests/unit/f/sift/test_agents.py:
+⋮
+│@pytest.fixture
+│def mock_client(mocker):
+⋮
+│@pytest.fixture
+│def mock_dispatch(mocker):
+⋮
+│@pytest.fixture
+│def valid_agent_request():
+⋮
+│def test_main_create_success(mock_client, mock_dispatch, valid_agent_request):
+⋮
+│def test_main_create_error(mock_client, mock_dispatch, valid_agent_request):
+⋮
+
+apps/sift-api/tests/unit/f/sift/test_responses.py:
+⋮
+│@pytest.fixture
+│def mock_client(mocker):
+⋮
+│@pytest.fixture
+│def mock_dispatch(mocker):
+⋮
+│@pytest.fixture
+│def valid_response_request():
+⋮
+│def test_responses_main_success(mock_client, mock_dispatch, valid_response_request):
+⋮
+│def test_responses_main_no_prefix(mock_client):
+⋮
+│def test_responses_main_error(mock_client, mock_dispatch, valid_response_request):
+⋮
+
+apps/sift-api/wmill-lock.yaml
+
+apps/sift-api/wmill.yaml
+
+packages/sift/pdm.lock
+
+packages/sift/pyproject.toml
+
+packages/sift/src/sift/__init__.py
+
+packages/sift/src/sift/client.py:
+⋮
+│class SiftClient:
+│    """Lightweight client facade for Sift API."""
+│
+│    def __init__(self, **kwargs: Any) -> None:
+⋮
+│    def get_agent(self, agent_name: str, version: Optional[int] = None) -> "Agent":
+⋮
+│    def save_agent(self, agent: "Agent") -> None:
+⋮
+│    def compile_and_save_agent(self, payload: Dict[str, Any]) -> None:
+⋮
+│    def predict_response(
+│        self,
+│        agent_id: str,
+│        input: Union[str, List[Dict[str, Any]]],
+│        background: bool = False,
+⋮
+
+packages/sift/src/sift/config.py:
+⋮
+│class Settings(LoggingSettings, BaseSettings):
+⋮
+
+packages/sift/src/sift/integrations/__init__.py
+
+packages/sift/src/sift/integrations/langfuse/__init__.py
+
+packages/sift/src/sift/integrations/langfuse/service.py:
+⋮
+│def get_langfuse_client() -> Langfuse:
+⋮
+
+packages/sift/src/sift/modules/__init__.py
+
+packages/sift/src/sift/modules/agents/__init__.py
+
+packages/sift/src/sift/modules/agents/repository/langfuse.py:
+⋮
+│def get_agent(agent_name: str, version: Optional[int] = None) -> Agent:
+⋮
+│def save_agent(agent: Agent) -> None:
+⋮
+
+packages/sift/src/sift/modules/agents/schema.py:
+⋮
+│class DSPySignatureState(BaseModel):
+⋮
+│class DSPyPredictorState(BaseModel):
+⋮
+│class DSPyParams(BaseModel):
+⋮
+│class Agent(BaseModel):
+⋮
+│class AgentRequest(Agent):
+⋮
+│class AgentResponse(Agent):
+⋮
+│class AgentpredictRequest(BaseModel):
+⋮
+
+packages/sift/src/sift/modules/agents/service.py:
+⋮
+│class AgentModule(dspy.Module):
+│    def __init__(self, state_dict: Dict[str, Any]):
+│        super().__init__()
+│        for key, pred_state in state_dict.items():
+│            if not isinstance(pred_state, dict):
+│                continue
+│
+│            sig_state = pred_state.get("signature", {})
+│            instructions = sig_state.get("instructions", "")
+│            fields = sig_state.get("fields", [])
+│
+⋮
+│    def forward(self, **kwargs):
+⋮
+│def compile_and_save_agent(payload: Dict[str, Any]) -> None:
+│    from sift.modules.agents.schema import Agent, DSPyPredictorState, DSPySignatureState
+⋮
+│    if trainset:
+│        logger.info("compiling_agent_started", trainset_size=len(trainset))
+│
+│        def dummy_metric(*args, **kwargs):
+⋮
+
+packages/sift/src/sift/modules/responses/__init__.py
+
+packages/sift/src/sift/modules/responses/schema.py:
+⋮
+│class ResponseRequest(BaseModel):
+⋮
+│class ResponseResponse(BaseModel):
+⋮
+
+packages/sift/src/sift/modules/responses/service.py:
+⋮
+│def predict_response(
+│    agent_id: str, input: Union[str, List[Dict[str, Any]]], background: bool = False
+⋮
+
+packages/sift/src/sift/utils/__init__.py
+
+packages/sift/src/sift/utils/webhook/__init__.py
+
+packages/sift/src/sift/utils/webhook/schema.py:
+⋮
+│class WebhookEvent(str, Enum):
+⋮
+│class Webhook(BaseModel):
+⋮
+
+packages/sift/src/sift/utils/webhook/service.py:
+⋮
+│def dispatch_webhook(
+│    webhook: Optional[Webhook], event: WebhookEvent, payload: Dict[str, Any]
+⋮
+│def webhook_dispatch(func: Callable[..., Any]) -> Callable[..., Any]:
+│    """Decorator to handle webhook lifecycle events (STARTED, COMPLETED, FAILED)."""
+│
+│    @functools.wraps(func)
+│    def wrapper(request: Any, *args: Any, **kwargs: Any) -> Any:
+⋮
+
+packages/sift/tests/__init__.py
+
+packages/sift/tests/conftest.py:
+⋮
+│def filter_response(response):
+⋮
+│@pytest.fixture(scope="module")
+│def vcr_config():
+⋮
+│@pytest.fixture(scope="session", autouse=True)
+│def setup_environment():
+⋮
+
+packages/sift/tests/e2e/__init__.py
+
+packages/sift/tests/e2e/cassettes/test_workflow.yaml
+
+packages/sift/tests/e2e/test_client.py:
+⋮
+│@pytest.mark.vcr
+│def test_workflow():
+⋮
+
+packages/sift/tests/integration/__init__.py
+
+packages/sift/tests/integration/internal/__init__.py
+
+packages/sift/tests/integration/internal/test_hydration.py:
+⋮
+│def test_end_to_end_hydration(mocker):
+⋮
+
+packages/sift/tests/unit/sift/__init__.py
+
+packages/sift/tests/unit/sift/modules/agents/repository/test_langfuse.py:
+⋮
+│@pytest.fixture
+│def mock_langfuse_client(mocker):
+⋮
+│def test_save_agent_instruction_extraction(mock_langfuse_client):
+⋮
+│def test_save_agent_empty_state(mock_langfuse_client):
+⋮
+│def test_get_agent_reads_from_config(mock_langfuse_client):
+⋮
+│def test_get_agent_defaults_agent_name(mock_langfuse_client):
+⋮
+
+packages/sift/tests/unit/sift/modules/agents/test_service.py:
+⋮
+│@patch("dspy.teleprompt.BootstrapFewShot")
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│def test_compile_and_save_agent_preserves_signature_fields(
+│    mock_save_agent, mock_bootstrap
+⋮
+│@patch("dspy.teleprompt.BootstrapFewShot")
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│def test_compile_and_save_agent_no_trainset(mock_save_agent, mock_bootstrap):
+⋮
+
+packages/sift/tests/unit/sift/test_client.py:
+⋮
+│def test_sift_client_initialization_overrides_settings() -> None:
+⋮
+│def test_sift_client_routing_properties(mocker) -> None:
+⋮
+
+packages/sift/tests/unit/sift/test_init.py:
+⋮
+│def test_public_api_exports():
+⋮
+
+packages/sift/tests/unit/sift/utils/webhook/test_service.py:
+⋮
+│@pytest.fixture
+│def webhook():
+⋮
+│def test_dispatch_webhook_success(webhook):
+⋮
+│def test_dispatch_webhook_no_webhook():
+⋮
+│def test_dispatch_webhook_event_not_in_list(webhook):
+⋮
+│def test_dispatch_webhook_http_error(webhook, caplog):
+⋮
+│class MockRequest:
+│    def __init__(self, webhook=None, data="req_data"):
+│        self.webhook = webhook
+⋮
+│    def model_dump(self):
+⋮
+│class MockResponse:
+│    def __init__(self, success=True, data="resp_data"):
+│        self.success = success
+⋮
+│    def model_dump(self):
+⋮
+│@webhook_dispatch
+│def dummy_success_func(request):
+⋮
+│@webhook_dispatch
+│def dummy_failure_func(request):
+⋮
+│@webhook_dispatch
+│def dummy_exception_func(request):
+⋮
+│def test_webhook_dispatch_success(webhook):
+⋮
+│def test_webhook_dispatch_handled_failure(webhook):
+⋮
+│def test_webhook_dispatch_unhandled_exception(webhook):
+⋮
+│def test_webhook_dispatch_no_webhook():
+⋮
+
+pdm.lock
+
+pyproject.toml
+
+```
