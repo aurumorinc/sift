@@ -11,9 +11,16 @@ class DSPySignatureState(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
+class DSPyTrainingExample(BaseModel):
+    trace_id: Optional[str] = None
+    score: Optional[float] = None
+    feedback: Optional[str] = None
+    model_config = ConfigDict(extra="allow")
+
+
 class DSPyPredictorState(BaseModel):
     traces: List[Any] = Field(default_factory=list)
-    train: List[Any] = Field(default_factory=list)
+    train: List[DSPyTrainingExample] = Field(default_factory=list)
     demos: List[Dict[str, Any]] = Field(default_factory=list)
     signature: DSPySignatureState
     lm: Optional[Dict[str, Any]] = None
@@ -22,6 +29,7 @@ class DSPyPredictorState(BaseModel):
 
 class DSPyParams(BaseModel):
     optimizer: Optional[str] = None
+    optimizer_params: Optional[Dict[str, Any]] = None
     state: Dict[str, DSPyPredictorState]
 
 

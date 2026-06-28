@@ -78,7 +78,8 @@ class AgentModule(dspy.Module):
 
 def compile_and_save_agent(payload: Dict[str, Any]) -> None:
     from sift.modules.agents.schema import Agent, DSPyPredictorState, DSPySignatureState
-    from dspy.teleprompt import BootstrapFewShot
+    import dspy.teleprompt
+    from sift.modules.agents.metric import dynamic_api_metric
     from sift.modules.agents.repository.langfuse import save_agent
 
     # 1. Instantiate Agent from updated schema
@@ -155,10 +156,17 @@ def compile_and_save_agent(payload: Dict[str, Any]) -> None:
     if trainset:
         logger.info("compiling_agent_started", trainset_size=len(trainset))
 
-        def dummy_metric(*args, **kwargs):
-            return True
+        optimizer_name = agent.dspy_params.optimizer or "BootstrapFewShot"
+        optimizer_params = agent.dspy_params.optimizer_params or {}
+        optimizer_params_dict = dict(optimizer_params)
+        
+        optimizer_class = getattr(dspy.teleprompt, optimizer_name, None)
+        if not optimizer_class:
+            raise ValueError(f"Optimizer {optimizer_name} not found in dspy.teleprompt")
+            
+        optimizer_params_dict["metric"] = dynamic_api_metric
+        optimizer = optimizer_class(**optimizer_params_dict)
 
-        optimizer = BootstrapFewShot(metric=dummy_metric)
         compiled_module = optimizer.compile(module, trainset=trainset)
         logger.info("compiling_agent_finished")
     else:

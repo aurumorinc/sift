@@ -67,6 +67,9 @@ def test_compile_and_save_agent_preserves_signature_fields(
     compile_and_save_agent(payload)
 
     # Assert
+    from sift.modules.agents.metric import dynamic_api_metric
+    mock_bootstrap.assert_called_once_with(metric=dynamic_api_metric)
+    
     mock_save_agent.assert_called_once()
     saved_agent = mock_save_agent.call_args[0][0]
 
@@ -124,3 +127,86 @@ def test_compile_and_save_agent_no_trainset(mock_save_agent, mock_bootstrap):
     # Even without compilation, the signature should be preserved because dump_state is still called on the base module
     assert pred_state.signature.fields == original_fields
     assert pred_state.signature.instructions == "Do something."
+
+
+@patch("sift.modules.agents.repository.langfuse.save_agent")
+@patch("dspy.teleprompt.MIPROv2")
+def test_compile_and_save_agent_dynamic_optimizer(mock_miprov2, mock_save_agent):
+    payload = {
+        "agent_name": "test-agent",
+        "agent_card_params": {},
+        "litellm_params": {"model": "openai/gpt-4o-mini"},
+        "dspy_params": {
+            "optimizer": "MIPROv2",
+            "optimizer_params": {"num_candidates": 2},
+            "state": {
+                "main_predictor": {
+                    "signature": {
+                        "instructions": "Original instructions.",
+                        "fields": [
+                            {"name": "input_a", "json_schema_extra": {"__dspy_field_type": "input"}},
+                            {"name": "output_c", "json_schema_extra": {"__dspy_field_type": "output"}},
+                        ],
+                    },
+                    "train": [{"input_a": "A", "output_c": "C"}],
+                    "traces": [],
+                    "demos": [],
+                }
+            }
+        },
+    }
+
+    mock_optimizer = MagicMock()
+    mock_compiled_module = MagicMock()
+    mock_compiled_module.dump_state.return_value = {
+        "main_predictor": {
+            "signature": {
+                "instructions": "MIPROv2 Optimized instructions.",
+                "fields": [],
+            },
+            "train": [{"input_a": "A", "output_c": "C"}],
+            "traces": [],
+            "demos": [],
+            "lm": None,
+        }
+    }
+    mock_optimizer.compile.return_value = mock_compiled_module
+    mock_miprov2.return_value = mock_optimizer
+
+    compile_and_save_agent(payload)
+
+    from sift.modules.agents.metric import dynamic_api_metric
+    mock_miprov2.assert_called_once_with(num_candidates=2, metric=dynamic_api_metric)
+    mock_save_agent.assert_called_once()
+
+
+@patch("sift.modules.agents.repository.langfuse.save_agent")
+def test_compile_and_save_agent_invalid_optimizer(mock_save_agent):
+    payload = {
+        "agent_name": "test-agent",
+        "agent_card_params": {},
+        "litellm_params": {"model": "openai/gpt-4o-mini"},
+        "dspy_params": {
+            "optimizer": "FakeOptimizer",
+            "state": {
+                "main_predictor": {
+                    "signature": {
+                        "instructions": "Original instructions.",
+                        "fields": [
+                            {"name": "input_a", "json_schema_extra": {"__dspy_field_type": "input"}},
+                            {"name": "output_c", "json_schema_extra": {"__dspy_field_type": "output"}},
+                        ],
+                    },
+                    "train": [{"input_a": "A", "output_c": "C"}],
+                    "traces": [],
+                    "demos": [],
+                }
+            }
+        },
+    }
+
+    import pytest
+    with pytest.raises(ValueError, match="Optimizer FakeOptimizer not found in dspy.teleprompt"):
+        compile_and_save_agent(payload)
+
+    mock_save_agent.assert_not_called()

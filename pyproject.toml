@@ -50,3 +50,9 @@ dev = [
 ]
 [tool.uv.sources]
 sift = { workspace = true }
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
