@@ -16,6 +16,8 @@ dspy/
 └── SKILL.md
 ```
 
+> **Agent Instructions:** The AST maps below provide a high-level overview of the `modules/` directory. Note that the complete repository source code is available within the `modules/` folder. You can and should use your file reading tools to access the actual source code within `modules/` for complete details, implementation logic, and context beyond what the AST map provides.
+
 ### AST Map: `modules/dspy`
 
 ```python
@@ -77,6 +79,8 @@ dspy/adapters/chat_adapter.py:
 │        output fields section to indicate the end of the output fields.
 ⋮
 │        def format_signature_fields_for_instructions(fields: dict[str, FieldInfo]):
+⋮
+│    def user_message_output_requirements(self, signature: type[Signature]) -> str:
 ⋮
 │    def parse(self, signature: type[Signature], completion: str) -> dict[str, Any]:
 ⋮
@@ -537,11 +541,6 @@ dspy/predict/parameter.py:
 │class Parameter:
 ⋮
 
-dspy/predict/predict.py:
-⋮
-│class Predict(Module, Parameter):
-⋮
-
 dspy/primitives/base_module.py:
 ⋮
 │class BaseModule:
@@ -797,6 +796,9 @@ dspy/signatures/signature.py:
 │    @classmethod
 │    def append(cls, name, field, type_=None) -> type["Signature"]:
 ⋮
+│    @classmethod
+│    def delete(cls, name) -> type["Signature"]:
+⋮
 │def ensure_signature(signature: str | type[Signature], instructions=None) -> None | type[Signature]
 ⋮
 │def make_signature(
@@ -962,6 +964,8 @@ dspy/utils/magicattr.py:
 ⋮
 │def set(obj, attr, val):
 ⋮
+│def delete(obj, attr):
+⋮
 │def lookup(obj, attr):
 ⋮
 │def _lookup_subscript_value(node):
@@ -1046,11 +1050,6 @@ tests/predict/test_best_of_n.py:
 │class DummyModule(dspy.Module):
 ⋮
 
-tests/predict/test_knn.py:
-⋮
-│def mock_example(question: str, answer: str) -> dspy.Example:
-⋮
-
 tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_text_mock_lm_loop_records_inputs_once():
@@ -1067,11 +1066,6 @@ tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_native_parallel_tool_calls_are_requested_and_replayed():
 │    def lookup(query: str) -> str:
-⋮
-
-tests/predict/test_refine.py:
-⋮
-│class DummyModule(dspy.Module):
 ⋮
 
 tests/predict/test_rlm.py:

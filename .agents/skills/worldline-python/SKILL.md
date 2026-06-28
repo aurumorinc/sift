@@ -71,8 +71,6 @@ worldline-python/
 
 .github/workflows/release.yaml
 
-.gitignore
-
 .rune/config
 
 .rune/index
@@ -188,9 +186,9 @@ tests/integration/test_telemetry_integration.py:
 │        "POSTHOG_API_KEY": "ph_dummy_key",
 │        "LANGFUSE_PUBLIC_KEY": "lf_pub",
 │        "LANGFUSE_SECRET_KEY": "lf_sec",
-│        "WM_TOKEN": "windmill_dummy_token",
-│        "WM_WORKSPACE": "windmill_ws",
-│        "WM_BASE_URL": "https://app.windmill.dev",
+│        "WINDMILL_TOKEN": "windmill_dummy_token",
+│        "WINDMILL_WORKSPACE": "windmill_ws",
+│        "WINDMILL_BASE_URL": "https://app.windmill.dev",
 ⋮
 │def test_telemetry_integration(
 │    mock_langfuse, mock_posthog, mock_sentry, in_memory_otel_exporters

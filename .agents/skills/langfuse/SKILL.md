@@ -18,6 +18,8 @@ langfuse/
 └── SKILL.md
 ```
 
+> **Agent Instructions:** The AST maps below provide a high-level overview of the `modules/` directory. Note that the complete repository source code is available within the `modules/` folder. You can and should use your file reading tools to access the actual source code within `modules/` for complete details, implementation logic, and context beyond what the AST map provides.
+
 ### AST Map: `modules/langfuse`
 
 ```python
@@ -98,6 +100,11 @@ packages/shared/src/domain/table-view-presets.ts:
 │  Datasets = "datasets",
 │  Experiments = "experiments",
 │  ExperimentItems = "experiment-items",
+⋮
+│export type TableViewPresetDomain = z.infer<typeof TableViewPresetDomainSchema>;
+│export type TableViewPresetState = Pick<
+│  TableViewPresetDomain,
+│  "filters" | "columnOrder" | "columnVisibility" | "orderBy"
 ⋮
 
 packages/shared/src/env.ts:
@@ -203,6 +210,9 @@ packages/shared/src/features/monitors/service/types.ts:
 
 packages/shared/src/features/monitors/types.ts:
 ⋮
+│export type MonitorThresholdOperator = z.infer<
+│  typeof MonitorThresholdOperatorSchema
+⋮
 │export type MonitorWindow = z.infer<typeof MonitorWindowSchema>;
 │
 ⋮
@@ -211,6 +221,12 @@ packages/shared/src/features/prompts/parsePromptDependencyTags.ts:
 ⋮
 │export function parsePromptDependencyTags(
 │  content: string | object,
+⋮
+
+packages/shared/src/features/query/types.ts:
+⋮
+│export type ViewVersion = z.infer<typeof viewVersions>;
+│
 ⋮
 
 packages/shared/src/features/scores/interfaces/ui/types.ts:
@@ -237,6 +253,7 @@ packages/shared/src/interfaces/tableNames.ts:
 │  Traces = "traces",
 │  Observations = "observations",
 │  Events = "events",
+│  Datasets = "datasets",
 │  DatasetRunItems = "dataset_run_items",
 │  DatasetItems = "dataset_items",
 │  AuditLogs = "audit_logs",
@@ -281,6 +298,14 @@ packages/shared/src/server/clickhouse/client.ts:
 │  private constructor() {}
 │
 │  /**
+⋮
+
+packages/shared/src/server/clickhouse/queryTags.ts:
+⋮
+│export type ClickHouseQueryTags = {
+│  surface?: ClickHouseQuerySurface | (string & {});
+│  route?: string;
+│  projectId?: string;
 ⋮
 
 packages/shared/src/server/evals/codeEvalDispatcherTypes.ts:
@@ -334,17 +359,6 @@ packages/shared/src/server/llm/internalTraceEvents.ts:
 │  itemExpectedOutput?: unknown;
 │  itemMetadata?: Record<string, unknown> | null;
 ⋮
-│type InternalTraceSnapshot = {
-│  spanId: string;
-│  traceId: string;
-│  parentSpanId?: string;
-│  name?: string;
-│  type: "SPAN" | "GENERATION";
-│  environment?: string;
-│  version?: string;
-│  release?: string;
-│  startTimeISO?: string;
-⋮
 
 packages/shared/src/server/llm/types.ts:
 ⋮
@@ -360,11 +374,6 @@ packages/shared/src/server/llm/types.ts:
 ⋮
 │export type OpenAIModel = (typeof openAIModels)[number];
 │
-⋮
-│export type ProcessedTraceEvent = {
-│  type: string;
-│  timestamp: string;
-│  body: Record<string, unknown>;
 ⋮
 │export type InternalTraceWriteInput = {
 │  rootSpanId: string;
@@ -421,6 +430,16 @@ packages/shared/src/server/queries/clickhouse-sql/clickhouse-filter.ts:
 │
 ⋮
 
+packages/shared/src/server/repositories/clickhouseExecExceptionTag.ts:
+⋮
+│export interface ClickhouseExecExceptionTagTransformOptions {
+│  // `x-clickhouse-exception-tag` response header; undefined pre-25.11 → detection off.
+│  exceptionTag: string | undefined;
+│  // Lets the caller classify the error (e.g. ClickHouseResourceError). Identity
+│  // by default, keeping this module free of server-only imports and unit-testable.
+│  wrapError?: (error: Error) => Error;
+⋮
+
 packages/shared/src/server/repositories/comments.ts:
 ⋮
 │export type CommentObjectType = "TRACE" | "OBSERVATION" | "SESSION" | "PROMPT";
@@ -443,20 +462,6 @@ packages/shared/src/server/services/PromptService/types.ts:
 ⋮
 │export type PromptReference = Pick<Prompt, "id" | "version" | "name">;
 │
-⋮
-
-packages/shared/src/server/services/StorageService.ts:
-⋮
-│export interface StorageService {
-│  uploadFile(params: UploadFile): Promise<void>;
-│
-│  uploadFileBuffered(params: UploadFileBuffered): Promise<void>;
-│
-│  uploadWithSignedUrl(
-│    params: UploadWithSignedUrl,
-│  ): Promise<{ signedUrl: string }>;
-│
-│  uploadJson(
 ⋮
 
 packages/shared/src/server/services/email/transport.ts:
@@ -560,6 +565,9 @@ packages/shared/src/utils/jsonSchemaValidation.ts:
 packages/shared/src/utils/zod.ts:
 ⋮
 │export type JsonNested = Literal | { [key: string]: JsonNested } | JsonNested[];
+⋮
+│type CommaSeparatedEnumArrayOptions = {
+│  unknownValues?: "reject" | "filter";
 ⋮
 
 web/src/__tests__/server/redis-test-utils.ts:
@@ -682,24 +690,15 @@ web/src/components/table/data-table-controls.clienttest.tsx:
 │          isDisabled={false}
 ⋮
 
+web/src/components/table/table-selection-store.ts:
+⋮
+│type RowSelectionUpdater = Updater<RowSelectionState>;
+⋮
+
 web/src/components/table/types.ts:
 ⋮
 │export type DataTableCellPadding = "compact" | "comfortable" | "none";
 │
-⋮
-
-web/src/components/table/utils/jsonExpansionUtils.ts:
-⋮
-│export interface JsonTableRow {
-│  id: string;
-│  key: string;
-│  value: unknown;
-│  type:
-│    | "string"
-│    | "number"
-│    | "boolean"
-│    | "object"
-│    | "array"
 ⋮
 
 web/src/components/trace/components/IOPreview/components/ToolCallDefinitionCard.tsx:
@@ -808,12 +807,6 @@ web/src/components/ui/AdvancedJsonViewer/utils/treeStructure.ts:
 │    | "null"
 ⋮
 
-web/src/components/ui/IOTableCell.tsx:
-⋮
-│type IOTableCellPadding = "default" | "compact";
-│
-⋮
-
 web/src/components/ui/MarkdownViewer.tsx:
 ⋮
 │type ReactMarkdownNode = ReactMarkdownExtraProps["node"];
@@ -823,13 +816,6 @@ web/src/components/ui/MarkdownViewer.tsx:
 │  value?: string;
 │  url?: string;
 │  children?: MarkdownAstNode[];
-⋮
-
-web/src/components/ui/badge.tsx:
-⋮
-│export interface BadgeProps
-│  extends
-│    React.HTMLAttributes<HTMLDivElement>,
 ⋮
 
 web/src/components/ui/chart.tsx:
@@ -842,6 +828,12 @@ web/src/components/ui/chart.tsx:
 │    | { color?: string; theme?: never }
 │    | { color?: never; theme: Record<keyof typeof THEMES, string> }
 │  );
+⋮
+
+web/src/components/ui/layer.tsx:
+⋮
+│export type LayerName = (typeof LAYER_ORDER)[number];
+│
 ⋮
 
 web/src/components/ui/side-panel.tsx:
@@ -902,14 +894,11 @@ web/src/features/blobstorage-integration/types.ts:
 │export type BlobStorageIntegrationFormSchema = z.infer<
 │  typeof blobStorageIntegrationFormSchema
 ⋮
-│export type BlobStorageSyncStatus =
-│  | "idle"
-│  | "queued"
-│  | "up_to_date"
-│  | "disabled"
-⋮
 
 web/src/features/blobstorage-integration/validation.ts:
+⋮
+│export function exportStartDateNotInFuture(d: Date | null | undefined) {
+│  return !d || d.getTime() <= Date.now() + MAX_EXPORT_START_DATE_FUTURE_MS;
 ⋮
 │export function validateExportFieldGroups(
 │  data: { exportFieldGroups: unknown[] },
@@ -946,20 +935,6 @@ web/src/features/dashboard/components/EditDashboardDialog.tsx:
 │  initialDescription: string;
 ⋮
 
-web/src/features/datasets/components/DatasetItemFields.tsx:
-⋮
-│type DatasetItemFieldsProps = {
-│  inputValue: string;
-│  expectedOutputValue: string;
-│  metadataValue: string;
-│  dataset: DatasetSchema | null;
-│  editable: boolean;
-│  // For form integration (edit mode)
-│  control?: Control<DatasetItemFormValues, unknown, DatasetItemFormValues>;
-│  onInputChange?: (value: string) => void;
-│  onExpectedOutputChange?: (value: string) => void;
-⋮
-
 web/src/features/datasets/lib/calculateBaselineDiff.ts:
 ⋮
 │export type BaselineDiff = NumericDiff | CategoricalDiff | null;
@@ -987,6 +962,14 @@ web/src/features/datasets/lib/csv/types.ts:
 │    headers: string[],
 │    index: number,
 │  ) => void | Promise<void>;
+⋮
+
+web/src/features/datasets/store/datasetsTableStore.ts:
+⋮
+│type RowSelectionUpdater = Updater<RowSelectionState>;
+⋮
+│export type DatasetsTableStore = StoreApi<DatasetsTableStoreState>;
+│
 ⋮
 
 web/src/features/entitlements/constants/entitlements.ts:
@@ -1026,32 +1009,6 @@ web/src/features/events/server/eventsService.ts:
 │
 ⋮
 
-web/src/features/experiments/components/table/ExperimentsTable.tsx:
-⋮
-│                pagination={{
-│                  totalCount,
-│                  onChange: (updater) => {
-│                    const newState =
-│                      typeof updater === "function"
-⋮
-│                    setPaginationState({
-│                      page: newState.pageIndex + 1,
-│                      limit: newState.pageSize,
-⋮
-
-web/src/features/experiments/components/table/types.ts:
-⋮
-│export type ExperimentsTableProps = {
-│  projectId: string;
-│  hideControls?: boolean;
-│  /** Default filters to apply on mount when no existing filters are set */
-│  defaultFilter?: FilterState;
-│  /** Hidden filters that scope the table but should not be user-visible */
-│  fixedFilter?: FilterState;
-│  /** Unique context ID to isolate filter state from other ExperimentsTable instances */
-│  sessionFilterContextId?: string;
-⋮
-
 web/src/features/experiments/types/charts.ts:
 ⋮
 │export type ScoreLevel = "obs" | "experiment";
@@ -1089,9 +1046,6 @@ web/src/features/filters/lib/filter-config.ts:
 
 web/src/features/mcp/features/observations/tools/getObservationFilterValues.ts:
 ⋮
-│type FilterValueColumn = z.infer<typeof FilterValueColumnSchema>;
-│
-⋮
 │type FilterOption = {
 │  value: string | boolean;
 │  count?: number;
@@ -1122,12 +1076,6 @@ web/src/features/mcp/types.ts:
 │
 │  /** Organization ID from authenticated API key */
 │  orgId: string;
-│
-⋮
-
-web/src/features/monitors/components/MonitorPagePermissions.tsx:
-⋮
-│type MonitorScope = "monitors:read" | "monitors:CUD";
 │
 ⋮
 
@@ -1163,8 +1111,6 @@ web/src/features/prompts/components/ProtectedLabelsSettings.tsx:
 web/src/features/public-api/components/ApiKeyList.tsx:
 ⋮
 │type ApiKeyScope = "project" | "organization";
-│type ApiKeyEntity = { id: string; note: string | null };
-│
 ⋮
 
 web/src/features/public-api/components/CreateApiKeyButton.tsx:
@@ -1241,9 +1187,6 @@ web/src/features/scores/components/multi-select-key-values.tsx:
 
 web/src/features/search-bar/lib/ast.ts:
 ⋮
-│export type Span = { from: number; to: number };
-│
-⋮
 │export type CompareOp =
 │  | "="
 │  | "exact"
@@ -1261,6 +1204,26 @@ web/src/features/search-bar/lib/fields.ts:
 │  | { type: "field"; field: FieldDef }
 │  | { type: "metadata"; key: string }
 │  | { type: "scores"; key: string; level: "observation" | "trace" }
+⋮
+
+web/src/features/slack/components/SlackConnectionCard.tsx:
+⋮
+│interface SlackConnectionCardProps {
+│  /** Project ID for the Slack integration */
+│  projectId: string;
+│  /** Whether the component is disabled */
+│  disabled?: boolean;
+│  /** Optional callback when connection status changes */
+│  onConnectionChange?: (connected: boolean) => void;
+│  /** Whether to show the connect button in the card */
+│  showConnectButton?: boolean;
+⋮
+
+web/src/features/tracing-tables/observations/observationsTableStore.ts:
+⋮
+│type RowSelectionUpdater = Updater<RowSelectionState>;
+│type BooleanUpdater = Updater<boolean>;
+│
 ⋮
 
 web/src/features/web-callouts/components/WebCalloutSettingsPage.tsx:
@@ -1357,15 +1320,15 @@ worker/src/__tests__/periodicRunner.test.ts:
 worker/src/features/blobstorage/gzipStream.ts:
 ⋮
 │export type GzipStats = {
-│  // zlib level actually used (the resolved tuning level, or the zlib default
-│  // when none was configured). Recorded so a measurement can be tied to a level.
 │  level: number;
-│  // Active compression time, summed per input chunk as the latency from handing
-│  // the chunk to zlib until zlib reports it consumed (zlib offloads to the libuv
-│  // threadpool). This isolates compression work from the idle gaps spent waiting
-│  // on the next ClickHouse row; under sustained downstream backpressure it also
-│  // absorbs upload-wait, which is itself a useful "gzip is not the bottleneck"
-│  // signal. Use together with input/output bytes to derive throughput + ratio.
+│  // Wall-clock time from handing a chunk to zlib until the write callback fires.
+│  // Includes both compression CPU and downstream backpressure pauses.
+│  activeMs: number;
+│  // Time spent waiting for the downstream consumer (S3 upload) to drain.
+│  // Measured independently as the gap between push() returning false
+│  // (gzip.pause()) and the next _read() call (gzip.resume()).
+│  // Pure gzip CPU ≈ max(0, activeMs - backpressureMs).
+│  backpressureMs: number;
 ⋮
 
 worker/src/features/queue-metrics-runner/index.ts:
@@ -1492,54 +1455,6 @@ app/[section]/layout.tsx:
 │  params: Promise<{ section: string }>;
 ⋮
 
-app/academy/(en)/[[...slug]]/page.tsx:
-⋮
-│type PageProps = {
-│  params: Promise<{ slug?: string[] }>;
-⋮
-
-app/api/feedback/route.ts:
-⋮
-│export async function POST(request: NextRequest) {
-│  try {
-│    if (!process.env.WEBSITE_FEEDBACK_WEBHOOK) {
-│      throw new Error("WEBSITE_FEEDBACK_WEBHOOK is not set");
-│    }
-│
-│    const body = await request.json();
-│
-│    const webhookResponse = await fetch(process.env.WEBSITE_FEEDBACK_WEBHOOK, {
-│      method: "POST",
-⋮
-
-app/api/metabase-embed/route.ts:
-⋮
-│export async function GET(request: NextRequest) {
-│  try {
-│    const METABASE_SITE_URL = "https://langfuse.metabaseapp.com";
-│    const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
-│
-│    if (!METABASE_SECRET_KEY) {
-│      console.error(
-│        "Missing required environment variables: METABASE_SECRET_KEY",
-│      );
-│      return NextResponse.json(
-⋮
-
-app/api/productUpdateSignup/route.ts:
-⋮
-│export async function POST(request: NextRequest) {
-│  try {
-│    const body = await request.json();
-│    const { email, source } = body;
-│
-│    if (!emailSchema.safeParse(email).success) {
-│      return NextResponse.json(
-│        { error: "Invalid email address" },
-│        { status: 400 },
-│      );
-⋮
-
 app/api/voice-agent/route.ts:
 ⋮
 │export async function POST(_request: NextRequest) {
@@ -1554,10 +1469,30 @@ app/api/voice-agent/route.ts:
 │    );
 ⋮
 
+app/blog/page.tsx:
+⋮
+│export default function BlogIndexPage() {
+│  const pages = getBlogIndexPages();
+│
+│  return (
+│    <BlogPageClient pages={pages}>
+│      <ContentColumns
+│        leftSidebar={<BlogSidebar />}
+│        rightSidebar={<BlogAside />}
+│        className="min-h-screen"
+│        footerClassName="md:max-w-none xl:max-w-none px-6 sm:px-6 md:px-6"
+⋮
+
 app/cloud/layout.tsx:
 ⋮
 │export default function CloudLayout({
 │  children,
+⋮
+
+app/faq/[[...slug]]/page.tsx:
+⋮
+│type PageProps = {
+│  params: Promise<{ slug?: string[] }>;
 ⋮
 
 app/japan/layout.tsx:
@@ -1595,6 +1530,12 @@ app/layout.tsx:
 ⋮
 │export default function RootLayout({
 │  children,
+⋮
+
+app/library/[[...slug]]/page.tsx:
+⋮
+│type PageProps = {
+│  params: Promise<{ slug?: string[] }>;
 ⋮
 
 components/Authors.tsx:
@@ -1735,12 +1676,6 @@ components/GitHubReadme.tsx:
 │        if (!r.ok) throw new Error(`HTTP ${r.status}`);
 │        return r.text();
 │      })
-⋮
-
-components/Glossary.tsx:
-⋮
-│type CategoryKey = keyof typeof CATEGORIES;
-│
 ⋮
 
 components/PageFooterNav.tsx:
@@ -2042,6 +1977,13 @@ components/blog/BlogFilterContext.tsx:
 │  listPosts: BlogPageItem[];
 ⋮
 │export function BlogFilterProvider({
+│  pages,
+│  children,
+⋮
+
+components/blog/BlogPageClient.tsx:
+⋮
+│export function BlogPageClient({
 │  pages,
 │  children,
 ⋮
@@ -2461,14 +2403,6 @@ components/icons/search.tsx:
 ⋮
 │function IconSearch(props: React.SVGProps<SVGSVGElement>) {
 │  return (
-│    <svg fill="none" viewBox="0 0 24 24" height="1em" width="1em" {...props}>
-│      <path
-│        fill="currentColor"
-│        fillRule="evenodd"
-│        d="M18.319 14.433A8.001 8.001 0 006.343 3.868a8 8 0 0010.564 11.976l.043.045 4.242 4.243a1 
-│        clipRule="evenodd"
-│      />
-│    </svg>
 ⋮
 
 components/icons/sort.tsx:
@@ -2622,6 +2556,24 @@ components/qaChatbot/index.tsx:
 ⋮
 │type ChatProps = HTMLAttributes<HTMLDivElement>;
 │
+⋮
+
+components/resources/ResourcesIndex.tsx:
+⋮
+│type ResourcePage = ReturnType<typeof resourcesSource.getPages>[number];
+│
+⋮
+
+components/role-finder/role-finder-data.ts:
+⋮
+│export type RoleKey =
+│  | "product"
+│  | "growth"
+│  | "integrations"
+│  | "sdk"
+│  | "data_infra"
+│  | "iam_billing"
+│  | "cloud"
 ⋮
 
 components/shared/EnterpriseLogoGrid.tsx:
@@ -2795,14 +2747,6 @@ lib/ai/inkeep-qa-schema.ts:
 │  }
 ⋮
 
-lib/blog-index.ts:
-⋮
-│export function getBlogTagCounts(): { tags: TagWithCount[]; total: number } {
-│  const pages = getBlogIndexPages();
-│  const tags = computeTagCounts(pages.map((p) => p.frontMatter?.tag));
-│  return { tags, total: pages.length };
-⋮
-
 lib/cloud-regions.ts:
 ⋮
 │export type CloudRegionKey = keyof typeof cloudRegions;
@@ -2943,12 +2887,6 @@ scripts/update-github-stars.js:
 ### AST Map: `modules/langfuse-python`
 
 ```python
-langfuse/__init__.py:
-⋮
-│Langfuse = _client_module.Langfuse
-│
-⋮
-
 langfuse/_client/attributes.py:
 ⋮
 │def _serialize(obj: Any) -> Optional[str]:
@@ -3093,41 +3031,6 @@ langfuse/_client/client.py:
 │        output: Optional[Any] = None,
 │        metadata: Optional[Any] = None,
 │        version: Optional[str] = None,
-⋮
-│    @overload
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: float,
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-⋮
-│    @overload
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: str,
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-⋮
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: Union[float, str],
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
 ⋮
 │    def run_experiment(
 │        self,
@@ -3378,6 +3281,11 @@ langfuse/_utils/environment.py:
 │def get_common_release_envs() -> Optional[str]:
 ⋮
 
+langfuse/_utils/json_path.py:
+⋮
+│def parse_path(json_path: str) -> List[Union[str, int]]:
+⋮
+
 langfuse/_utils/parse_error.py:
 ⋮
 │def generate_error_message_fern(error: Error) -> str:
@@ -3559,6 +3467,13 @@ langfuse/api/core/enum.py:
 │    class StrEnum(str, enum.Enum):
 ⋮
 
+langfuse/api/core/file.py:
+⋮
+│FileContent = Union[IO[bytes], bytes, str]
+⋮
+│def with_content_type(*, file: File, default_content_type: str) -> File:
+⋮
+
 langfuse/api/core/force_multipart.py:
 ⋮
 │class ForceMultipartDict(Dict[str, Any]):
@@ -3611,6 +3526,8 @@ langfuse/api/core/pydantic_utilities.py:
 │    @classmethod
 │    def model_construct(
 │        cls: Type["Model"], _fields_set: Optional[Set[str]] = None, **values: Any
+⋮
+│    def json(self, **kwargs: Any) -> str:
 ⋮
 │    def dict(self, **kwargs: Any) -> Dict[str, Any]:
 ⋮
@@ -3668,21 +3585,6 @@ langfuse/api/core/serialization.py:
 │    aliases_to_field_names: typing.Dict[str, str],
 ⋮
 
-langfuse/api/dataset_items/client.py:
-⋮
-│class DatasetItemsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncDatasetItemsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-
 langfuse/api/dataset_items/types/delete_dataset_item_response.py:
 ⋮
 │class DeleteDatasetItemResponse(UniversalBaseModel):
@@ -3696,6 +3598,27 @@ langfuse/api/dataset_items/types/paginated_dataset_items.py:
 langfuse/api/dataset_run_items/types/paginated_dataset_run_items.py:
 ⋮
 │class PaginatedDatasetRunItems(UniversalBaseModel):
+⋮
+
+langfuse/api/datasets/raw_client.py:
+⋮
+│class RawDatasetsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        dataset_name: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncRawDatasetsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        dataset_name: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/datasets/types/delete_dataset_run_response.py:
@@ -3888,6 +3811,21 @@ langfuse/api/organizations/types/organization_projects_response.py:
 │class OrganizationProjectsResponse(UniversalBaseModel):
 ⋮
 
+langfuse/api/projects/client.py:
+⋮
+│class ProjectsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncProjectsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+
 langfuse/api/projects/types/api_key_deletion_response.py:
 ⋮
 │class ApiKeyDeletionResponse(UniversalBaseModel):
@@ -3908,9 +3846,9 @@ langfuse/api/projects/types/projects.py:
 │class Projects(UniversalBaseModel):
 ⋮
 
-langfuse/api/prompts/raw_client.py:
+langfuse/api/prompts/client.py:
 ⋮
-│class RawPromptsClient:
+│class PromptsClient:
 │    def __init__(self, *, client_wrapper: SyncClientWrapper):
 ⋮
 │    def get(
@@ -3922,7 +3860,7 @@ langfuse/api/prompts/raw_client.py:
 │        resolve: typing.Optional[bool] = None,
 │        request_options: typing.Optional[RequestOptions] = None,
 ⋮
-│class AsyncRawPromptsClient:
+│class AsyncPromptsClient:
 │    def __init__(self, *, client_wrapper: AsyncClientWrapper):
 ⋮
 │    async def get(
@@ -4251,19 +4189,6 @@ langfuse/langchain/CallbackHandler.py:
 langfuse/media.py:
 ⋮
 │class LangfuseMedia:
-│    """A class for wrapping media objects for upload to Langfuse.
-│
-│    This class handles the preparation and formatting of media content for Langfuse,
-│    supporting both base64 data URIs and raw content bytes.
-│
-│    Args:
-│        obj (Optional[object]): The source object to be wrapped. Can be accessed via the `obj` attr
-│        base64_data_uri (Optional[str]): A base64-encoded data URI containing the media content
-│            and content type (e.g., "data:image/jpeg;base64,/9j/4AAQ...").
-│        content_type (Optional[str]): The MIME type of the media content when providing raw bytes.
-⋮
-│    @staticmethod
-│    def parse_reference_string(reference_string: str) -> ParsedMediaReference:
 ⋮
 
 langfuse/model.py:
@@ -4334,9 +4259,16 @@ langfuse/types.py:
 │    def __call__(
 │        self, *, params: MaskOtelSpansParams
 ⋮
-│class ParsedMediaReference(TypedDict):
-⋮
 │class TraceContext(TypedDict):
+⋮
+
+tests/conftest.py:
+⋮
+│class InMemorySpanExporter(SpanExporter):
+│    """Simple in-memory exporter to collect spans for deterministic tests."""
+│
+⋮
+│    def get_finished_spans(self) -> list[ReadableSpan]:
 ⋮
 
 tests/support/retry.py:
@@ -4350,20 +4282,6 @@ tests/support/retry.py:
 │    interval_seconds: float = DEFAULT_RETRY_INTERVAL_SECONDS,
 ⋮
 
-tests/unit/test_e2e_support.py:
-⋮
-│def test_raw_api_wrapper_retries_not_found_payload(monkeypatch):
-│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
-│
-⋮
-│    class FakeResponse:
-│        def __init__(self, status_code, payload):
-│            self.status_code = status_code
-│            self._payload = payload
-⋮
-│        def json(self):
-⋮
-
 tests/unit/test_openai_prompt_extraction.py:
 ⋮
 │def test_openai_value_serialization_fallback_stays_json_safe():
@@ -4374,15 +4292,6 @@ tests/unit/test_openai_prompt_extraction.py:
 │        created_at: datetime
 ⋮
 │        def model_dump(self, *args, **kwargs):
-⋮
-
-tests/unit/test_otel.py:
-⋮
-│class InMemorySpanExporter(SpanExporter):
-│    """Simple in-memory exporter to collect spans for testing."""
-│
-⋮
-│    def get_finished_spans(self) -> List[ReadableSpan]:
 ⋮
 
 tests/unit/test_version.py:
