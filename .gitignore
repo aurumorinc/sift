@@ -227,6 +227,9 @@ plans/
 # Windmill
 *.resource.yaml
 
+# Aider
+.aider.*
+
 # Rune
 .rune/*
 !.rune/config
