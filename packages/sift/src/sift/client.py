@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
 
-from sift.config import settings
+from sift.config import Settings, settings
 from worldline import structlog
 
 logger = structlog.get_logger(__name__)
@@ -13,15 +13,13 @@ if TYPE_CHECKING:
 class SiftClient:
     """Lightweight client facade for Sift API."""
 
-    def __init__(self, **settings_override: Any) -> None:
-        """Initialize the client, optionally overriding settings."""
-        for key, value in settings_override.items():
-            if hasattr(settings, key):
-                setattr(settings, key, value)
-            else:
-                # If extra is allowed, we can still set it on the pydantic model but dynamically it's tricky.
-                # Actually, pydantic settings v2 allows setting attributes if extra is allowed, but it's safer to just setattr.
-                setattr(settings, key, value)
+    def __init__(self, **kwargs: Any) -> None:
+        """Initialize the KodaClient."""
+        if kwargs:
+            settings_dump = settings.model_dump()
+            settings_dump.update(kwargs)
+            settings_valid = Settings.model_validate(settings_dump)
+            settings.__dict__.update(settings_valid.__dict__)
 
     def get_agent(self, agent_name: str, version: Optional[int] = None) -> "Agent":
         from sift.modules.agents.repository.langfuse import get_agent
