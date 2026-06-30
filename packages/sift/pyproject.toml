@@ -1,6 +1,6 @@
 [project]
 name = "sift"
-version = "0.2.1"
+version = "0.3.0"
 
 description = "Sift is an API-driven platform for defining, managing, and executing DSPy-based AI agents."
 authors = [

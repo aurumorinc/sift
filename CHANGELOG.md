@@ -1,14 +1,23 @@
-# Changelog v0.2.1
+# Changelog v0.3.0
 
-## Infrastructure
+## Features
 
-*   **Workspace Cleanup**
-    Removed unused files and legacy tests to reduce repository bloat and standardized environment variable configurations. (Commits: [c215ad6](https://github.com/aurumorinc/sift/commit/c215ad63), [07ec859](https://github.com/aurumorinc/sift/commit/07ec859c), [6b2e1da](https://github.com/aurumorinc/sift/commit/6b2e1da6))
+* **Dynamic DSPy Metrics**
+  Implemented support for dynamic metrics, enabling real-time scoring and feedback-based optimization workflows.
+  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
 
-*   **Git Ignore Configuration**
-    Updated `.gitignore` to include `.aider.*` patterns to prevent temporary AI-generated files from being committed. (Commit: [fafc61f](https://github.com/aurumorinc/sift/commit/fafc61fd))
+* **Configurable DSPy Optimizers**
+  Added support for configurable DSPy optimizers, including full parameter schema validation to ensure type safety during configuration.
+  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
 
-## Documentation
+## Improvements
 
-*   **Repository Map Update**
-    Added a comprehensive repository map to `AGENTS.md` to improve developer onboarding and codebase navigation. (Commits: [c215ad6](https://github.com/aurumorinc/sift/commit/c215ad63), [07ec859](https://github.com/aurumorinc/sift/commit/07ec859c), [6b2e1da](https://github.com/aurumorinc/sift/commit/6b2e1da6))
+* **SiftClient Initialization Logic**
+  Refactored the `SiftClient` initialization process to improve settings handling and configuration robustness.
+  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
+
+## Other
+
+* **Testing Infrastructure**
+  Expanded the test suite to include comprehensive unit tests for new dynamic metrics and parameter schema validation logic.
+  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
