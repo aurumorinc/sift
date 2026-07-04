@@ -1,3 +1,4 @@
+import uuid
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -34,7 +35,7 @@ class DSPyParams(BaseModel):
 
 
 class Agent(BaseModel):
-    agent_name: str
+    agent_name: str = Field(default_factory=lambda: uuid.uuid4().hex)
     agent_card_params: Dict[str, Any]
     litellm_params: Dict[str, Any]
     object_permission: Optional[Dict[str, Any]] = None
