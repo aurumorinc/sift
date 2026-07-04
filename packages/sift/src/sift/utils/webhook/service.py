@@ -1,8 +1,9 @@
-from worldline import structlog
-from typing import Any, Callable, Dict, Optional
 import functools
+import inspect
+from typing import Any, Callable, Dict, Optional
 
 import httpx
+from worldline import structlog
 
 from sift.utils.webhook.schema import Webhook, WebhookEvent
 
@@ -41,21 +42,30 @@ def webhook_dispatch(func: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator to handle webhook lifecycle events (STARTED, COMPLETED, FAILED)."""
 
     @functools.wraps(func)
-    def wrapper(request: Any, *args: Any, **kwargs: Any) -> Any:
-        webhook = getattr(request, "webhook", None)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        sig = inspect.signature(func)
+        bound_args = sig.bind(*args, **kwargs)
+        bound_args.apply_defaults()
+        
+        webhook_data = bound_args.arguments.get("webhook")
+        webhook = None
+        if isinstance(webhook_data, dict):
+            webhook = Webhook(**webhook_data)
+        elif isinstance(webhook_data, Webhook):
+            webhook = webhook_data
 
         if webhook:
             dispatch_webhook(
                 webhook=webhook,
                 event=WebhookEvent.STARTED,
-                payload=request.model_dump(),
+                payload=bound_args.arguments,
             )
 
         try:
-            response = func(request, *args, **kwargs)
+            response = func(*args, **kwargs)
         except Exception as e:
             if webhook:
-                payload = request.model_dump()
+                payload = dict(bound_args.arguments)
                 payload["error"] = str(e)
                 dispatch_webhook(
                     webhook=webhook, event=WebhookEvent.FAILED, payload=payload
