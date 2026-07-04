@@ -21,6 +21,15 @@ def get_agent(agent_name: str, version: Optional[int] = None) -> Agent:
     return Agent(**payload)
 
 
+def get_agent_safe(agent_name: str, version: Optional[int] = None) -> Optional[Agent]:
+    """Fetch an agent configuration from Langfuse, returning None if not found."""
+    try:
+        return get_agent(agent_name, version)
+    except Exception as e:
+        logger.info("agent_not_found_in_langfuse", agent_name=agent_name, error=str(e))
+        return None
+
+
 def save_agent(agent: Agent) -> None:
     """Save an agent configuration to Langfuse Prompt Management."""
     logger.info("saving_agent", agent_name=agent.agent_name)
