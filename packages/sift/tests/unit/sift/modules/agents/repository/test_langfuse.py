@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 
-from sift.modules.agents.repository.langfuse import get_agent, save_agent
+from sift.modules.agents.repository.langfuse import get_agent, get_agent_safe, save_agent
 from sift.modules.agents.schema import (
     Agent,
     DSPyParams,
@@ -115,3 +115,25 @@ def test_get_agent_defaults_agent_name(mock_langfuse_client):
     agent = get_agent("missing-name-agent")
 
     assert agent.agent_name == "missing-name-agent"
+
+
+def test_get_agent_safe_returns_agent(mock_langfuse_client):
+    mock_prompt = MagicMock()
+    mock_prompt.config = {
+        "agent_name": "existing-agent",
+        "agent_card_params": {},
+        "litellm_params": {},
+        "dspy_params": {"state": {}},
+    }
+    mock_langfuse_client.get_prompt.return_value = mock_prompt
+
+    agent = get_agent_safe("existing-agent")
+    assert isinstance(agent, Agent)
+    assert agent.agent_name == "existing-agent"
+
+
+def test_get_agent_safe_returns_none_on_exception(mock_langfuse_client):
+    mock_langfuse_client.get_prompt.side_effect = Exception("Not found")
+
+    agent = get_agent_safe("non-existent-agent")
+    assert agent is None
