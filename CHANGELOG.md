@@ -1,23 +1,11 @@
-# Changelog v0.3.0
+# Changelog v0.4.0
 
 ## Features
 
-* **Dynamic DSPy Metrics**
-  Implemented support for dynamic metrics, enabling real-time scoring and feedback-based optimization workflows.
-  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
-
-* **Configurable DSPy Optimizers**
-  Added support for configurable DSPy optimizers, including full parameter schema validation to ensure type safety during configuration.
-  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
+* **Agent Name Auto-generation**
+  The `Agent` model now automatically assigns a default UUID to the `agent_name` field upon initialization, ensuring unique identifiers without requiring manual input. (Commit: [7c3835a](https://github.com/aurumorinc/sift/commit/7c3835a3))
 
 ## Improvements
 
-* **SiftClient Initialization Logic**
-  Refactored the `SiftClient` initialization process to improve settings handling and configuration robustness.
-  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
-
-## Other
-
-* **Testing Infrastructure**
-  Expanded the test suite to include comprehensive unit tests for new dynamic metrics and parameter schema validation logic.
-  Commits: [f3ef5dc](https://github.com/aurumorinc/sift/commit/f3ef5dc0), [3e5bd6d](https://github.com/aurumorinc/sift/commit/3e5bd6d6)
+* **Webhook Decorator Robustness**
+  Refactored the webhook decorator to utilize `inspect.signature` for more reliable argument binding and consistent payload extraction. (Commits: [01a18fa](https://github.com/aurumorinc/sift/commit/01a18fa3), [2da438e](https://github.com/aurumorinc/sift/commit/2da438ef), [e1e20c4](https://github.com/aurumorinc/sift/commit/e1e20c45))
