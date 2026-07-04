@@ -3,9 +3,9 @@ from sift.config import settings
 
 
 def test_sift_client_initialization_overrides_settings() -> None:
-    _ = SiftClient(langfuse_public_key="test_public_key", custom_api_key="test_custom")
+    _ = SiftClient(langfuse_public_key="test_public_key", langfuse_secret_key="test_secret")
     assert settings.langfuse_public_key == "test_public_key"
-    assert getattr(settings, "custom_api_key") == "test_custom"
+    assert settings.langfuse_secret_key == "test_secret"
 
 
 def test_sift_client_routing_properties(mocker) -> None:

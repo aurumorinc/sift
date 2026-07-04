@@ -1,4 +1,4 @@
-from sift.modules.agents.schema import DSPyTrainingExample
+from sift.modules.agents.schema import DSPyTrainingExample, Agent, DSPyParams
 
 
 def test_dspy_training_example_valid_schema():
@@ -16,3 +16,14 @@ def test_dspy_training_example_missing_extras():
     assert example.feedback is None
     assert example.trace_id is None
     assert example.model_extra is None or len(example.model_extra) == 0
+
+
+def test_agent_name_auto_generation():
+    agent = Agent(
+        agent_card_params={},
+        litellm_params={},
+        dspy_params=DSPyParams(state={})
+    )
+    assert agent.agent_name is not None
+    assert isinstance(agent.agent_name, str)
+    assert len(agent.agent_name) == 32
