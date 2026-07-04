@@ -1,6 +1,7 @@
 import pytest
 import httpx
 from unittest.mock import patch, MagicMock
+from typing import Optional
 
 from sift.utils.webhook.schema import Webhook, WebhookEvent
 from sift.utils.webhook.service import dispatch_webhook, webhook_dispatch
@@ -66,15 +67,6 @@ def test_dispatch_webhook_http_error(webhook, caplog):
 # tests for webhook_dispatch decorator
 
 
-class MockRequest:
-    def __init__(self, webhook=None, data="req_data"):
-        self.webhook = webhook
-        self.data = data
-
-    def model_dump(self):
-        return {"data": self.data}
-
-
 class MockResponse:
     def __init__(self, success=True, data="resp_data"):
         self.success = success
@@ -85,78 +77,80 @@ class MockResponse:
 
 
 @webhook_dispatch
-def dummy_success_func(request):
+def dummy_success_func(data: str, webhook: Optional[dict] = None):
     return MockResponse(success=True)
 
 
 @webhook_dispatch
-def dummy_failure_func(request):
+def dummy_failure_func(data: str, webhook: Optional[dict] = None):
     return MockResponse(success=False)
 
 
 @webhook_dispatch
-def dummy_exception_func(request):
+def dummy_exception_func(data: str, webhook: Optional[dict] = None):
     raise ValueError("dummy error")
 
 
 def test_webhook_dispatch_success(webhook):
-    req = MockRequest(webhook=webhook)
+    webhook_dict = webhook.model_dump()
     with patch("sift.utils.webhook.service.dispatch_webhook") as mock_dispatch:
-        response = dummy_success_func(req)
+        response = dummy_success_func(data="req_data", webhook=webhook_dict)
 
         assert response.success is True
         assert mock_dispatch.call_count == 2
-        mock_dispatch.assert_any_call(
-            webhook=webhook, event=WebhookEvent.STARTED, payload={"data": "req_data"}
-        )
-        mock_dispatch.assert_any_call(
-            webhook=webhook,
-            event=WebhookEvent.COMPLETED,
-            payload={"data": "resp_data", "success": True},
-        )
+        
+        started_call = mock_dispatch.call_args_list[0]
+        assert started_call.kwargs["webhook"].url == webhook.url
+        assert started_call.kwargs["event"] == WebhookEvent.STARTED
+        assert started_call.kwargs["payload"] == {"data": "req_data", "webhook": webhook_dict}
+
+        completed_call = mock_dispatch.call_args_list[1]
+        assert completed_call.kwargs["webhook"].url == webhook.url
+        assert completed_call.kwargs["event"] == WebhookEvent.COMPLETED
+        assert completed_call.kwargs["payload"] == {"data": "resp_data", "success": True}
 
 
 def test_webhook_dispatch_handled_failure(webhook):
-    # If the webhook is not configured to receive FAILED events, dispatch_webhook will still be called but will return early internally.
-    # However, for this test, we should add FAILED to the webhook so we are testing the decorator's behavior, not dispatch_webhook's filtering.
-    # The decorator blindly calls dispatch_webhook.
-    req = MockRequest(webhook=webhook)
+    webhook_dict = webhook.model_dump()
     with patch("sift.utils.webhook.service.dispatch_webhook") as mock_dispatch:
-        response = dummy_failure_func(req)
+        response = dummy_failure_func(data="req_data", webhook=webhook_dict)
 
         assert response.success is False
         assert mock_dispatch.call_count == 2
-        mock_dispatch.assert_any_call(
-            webhook=webhook, event=WebhookEvent.STARTED, payload={"data": "req_data"}
-        )
-        mock_dispatch.assert_any_call(
-            webhook=webhook,
-            event=WebhookEvent.FAILED,
-            payload={"data": "resp_data", "success": False},
-        )
+        
+        started_call = mock_dispatch.call_args_list[0]
+        assert started_call.kwargs["webhook"].url == webhook.url
+        assert started_call.kwargs["event"] == WebhookEvent.STARTED
+        assert started_call.kwargs["payload"] == {"data": "req_data", "webhook": webhook_dict}
+
+        failed_call = mock_dispatch.call_args_list[1]
+        assert failed_call.kwargs["webhook"].url == webhook.url
+        assert failed_call.kwargs["event"] == WebhookEvent.FAILED
+        assert failed_call.kwargs["payload"] == {"data": "resp_data", "success": False}
 
 
 def test_webhook_dispatch_unhandled_exception(webhook):
-    req = MockRequest(webhook=webhook)
+    webhook_dict = webhook.model_dump()
     with patch("sift.utils.webhook.service.dispatch_webhook") as mock_dispatch:
         with pytest.raises(ValueError, match="dummy error"):
-            dummy_exception_func(req)
+            dummy_exception_func(data="req_data", webhook=webhook_dict)
 
         assert mock_dispatch.call_count == 2
-        mock_dispatch.assert_any_call(
-            webhook=webhook, event=WebhookEvent.STARTED, payload={"data": "req_data"}
-        )
-        mock_dispatch.assert_any_call(
-            webhook=webhook,
-            event=WebhookEvent.FAILED,
-            payload={"data": "req_data", "error": "dummy error"},
-        )
+        
+        started_call = mock_dispatch.call_args_list[0]
+        assert started_call.kwargs["webhook"].url == webhook.url
+        assert started_call.kwargs["event"] == WebhookEvent.STARTED
+        assert started_call.kwargs["payload"] == {"data": "req_data", "webhook": webhook_dict}
+
+        failed_call = mock_dispatch.call_args_list[1]
+        assert failed_call.kwargs["webhook"].url == webhook.url
+        assert failed_call.kwargs["event"] == WebhookEvent.FAILED
+        assert failed_call.kwargs["payload"] == {"data": "req_data", "webhook": webhook_dict, "error": "dummy error"}
 
 
 def test_webhook_dispatch_no_webhook():
-    req = MockRequest(webhook=None)
     with patch("sift.utils.webhook.service.dispatch_webhook") as mock_dispatch:
-        response = dummy_success_func(req)
+        response = dummy_success_func(data="req_data", webhook=None)
 
         assert response.success is True
         mock_dispatch.assert_not_called()
