@@ -85,6 +85,37 @@ def compile_and_save_agent(payload: Dict[str, Any]) -> None:
     # 1. Instantiate Agent from updated schema
     agent = Agent(**payload)
 
+    # 1.5 Infer fields for new agents missing signature configuration
+    for key, pred_state in agent.dspy_params.state.items():
+        if not pred_state.signature.fields and pred_state.train:
+            first_example = pred_state.train[0]
+            # Convert DSPyTrainingExample to dict, omitting unset optional fields
+            example_dict = first_example.model_dump(exclude_unset=True)
+            inferred_fields = []
+            for k in example_dict.keys():
+                if k in ["trace_id", "score", "feedback"]:
+                    continue
+                # Categorize inputs/outputs based on common naming
+                if (
+                    "response" in k.lower()
+                    or "output" in k.lower()
+                    or "answer" in k.lower()
+                ):
+                    field_type = "output"
+                else:
+                    field_type = "input"
+                inferred_fields.append(
+                    {
+                        "name": k,
+                        "json_schema_extra": {
+                            "__dspy_field_type": field_type,
+                            "prefix": f"{k.capitalize()}:",
+                            "desc": f"${{{k}}}",
+                        },
+                    }
+                )
+            pred_state.signature.fields = inferred_fields
+
     # 2. Extract litellm_params and initialize LM
     litellm_params = agent.litellm_params.copy()
     lm = dspy.LM(**litellm_params)

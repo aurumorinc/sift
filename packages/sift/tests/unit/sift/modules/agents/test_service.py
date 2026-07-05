@@ -210,3 +210,45 @@ def test_compile_and_save_agent_invalid_optimizer(mock_save_agent):
         compile_and_save_agent(payload)
 
     mock_save_agent.assert_not_called()
+
+
+@patch("sift.modules.agents.repository.langfuse.save_agent")
+def test_compile_and_save_agent_infers_fields(mock_save_agent):
+    payload = {
+        "agent_name": "test-agent",
+        "agent_card_params": {},
+        "litellm_params": {"model": "openai/gpt-4o-mini"},
+        "dspy_params": {
+            "state": {
+                "main_predictor": {
+                    "signature": {
+                        "instructions": "",
+                        "fields": [],
+                    },
+                    "train": [{"question": "Q", "answer": "A", "metadata": "ignored"}],
+                    "traces": [],
+                    "demos": [],
+                }
+            }
+        },
+    }
+
+    compile_and_save_agent(payload)
+
+    mock_save_agent.assert_called_once()
+    saved_agent = mock_save_agent.call_args[0][0]
+    pred_state = saved_agent.dspy_params.state["main_predictor"]
+
+    fields = pred_state.signature.fields
+    assert len(fields) == 3
+    names = [f["name"] for f in fields]
+    assert "question" in names
+    assert "answer" in names
+    assert "metadata" in names
+
+    for f in fields:
+        extra = f["json_schema_extra"]
+        if f["name"] == "answer":
+            assert extra["__dspy_field_type"] == "output"
+        else:
+            assert extra["__dspy_field_type"] == "input"

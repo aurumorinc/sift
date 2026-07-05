@@ -36,7 +36,8 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = [
-  "src"
+  "src",
+  "../../apps/sift-api"
 ]
 
 [tool.pyrefly]

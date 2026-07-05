@@ -4,37 +4,28 @@
 # ]
 # ///
 
-from sift import SiftClient, AgentRequest, AgentResponse, webhook_dispatch
-from worldline import structlog
+from typing import Dict, List, Optional
 
-logger = structlog.get_logger(__name__)
-
-client = SiftClient()
+from sift.modules.agents.schema import AgentResponse
+from sift.use_cases.agents.service import main as agents_main
 
 
-@webhook_dispatch
-def main(request: AgentRequest) -> AgentResponse:
+def main(
+    agent_name: Optional[str] = None,
+    agent_card_params: Optional[Dict] = None,
+    litellm_params: Optional[Dict] = None,
+    dspy_params: Optional[Dict] = None,
+    object_permission: Optional[Dict] = None,
+    labels: Optional[List] = None,
+    webhook: Optional[Dict] = None,
+) -> AgentResponse:
     """Create/compile agents and trigger webhooks."""
-    webhook_url = str(request.webhook.url) if request.webhook else None
-    logger.info("processing_agent_request", webhook_url=webhook_url)
-
-    try:
-        client.compile_and_save_agent(request.model_dump(exclude={"webhook"}))
-        response = AgentResponse(
-            **request.model_dump(exclude={"webhook"}),
-            webhook=request.webhook,
-            success=True,
-            error=None,
-        )
-        logger.info("agent_processing_completed")
-        return response
-    except Exception as e:
-        error_msg = str(e)
-        logger.exception("agent_processing_failed")
-        response = AgentResponse(
-            **request.model_dump(exclude={"webhook"}),
-            webhook=request.webhook,
-            success=False,
-            error=error_msg,
-        )
-        return response
+    return agents_main(
+        agent_name=agent_name,
+        agent_card_params=agent_card_params,
+        litellm_params=litellm_params,
+        dspy_params=dspy_params,
+        object_permission=object_permission,
+        labels=labels,
+        webhook=webhook,
+    )

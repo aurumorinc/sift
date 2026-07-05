@@ -1,0 +1,272 @@
+openapi: 3.0.3
+info:
+  title: Sift API
+  description: API for defining, managing, and executing DSPy-based AI agents via Windmill.
+  version: 0.3.0
+servers:
+  - url: https://windmill.aurumor.com/api/w/aurumor
+    description: Production Windmill Workspace
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    AgentRequest:
+      type: object
+      required:
+        - agent_card_params
+        - litellm_params
+        - dspy_params
+      properties:
+        agent_name:
+          type: string
+          description: Unique identifier for the agent (saved to Langfuse).
+        agent_card_params:
+          type: object
+          additionalProperties: true
+          description: Extraneous metadata for the agent.
+        litellm_params:
+          type: object
+          additionalProperties: true
+          description: Configuration for LiteLLM (model, temperature, etc.).
+        dspy_params:
+          $ref: '#/components/schemas/DSPyParams'
+        object_permission:
+          type: object
+          additionalProperties: true
+          description: Optional permissions for the object.
+        labels:
+          type: array
+          items:
+            type: string
+          description: Langfuse labels.
+        webhook:
+          $ref: '#/components/schemas/Webhook'
+    
+    AgentResponse:
+      type: object
+      required:
+        - success
+        - agent_card_params
+        - litellm_params
+        - dspy_params
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+          nullable: true
+        agent_name:
+          type: string
+        agent_card_params:
+          type: object
+          additionalProperties: true
+        litellm_params:
+          type: object
+          additionalProperties: true
+        dspy_params:
+          $ref: '#/components/schemas/DSPyParams'
+        object_permission:
+          type: object
+          additionalProperties: true
+        labels:
+          type: array
+          items:
+            type: string
+        webhook:
+          $ref: '#/components/schemas/Webhook'
+          
+    DSPyParams:
+      type: object
+      required:
+        - state
+      properties:
+        optimizer:
+          type: string
+        optimizer_params:
+          type: object
+          additionalProperties: true
+        state:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DSPyPredictorState'
+            
+    DSPyPredictorState:
+      type: object
+      required:
+        - signature
+      properties:
+        traces:
+          type: array
+          items: {}
+        train:
+          type: array
+          items:
+            $ref: '#/components/schemas/DSPyTrainingExample'
+        demos:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        signature:
+          $ref: '#/components/schemas/DSPySignatureState'
+        lm:
+          type: object
+          additionalProperties: true
+          
+    DSPySignatureState:
+      type: object
+      required:
+        - instructions
+        - fields
+      properties:
+        instructions:
+          type: string
+        fields:
+          type: object
+          additionalProperties: true
+          
+    DSPyTrainingExample:
+      type: object
+      properties:
+        trace_id:
+          type: string
+        score:
+          type: number
+          format: float
+        feedback:
+          type: string
+      additionalProperties: true
+      
+    ResponseRequest:
+      type: object
+      required:
+        - model
+        - input
+      properties:
+        model:
+          type: string
+        input:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: object
+                additionalProperties: true
+        background:
+          type: boolean
+          default: false
+        webhook:
+          $ref: '#/components/schemas/Webhook'
+          
+    ResponseResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+          nullable: true
+        response:
+          $ref: '#/components/schemas/ResponsesAPIResponse'
+        webhook:
+          $ref: '#/components/schemas/Webhook'
+          
+    Webhook:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        events:
+          type: array
+          items:
+            type: string
+            enum: [started, completed, failed]
+          default: [started, completed, failed]
+          
+    ResponsesAPIResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+        created_at:
+          type: integer
+        model:
+          type: string
+        status:
+          type: string
+        output:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        usage:
+          type: object
+          properties:
+            input_tokens:
+              type: integer
+            output_tokens:
+              type: integer
+            total_tokens:
+              type: integer
+      additionalProperties: true
+
+paths:
+  /jobs/run/wait/result/p/f/sift/agents:
+    post:
+      summary: Create/Compile Agent
+      description: Compiles and saves a DSPy agent to Langfuse.
+      tags:
+        - Agents
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRequest'
+      responses:
+        '200':
+          description: Agent compiled and saved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+                
+  /jobs/run/wait/result/p/f/sift/responses:
+    post:
+      summary: Predict Response
+      description: Executes an existing agent against user input.
+      tags:
+        - Responses
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseRequest'
+      responses:
+        '200':
+          description: Response prediction completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResponse'
