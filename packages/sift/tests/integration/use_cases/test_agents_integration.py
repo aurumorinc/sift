@@ -100,3 +100,126 @@ def test_full_optimization_flow_existing_agent(mock_get_langfuse_client, mock_bo
     # Verify overwritten train data is present
     assert len(predict_state["train"]) == 2
     assert predict_state["train"][1]["question"] == "Q2"
+
+
+@patch("dspy.LM")
+@patch("dspy.teleprompt.BootstrapFewShot")
+@patch("sift.modules.agents.repository.langfuse.get_langfuse_client")
+def test_full_compilation_loop_with_llm_judge(mock_get_langfuse_client, mock_bootstrap, mock_lm):
+    mock_client = MagicMock()
+    mock_get_langfuse_client.return_value = mock_client
+
+    mock_prompt = MagicMock()
+    mock_prompt.config = {
+        "agent_name": "judge-agent",
+        "agent_card_params": {},
+        "litellm_params": {"model": "openai/gpt-4"},
+        "dspy_params": {
+            "optimizer": None,  # Rely on implicit sizing
+            "state": {
+                "main_predictor": {
+                    "signature": {"instructions": "", "fields": []},
+                    "train": [],
+                    "traces": [],
+                    "demos": []
+                }
+            }
+        },
+    }
+    mock_client.get_prompt.return_value = mock_prompt
+
+    # Mock the language model responding for the judge
+    mock_lm_instance = MagicMock()
+    mock_lm_instance.return_value = ["1.0", "Looks perfect"]
+    mock_lm.return_value = mock_lm_instance
+
+    mock_optimizer = MagicMock()
+    mock_compiled_module = MagicMock()
+    mock_compiled_module.dump_state.return_value = {
+        "main_predictor": {
+            "signature": {
+                "instructions": "New inst.",
+                "fields": []
+            },
+            "train": [{"question": "Q1", "answer": "A1"}, {"question": "Q2", "answer": "A2"}],
+            "traces": [],
+            "demos": [],
+            "lm": None,
+        }
+    }
+    mock_optimizer.compile.return_value = mock_compiled_module
+    mock_bootstrap.return_value = mock_optimizer
+
+    response = main(
+        agent_name="judge-agent",
+        dspy_params={
+            "state": {
+                "main_predictor": {
+                    "train": [{"question": "Q1", "answer": "A1"}, {"question": "Q2", "answer": "A2"}],
+                }
+            }
+        }
+    )
+
+    assert response.success is True
+    # Verify BootstrapFewShot was implicitly selected (trainset size = 2, so <= 5)
+    mock_bootstrap.assert_called_once()
+    kwargs = mock_bootstrap.call_args[1]
+    assert kwargs["max_bootstrapped_demos"] == 2
+    assert kwargs["max_labeled_demos"] == 2
+
+
+@patch("dspy.teleprompt.BootstrapFewShot")
+@patch("sift.modules.agents.repository.langfuse.get_langfuse_client")
+def test_implicit_vs_explicit_param_merging_integration(mock_get_langfuse_client, mock_bootstrap):
+    mock_client = MagicMock()
+    mock_get_langfuse_client.return_value = mock_client
+
+    mock_prompt = MagicMock()
+    mock_prompt.config = {
+        "agent_name": "merge-agent",
+        "agent_card_params": {},
+        "litellm_params": {"model": "openai/gpt-4"},
+        "dspy_params": {
+            "optimizer": None, # implicit 
+            "optimizer_params": {"max_bootstrapped_demos": 50}, # user override
+            "state": {
+                "predict": {
+                    "signature": {"instructions": "", "fields": []},
+                    "train": [{"q": "1", "a": "1"}],
+                    "traces": [],
+                    "demos": []
+                }
+            }
+        },
+    }
+    mock_client.get_prompt.return_value = mock_prompt
+
+    mock_optimizer = MagicMock()
+    mock_compiled_module = MagicMock()
+    mock_compiled_module.dump_state.return_value = {
+        "predict": {
+            "signature": {"instructions": "O", "fields": []},
+            "train": [{"q": "1", "a": "1"}],
+            "traces": [],
+            "demos": [],
+            "lm": None,
+        }
+    }
+    mock_optimizer.compile.return_value = mock_compiled_module
+    mock_bootstrap.return_value = mock_optimizer
+
+    response = main(
+        agent_name="merge-agent",
+        dspy_params={
+            "optimizer_params": {"max_bootstrapped_demos": 50},
+        }
+    )
+
+    assert response.success is True
+    # The default max_bootstrapped_demos would be min(1, 3) = 1
+    # But user override was 50, so it should be 50.
+    mock_bootstrap.assert_called_once()
+    kwargs = mock_bootstrap.call_args[1]
+    assert kwargs["max_bootstrapped_demos"] == 50
+    assert kwargs["max_labeled_demos"] == 1 # the default fallback for this field since no override was provided
