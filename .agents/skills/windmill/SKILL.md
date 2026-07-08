@@ -26,28 +26,6 @@ ai_evals/core/types.ts:
 │export type EvalMode = (typeof EVAL_MODES)[number];
 │
 ⋮
-│export interface CliValidationSpec {
-│  requiredSkills?: string[];
-│  forbiddenSkills?: string[];
-│  requiredSkillsBeforeFirstMutation?: string[];
-│  requiredAssistantMentions?: string[];
-│  forbiddenAssistantMentions?: string[];
-│  orderedAssistantMentions?: string[];
-│  requiredProposedCommands?: string[];
-│  forbiddenProposedCommands?: string[];
-│  orderedProposedCommands?: string[];
-⋮
-│export interface ToolValidationSpec {
-│  requiredToolsUsed?: string[];
-│  /**
-│   * Each inner array is an alternatives group: the check passes when at least
-│   * one tool in the group was used. Use when several tools satisfy the same
-│   * intent so a model that picks any valid path passes — e.g. inspecting an
-│   * app's files via either `read_app_file` or `search_app`.
-│   */
-│  requiredToolsAnyOf?: string[][];
-│  forbiddenToolsUsed?: string[];
-⋮
 │export interface EvalCase {
 │  id: string;
 │  prompt: string;
@@ -130,6 +108,16 @@ backend/parsers/windmill-parser-wasm/lib/windmill_parser_wasm.generated.d.ts:
 │  url?: URL;
 │  /** Callback to decompress the raw Wasm file bytes before instantiating. */
 │  decompress?: (bytes: Uint8Array) => Uint8Array;
+⋮
+
+backend/parsers/windmill-parser/src/asset_parser.rs:
+⋮
+│pub enum AssetKind {
+│    S3Object,
+│    Resource,
+│    Ducklake,
+│    DataTable,
+│    Volume,
 ⋮
 
 backend/src/monitor.rs:
@@ -314,17 +302,6 @@ backend/windmill-common/src/auth.rs:
 │        self.token.clone()
 │    }
 ⋮
-│pub struct JWTAuthClaims {
-│    pub email: String,
-│    pub username: String,
-│    pub is_admin: bool,
-│    pub is_operator: bool,
-│    pub groups: Vec<String>,
-│    pub folders: Vec<(String, bool, bool)>,
-│    pub label: Option<String>,
-│    pub workspace_id: Option<String>,
-│    pub workspace_ids: Option<Vec<String>>,
-⋮
 │pub async fn is_super_admin_email<'c>(db: impl sqlx::PgExecutor<'c>, email: &str) -> Result<bool> {
 │    if email == SUPERADMIN_SECRET_EMAIL || email == SUPERADMIN_NOTIFICATION_EMAIL {
 │        return Ok(true);
@@ -400,20 +377,6 @@ backend/windmill-common/src/email_oss.rs:
 │    _client_timeout: Option<tokio::time::Duration>,
 ⋮
 
-backend/windmill-common/src/error.rs:
-⋮
-│pub enum Error {
-│    #[error("Bad gateway: {0}")]
-│    BadGateway(String),
-│    #[error("Bad config: {0}")]
-│    BadConfig(String),
-│    #[error("Connecting to database: {0}")]
-│    ConnectingToDatabase(String),
-│    #[error("Not found: {0}")]
-│    NotFound(String),
-│    #[error("Not authorized: {0}")]
-⋮
-
 backend/windmill-common/src/instance_config.rs:
 ⋮
 │pub enum ScriptLang {
@@ -485,17 +448,22 @@ backend/windmill-common/src/utils.rs:
 │        self,
 ⋮
 
-backend/windmill-common/src/worker.rs:
-⋮
-│pub fn to_raw_value<T: Serialize>(result: &T) -> Box<RawValue> {
-│    serde_json::value::to_raw_value(result)
-│        .unwrap_or_else(|_| RawValue::from_string("{}".to_string()).unwrap())
-⋮
-
 backend/windmill-common/src/workspace_dependencies.rs:
 ⋮
 │fn map_err(e: String) -> error::Error {
 │    error::Error::FeatureUnavailable(e)
+⋮
+
+backend/windmill-types/src/assets.rs:
+⋮
+│pub enum AssetKind {
+│    S3Object,
+│    Resource,
+│    // Avoid unnexpected crashes when deserializing old assets
+│    Variable, // Deprecated
+│    Ducklake,
+│    DataTable,
+│    Volume,
 ⋮
 
 backend/windmill-types/src/flows.rs:
@@ -510,6 +478,25 @@ backend/windmill-types/src/flows.rs:
 │    pub stop_after_all_iters_if: Option<StopAfterIf>,
 │    #[serde(skip_serializing_if = "Option::is_none")]
 │    pub summary: Option<String>,
+⋮
+│impl TryFrom<UntaggedInputTransform> for InputTransform {
+│    type Error = anyhow::Error;
+│    fn try_from(value: UntaggedInputTransform) -> Result<Self, Self::Error> {
+│        let input_transform = match value.type_.as_str() {
+│            "static" => InputTransform::new_static_value(value.value.unwrap_or_else(default_null)),
+│            "javascript" => InputTransform::new_javascript_expr(&value.expr.unwrap_or_default()),
+│            "ai" => InputTransform::Ai,
+│            other => {
+│                return Err(anyhow::anyhow!(
+│                    "got value: {other} for field `type`, expected value: `static` or `javascript`"
+⋮
+
+backend/windmill-types/src/lib.rs:
+⋮
+│/// windmill-types cannot depend on windmill-common (it would be circular).
+│pub fn to_raw_value<T: serde::Serialize>(result: &T) -> Box<serde_json::value::RawValue> {
+│    serde_json::value::to_raw_value(result)
+│        .unwrap_or_else(|_| serde_json::value::RawValue::from_string("{}".to_string()).unwrap())
 ⋮
 
 backend/windmill-types/src/scripts.rs:
@@ -535,9 +522,6 @@ backend/windmill-types/src/scripts.rs:
 │            "deno" => ScriptLang::Deno,
 │            "python3" => ScriptLang::Python3,
 │            "go" => ScriptLang::Go,
-⋮
-│pub struct ScriptHash(pub i64);
-│
 ⋮
 
 backend/windmill-worker/src/worker.rs:
@@ -659,17 +643,6 @@ cli/src/core/settings.ts:
 │  skipReencrypt?: boolean;
 ⋮
 
-cli/src/core/specific_items.ts:
-⋮
-│export interface SpecificItemsConfig {
-│  variables?: string[];
-│  resources?: string[];
-│  triggers?: string[];
-│  schedules?: string[];
-│  folders?: string[];
-│  settings?: boolean;
-⋮
-
 cli/src/types.ts:
 ⋮
 │export type GlobalOptions = {
@@ -681,18 +654,6 @@ cli/src/types.ts:
 
 cli/src/utils/script_common.ts:
 │export type ScriptLanguage =
-⋮
-
-cli/src/utils/upgrade.ts:
-⋮
-│export type NpmProviderOptions = { main?: string; logger?: any } & (
-│  | {
-│      package: string;
-│    }
-│  | {
-│      scope: string;
-│      name?: string;
-│    }
 ⋮
 
 cli/test/test_backend.ts:
@@ -707,6 +668,24 @@ cli/test/test_backend.ts:
 │  stop(): Promise<void>;
 │  reset(): Promise<void>;
 │
+⋮
+
+cli/windmill-utils-internal/src/parse/parse-schema.ts:
+⋮
+│export type EnumType =
+│  | string[]
+│  | { label: string; value: string }[]
+⋮
+│export interface SchemaProperty {
+│  type: string | undefined;
+│  description?: string;
+│  pattern?: string;
+│  default?: any;
+│  enum?: EnumType;
+│  contentEncoding?: "base64" | "binary";
+│  format?: string;
+│  items?: {
+│    type?: "string" | "number" | "bytes" | "object" | "resource";
 ⋮
 
 debugger/test_dap_server.py:
@@ -776,33 +755,12 @@ ephemeral-backends/worktree-pool.ts:
 │  currentCommit?: string;
 ⋮
 
-examples/deploy/aws-ecs-terraform/rds.tf:
-⋮
-│resource "aws_db_instance" "windmill_cluster_rds" {
-⋮
-
 examples/deploy/aws-ecs-terraform/vpc.tf:
 │resource "aws_vpc" "windmill_cluster_vpc" {
-⋮
-│resource "aws_subnet" "windmill_cluster_subnet_public1" {
-⋮
-│resource "aws_subnet" "windmill_cluster_subnet_public2" {
 ⋮
 │resource "aws_subnet" "windmill_cluster_subnet_private1" {
 ⋮
 │resource "aws_subnet" "windmill_cluster_subnet_private2" {
-⋮
-│resource "aws_route_table" "windmill_cluster_rtb_public" {
-⋮
-
-frontend/src/lib/actions/triggerableByAI.svelte.ts:
-⋮
-│export interface TriggerableByAIOptions {
-│	id?: string
-│	description?: string
-│	callback?: (value?: string) => void
-│	disabled?: boolean
-│	showAnimation?: boolean
 ⋮
 
 frontend/src/lib/ata/apis.ts:
@@ -811,26 +769,10 @@ frontend/src/lib/ata/apis.ts:
 │	usage: number
 ⋮
 
-frontend/src/lib/cancelable-promise-utils.ts:
-⋮
-│export namespace CancelablePromiseUtils {
-│	export function then<T, U>(
-│		promise: CancelablePromise<T>,
-│		f: (value: T) => CancelablePromise<U>
-│	): CancelablePromise<U> {
-│		let promiseToBeCanceled: CancelablePromise<any> = promise
-│		let p = new CancelablePromise<U>((resolve, reject) => {
-│			promise
-│				.then((value1) => {
-│					let promise2 = f(value1)
-⋮
-│	export function map<T, U>(
-│		promise: CancelablePromise<T>,
-│		f: (value: T) => U
-⋮
-
 frontend/src/lib/common.ts:
 ⋮
+│export type EnumType = string[] | { value: string; label: string }[] | undefined
+│
 │export interface SchemaProperty {
 │	type: string | undefined
 │	description?: string
@@ -843,14 +785,44 @@ frontend/src/lib/common.ts:
 │		type?: 'string' | 'number' | 'bytes' | 'object' | 'resource'
 ⋮
 
+frontend/src/lib/components/apps/components/helpers/eval.ts:
+⋮
+│type WmFunctor = (
+│	context,
+│	state,
+│	createProxy,
+│	goto,
+│	setTab,
+│	recompute,
+│	globalRecompute,
+│	getAgGrid,
+│	setValue,
+⋮
+
 frontend/src/lib/components/apps/svelte-grid/utils/other.ts:
 │export function throttle(func, timeFrame) {
 ⋮
 
-frontend/src/lib/components/apps/types.ts:
+frontend/src/lib/components/assets/AssetGraph/boundedCascade.test.ts:
 ⋮
-│export interface CancelablePromise<T> extends Promise<T> {
-│	cancel: () => void
+│type T = [producer: string, tested: string, asset: string] // `// data_test` ordering edge
+│
+⋮
+
+frontend/src/lib/components/assets/AssetGraph/types.ts:
+⋮
+│export interface AssetGraphResponse {
+│	assets: AssetGraphAssetNode[]
+│	runnables: AssetGraphRunnableNode[]
+│	edges: AssetGraphEdge[]
+│	triggers: AssetGraphTrigger[]
+│	macro_edges?: AssetGraphMacroEdge[]
+│	test_edges?: AssetGraphTestEdge[]
+⋮
+
+frontend/src/lib/components/assets/lib.ts:
+⋮
+│export type AssetKind = _AssetKind
 ⋮
 
 frontend/src/lib/components/common/fileInput/model.ts:
@@ -858,8 +830,6 @@ frontend/src/lib/components/common/fileInput/model.ts:
 
 frontend/src/lib/components/copilot/chat/files/attachedFilesDB.ts:
 ⋮
-│export type AttachedItemKind = 'snapshot' | 'dir-handle'
-│
 │export interface PersistedAttachedItem {
 │	/** Stable record id. */
 │	id: string
@@ -870,12 +840,6 @@ frontend/src/lib/components/copilot/chat/files/attachedFilesDB.ts:
 │	name: string
 │	/** Top-level folder (for grouping); equals `name` for dir-handle records. */
 │	folder?: string
-⋮
-
-frontend/src/lib/components/copilot/chat/global/workspaceItems.ts:
-⋮
-│export type TriggerKind = (typeof TRIGGER_KINDS)[number]
-│
 ⋮
 
 frontend/src/lib/components/copilot/chat/monaco-adapter.ts:
@@ -965,16 +929,52 @@ frontend/src/lib/monaco_workers/graphql.worker.bundle.js:
 │`);return a.message&&!m&&(E=`${" ".repeat(g+1)}${a.message}
 │${E}`),E}e.codeFrameColumns=i}),L_={};ih(L_,{__debug:()=>d4,check:()=>h4,doc:()=>gh,format:()=>Th,f
 ⋮
-
-frontend/src/lib/navigation.ts:
+│`)),Z_(s,n.loggerPrintWidth)};W1=[],c_=[];K_=(e,t,{descriptor:n,logger:r,schemas:i})=>{let s=[`Igno
 ⋮
-│export function goto(path: string, options = {}) {
-│	if (svelteBase == '' || path.startsWith('?')) {
-│		return svelteGoto(path, options)
-│	} else {
-│		const fullPath = path.startsWith(svelteBase) ? path : `${svelteBase}${path}`
-│		return svelteGoto(fullPath, options)
-│	}
+│`,kt=F.split(/\r\n|[\n\r]/g),Vi=kt[x];if(Vi.length>120){let ir=Math.floor(rt/80),Gl=rt%80,$t=[];for
+│`)}function q4(p){let _=p[0];return _==null||"kind"in _||"length"in _?{nodes:_,source:p[1],position
+│
+⋮
+│spurious results.`)}}return!1},$h=class{constructor(p,_="GraphQL request",D={line:1,column:1}){type
+│
+│`+t.stack):new Error(t.message+`
+│
+│`+t.stack):t},0)}}addListener(t){return this.listeners.push(t),()=>{this._removeListener(t)}}emit(t
+⋮
+│`}return r.length>t&&(o+=`
+│
+│
+│... and ${r.length-t} more leaking disposables
+│
+│`),{leaks:r,details:o}}};function tc(e){return ho?.trackDisposable(e),e}function nc(e){ho?.markAsDi
+│`).slice(2).join(`
+│`))}},ac=class extends Error{constructor(t,n){super(t),this.name="ListenerLeakError",this.stack=n}}
+│`||e==="	"}var Ut;(function(e){e[e.None=0]="None",e[e.NonBasicASCII=1]="NonBasicASCII",e[e.Invisibl
+│`?(n++,r=0):r++;return new e(n,r)}static ofSubstr(t,n){return e.ofText(n.substring(t))}static sum(t
+⋮
+│`+this._getLineContent(t.endLineNumber).substring(0,t.endColumn-1),n}getLineLength(t){return this._
+│`,w);if(L===-1)throw new Oe("Text length mismatch");w=L+1,k++}return w+=I,[q.substring(0,w),q.subst
+│`):typeof t=="string"?this.toString(new Bn(t)):this.replacements.length===0?"":this.replacements.ma
+│`)}},xt=class e{static joinReplacements(t,n){if(t.length===0)throw new Oe;if(t.length===1)return t[
+⋮
+│`),i=Ki(n,r),s=xn.ofText(n.substring(0,n.length-i)).addToPosition(this.range.getStartPosition()),o=
+│`,`
+│`),r=t.getValueOfRange(this.range).replaceAll(`\r
+│`,`
+│`),i=Zi(n,r);n=n.substring(i),r=r.substring(i);let s=Ki(n,r);return n=n.substring(0,n.length-s),r=r
+│`);this.histogram[a]=(this.histogram[a]||0)+1}this.totalCount=i}computeSimilarity(t){let n=0,r=Math
+│`).length>=15&&eD(f,m=>m.length>=2)>=2}),o=iD(e,o),o}function eD(e,t){let n=0;for(let r of e)t(r)&&
+│`)}isStronglyEqual(t,n){return this.lines[t]===this.lines[n]}};function sm(e){let t=0;for(;t<e.leng
+│`);s.lastIndex=0;let c;for(;(c=s.exec(l))!==null;){let f=l.substring(0,c.index),d=(f.match(/\n/g)||
+│`),E=g.length,T=m+E-1,v=f.lastIndexOf(`
+│`)+1,A=c.index-v+1,S=g[g.length-1],C=E===1?A+c[0].length:S.length+1,q={startLineNumber:m,startColum
+│`,c=r.split(/\r\n|[\n\r]/g),f=c[i];if(f.length>120){let d=Math.floor(u/80),m=u%80,g=[];for(let E=0;
+│`)}function AD(e){let t=e[0];return t==null||"kind"in t||"length"in t?{nodes:t,source:e[1],position
+│
+⋮
+│  `))}function Um(e){var t;return(t=e?.some(n=>n.includes(`
+│`)))!==null&&t!==void 0?t:!1}function Wo(e,t){switch(e.kind){case b.NULL:return null;case b.INT:ret
+│
 ⋮
 
 frontend/src/lib/newDraftFlag.test.ts:
@@ -1025,21 +1025,9 @@ frontend/src/lib/utils.ts:
 ⋮
 
 frontend/static/tailwind.js:
-│(()=>{var Pw=Object.create;var ii=Object.defineProperty;var Dw=Object.getOwnPropertyDescriptor;var 
+⋮
 │In order to be iterable, non-array objects must have a [Symbol.iterator]() method.`)}return t=r[Sym
-│`),k=w.length-1,k>0?(x=a+k,S=b-w[k].length):(x=a,S=s),D=O.comment,a=x,h=x,p=b-S):c===O.slash?(b=o,D
-│ `+d+o("^")}return" "+u(h)+c}).join(`
-│`)}toString(){let e=this.showSourceCode();return e&&(e=`
-│
-│`+e+`
-│`),this.name+": "+this.message+e}};Hf.exports=Ct;Ct.default=Ct});var Pi=v((JE,ea)=>{l();"use strict
 ⋮
-│`,emptyBody:"",commentLeft:" ",commentRight:" ",semicolon:!1};function a1(r){return r[0].toUpperCas
-⋮
-│`)&&(t=t.replace(/[^\n]+$/,"")),!1}),t&&(t=t.replace(/\S/g,"")),t}rawBeforeOpen(e){let t;return e.w
-│`)){let a=this.raw(e,null,"indent");if(a.length)for(let o=0;o<s;o++)i+=a}return i}rawValue(e,t){let
-│`?(i=1,n+=1):i+=1;return{line:n,column:i}}positionBy(e){let t=this.source.start;if(e.index)t=this.p
-│`.charCodeAt(0),Nr=" ".charCodeAt(0),ji="\f".charCodeAt(0),Vi="	".charCodeAt(0),Ui="\r".charCodeAt(
 │`,"	"];return Br.split(r,e)},comma(r){return Br.split(r,[","],!0)}};Ec.exports=Br;Br.default=Br});v
 │`);i=new Array(s.length);let a=0;for(let o=0,u=s.length;o<u;o++)i[o]=a,a+=s[o].length+1;this[ma]=i}
 │https://evilmartians.com/chronicles/postcss-8-plugin-migration`),m.env.LANG&&m.env.LANG.startsWith(
@@ -1048,13 +1036,6 @@ frontend/static/tailwind.js:
 │`)).join(`
 │
 │`);x.push(`  Use \`${r.replace("[",`[${D}:`)}\` for \`${M.trim()}\``);break}N.warn([`The class \`${
-│`))if(n=n.trim(),!i.has(n))if(i.add(n),Xr.get(e).has(n))for(let s of Xr.get(e).get(n))t.add(s);else
-⋮
-│`),t}].filter(Boolean)}};So.exports.postcss=!0});var Co=v((T3,Ih)=>{l();Ih.exports=()=>["and_chr 92
-│`)),e._autoprefixerCascade}maxPrefixed(e,t){if(t._autoprefixerMax)return t._autoprefixerMax;let i=0
-│`),i=t[t.length-1];this.all.group(e).up(n=>{let s=n.raw("before").split(`
-│`),a=s[s.length-1];a.length<i.length&&(i=a)}),t[t.length-1]=i,e.raws.before=t.join(`
-│`)}insert(e,t,i){let n=this.set(this.clone(e),t);if(!(!n||e.parent.some(a=>a.prop===n.prop&&a.value
 ⋮
 
 frontend/static/web-components.min.js:
@@ -1089,15 +1070,21 @@ python-client/wmill/wmill/client.py:
 │    def fetch_one(self):
 ⋮
 
-python-client/wmill/wmill/s3_types.py:
-⋮
-│class S3Object(dict):
-⋮
-
 typescript-client/docs/assets/main.js:
 ⋮
 │"use strict";(()=>{var Ce=Object.create;var ie=Object.defineProperty;var Oe=Object.getOwnPropertyDe
 │`,e)},t.Pipeline.load=function(e){var n=new t.Pipeline;return e.forEach(function(r){var i=t.Pipelin
+⋮
+
+typescript-client/s3Types.ts:
+⋮
+│export type S3ObjectRecord = {
+│  /** File key/path in S3 bucket */
+│  s3: string;
+│  /** Storage backend identifier */
+│  storage?: string;
+│  /** Presigned URL query string for public access */
+│  presigned?: string;
 ⋮
 
 typescript-client/sqlUtils.d.ts:
@@ -1163,6 +1150,13 @@ typescript-client/tests/sqlUtils.test.ts:
 │  preamble(): string;
 │  language: "postgresql" | "duckdb";
 │  extraArgs: Record<string, any>;
+⋮
+
+windmill-yaml-validator/src/validation/yaml-validator.ts:
+⋮
+│export type ValidationTarget =
+│  | { type: "flow" }
+│  | { type: "schedule" }
 ⋮
 
 wm-ts-nav/src/main.rs:

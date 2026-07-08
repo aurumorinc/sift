@@ -153,9 +153,6 @@ src/worldline/service.py:
 │def remove_otel_context(
 │    logger: logging.Logger, method_name: str, event_dict: Dict[str, Any]
 ⋮
-│def rich_renderer(
-│    logger: logging.Logger, method_name: str, event_dict: Dict[str, Any]
-⋮
 │def get_console_format() -> Tuple[List[Any], List[logging.Handler]]:
 ⋮
 │def add_otel_context(
@@ -347,5 +344,7 @@ tests/unit/worldline/test_service.py:
 │def test_remove_otel_context():
 ⋮
 │def test_remove_otel_context_missing_keys():
+⋮
+│def test_get_console_format():
 ⋮
 ```

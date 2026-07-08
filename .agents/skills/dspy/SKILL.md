@@ -336,15 +336,7 @@ dspy/clients/openai_format.py:
 ⋮
 │def parts_to_openai_content(parts: list[Any]) -> str | list[dict[str, Any]]:
 ⋮
-│def provider_tool_call_to_part(tool_call: Any) -> LMToolCallPart:
-⋮
-│def citation_to_part(citation: Any) -> LMCitationPart:
-⋮
 │def usage_from_response(response: Any) -> LMUsage | None:
-⋮
-│def data_uri(media_type: str, data: str) -> str:
-⋮
-│def split_data_uri(value: str) -> tuple[str, str]:
 ⋮
 │def get_value(value: Any, key: str, default: Any = None) -> Any:
 ⋮
@@ -468,6 +460,8 @@ dspy/core/types.py:
 
 dspy/dsp/utils/dpr.py:
 ⋮
+│def DPR_tokenize(text):  # noqa: N802
+⋮
 │def DPR_normalize(text):  # noqa: N802
 ⋮
 
@@ -539,6 +533,11 @@ dspy/predict/parallel.py:
 
 dspy/predict/parameter.py:
 │class Parameter:
+⋮
+
+dspy/predict/predict.py:
+⋮
+│class Predict(Module, Parameter):
 ⋮
 
 dspy/primitives/base_module.py:
@@ -796,9 +795,6 @@ dspy/signatures/signature.py:
 │    @classmethod
 │    def append(cls, name, field, type_=None) -> type["Signature"]:
 ⋮
-│    @classmethod
-│    def delete(cls, name) -> type["Signature"]:
-⋮
 │def ensure_signature(signature: str | type[Signature], instructions=None) -> None | type[Signature]
 ⋮
 │def make_signature(
@@ -1050,6 +1046,11 @@ tests/predict/test_best_of_n.py:
 │class DummyModule(dspy.Module):
 ⋮
 
+tests/predict/test_knn.py:
+⋮
+│def mock_example(question: str, answer: str) -> dspy.Example:
+⋮
+
 tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_text_mock_lm_loop_records_inputs_once():
@@ -1066,6 +1067,11 @@ tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_native_parallel_tool_calls_are_requested_and_replayed():
 │    def lookup(query: str) -> str:
+⋮
+
+tests/predict/test_refine.py:
+⋮
+│class DummyModule(dspy.Module):
 ⋮
 
 tests/predict/test_rlm.py:

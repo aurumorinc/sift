@@ -46,22 +46,20 @@ packages/shared/scripts/seeder/scenarios/types.ts:
 │  baseUrl: string;
 │  log: (message: string) => void;
 ⋮
+│export class SeedError extends Error {
+│  public readonly fix?: string;
+│
+│  constructor(message: string, fix?: string) {
+│    super(message);
+│    this.name = "SeedError";
+│    this.fix = fix;
+│  }
+⋮
 
 packages/shared/scripts/seeder/utils/types.ts:
 ⋮
 │export type SeederMode = "bulk" | "synthetic";
 │
-⋮
-
-packages/shared/src/constants.ts:
-⋮
-│export enum ModelUsageUnit {
-│  Characters = "CHARACTERS",
-│  Tokens = "TOKENS",
-│  Seconds = "SECONDS",
-│  Milliseconds = "MILLISECONDS",
-│  Images = "IMAGES",
-│  Requests = "REQUESTS",
 ⋮
 
 packages/shared/src/domain/observation-field-groups.ts:
@@ -144,6 +142,12 @@ packages/shared/src/errors/NotFoundError.ts:
 │  }
 ⋮
 
+packages/shared/src/features/batchAction/types.ts:
+⋮
+│export type TraceDeleteBatchActionConfig = z.infer<
+│  typeof TraceDeleteBatchActionConfigSchema
+⋮
+
 packages/shared/src/features/entitlements/plans.ts:
 ⋮
 │export type Plan = keyof typeof planLabels;
@@ -210,9 +214,6 @@ packages/shared/src/features/monitors/service/types.ts:
 
 packages/shared/src/features/monitors/types.ts:
 ⋮
-│export type MonitorThresholdOperator = z.infer<
-│  typeof MonitorThresholdOperatorSchema
-⋮
 │export type MonitorWindow = z.infer<typeof MonitorWindowSchema>;
 │
 ⋮
@@ -221,12 +222,6 @@ packages/shared/src/features/prompts/parsePromptDependencyTags.ts:
 ⋮
 │export function parsePromptDependencyTags(
 │  content: string | object,
-⋮
-
-packages/shared/src/features/query/types.ts:
-⋮
-│export type ViewVersion = z.infer<typeof viewVersions>;
-│
 ⋮
 
 packages/shared/src/features/scores/interfaces/ui/types.ts:
@@ -331,6 +326,14 @@ packages/shared/src/server/evals/codeEvalDispatcherTypes.ts:
 │    options: {
 │      code: CodeEvalDispatcherErrorCode;
 │      retryable?: boolean;
+⋮
+
+packages/shared/src/server/ingestion/ingestionAttribution.ts:
+⋮
+│export type IngestionAttribution = {
+│  ingestionApiKey: string;
+│  ingestionSdkName: string;
+│  ingestionSdkVersion: string;
 ⋮
 
 packages/shared/src/server/instrumentation/index.ts:
@@ -446,12 +449,6 @@ packages/shared/src/server/repositories/comments.ts:
 │
 ⋮
 
-packages/shared/src/server/repositories/definitions.ts:
-⋮
-│export type TraceRecordInsertType = z.infer<typeof traceRecordInsertSchema>;
-│
-⋮
-
 packages/shared/src/server/services/DefaultViewService/types.ts:
 ⋮
 │export type DefaultViewScope = z.infer<typeof DefaultViewScope>;
@@ -462,14 +459,6 @@ packages/shared/src/server/services/PromptService/types.ts:
 ⋮
 │export type PromptReference = Pick<Prompt, "id" | "version" | "name">;
 │
-⋮
-
-packages/shared/src/server/services/email/transport.ts:
-⋮
-│function buildSesTransportOptions(connectionUrl: string): SESTransport.Options {
-│  const region = parseSesRegion(connectionUrl);
-│  const sesClient = new SESv2Client({ region });
-│  return { SES: { sesClient, SendEmailCommand } } as SESTransport.Options;
 ⋮
 
 packages/shared/src/server/utils/rendering.ts:
@@ -484,20 +473,6 @@ packages/shared/src/server/utils/rendering.ts:
 │   * Whether to skip JSON parsing of input/output fields and return them as raw strings.
 │   * This is useful when the client will handle JSON parsing to avoid double parsing.
 │   */
-⋮
-
-packages/shared/src/server/utils/transforms/transformStreamToJsonl.ts:
-⋮
-│export function transformStreamToJsonl(): Transform {
-│  return new Transform({
-│    objectMode: true,
-│
-│    transform(
-│      row: Record<string, any>,
-│      encoding: BufferEncoding,
-│      callback: TransformCallback,
-│    ): void {
-│      this.push(stringify(row) + "\n");
 ⋮
 
 packages/shared/src/tableDefinitions/types.ts:
@@ -562,14 +537,6 @@ packages/shared/src/utils/jsonSchemaValidation.ts:
 │      errors: FieldValidationError[];
 ⋮
 
-packages/shared/src/utils/zod.ts:
-⋮
-│export type JsonNested = Literal | { [key: string]: JsonNested } | JsonNested[];
-⋮
-│type CommaSeparatedEnumArrayOptions = {
-│  unknownValues?: "reject" | "filter";
-⋮
-
 web/src/__tests__/server/redis-test-utils.ts:
 ⋮
 │export type RedisTestClient = NonNullable<
@@ -588,20 +555,6 @@ web/src/components/ItemBadge.tsx:
 │  | "DATASET_RUN"
 │  | "DATASET_ITEM"
 │  | "ANNOTATION_QUEUE"
-⋮
-
-web/src/components/layouts/app-layout/utils/navigationFilters.types.ts:
-⋮
-│export type NavigationFilterContext = {
-│  /** Current project ID from router query params */
-│  routerProjectId: string | undefined;
-│  /** Current organization ID from router query params */
-│  routerOrganizationId: string | undefined;
-│  /** User session data including user info and environment */
-│  session: Session | null;
-│  /** Whether experimental features are enabled globally */
-│  enableExperimentalFeatures: boolean;
-│  /** Whether user is a cloud admin (bypasses most checks) */
 ⋮
 
 web/src/components/layouts/app-layout/utils/pathClassification.ts:
@@ -640,7 +593,7 @@ web/src/components/session/TraceEventsRow.tsx:
 │  traceCommentCounts: Map<string, number> | undefined;
 │  showCorrections: boolean;
 │  filterState: FilterState;
-│  hideTracePanel?: boolean;
+│  /** Selected view's display name, for the empty-state notice (null = custom). */
 ⋮
 │                    <NewDatasetItemFromTraceId
 │                      projectId={projectId}
@@ -690,6 +643,20 @@ web/src/components/table/data-table-controls.clienttest.tsx:
 │          isDisabled={false}
 ⋮
 
+web/src/components/table/peek/store/peekPanelStore.ts:
+⋮
+│export interface PeekPanelStoreState {
+│  /** Committed widget width (persisted), as a fraction of the viewport. */
+│  widthFraction: number;
+│  /** Live widget width during a drag; null when not dragging or expanded. */
+│  draftFraction: number | null;
+│  /** True while a drag is previewing the expanded (max) width. */
+│  draftExpanded: boolean;
+│  /** True while the resize handle is being dragged. */
+│  isResizing: boolean;
+│  actions: {
+⋮
+
 web/src/components/table/table-selection-store.ts:
 ⋮
 │type RowSelectionUpdater = Updater<RowSelectionState>;
@@ -701,15 +668,6 @@ web/src/components/table/types.ts:
 │
 ⋮
 
-web/src/components/trace/components/IOPreview/components/ToolCallDefinitionCard.tsx:
-⋮
-│export interface ToolCallDefinitionCardProps {
-│  tools: ToolDefinition[];
-│  toolCallCounts: Map<string, number>;
-│  toolNameToDefinitionNumber?: Map<string, number>;
-│  className?: string;
-⋮
-
 web/src/components/trace/components/IOPreview/hooks/useChatMLParser.ts:
 ⋮
 │export interface ChatMLParserResult {
@@ -718,15 +676,10 @@ web/src/components/trace/components/IOPreview/hooks/useChatMLParser.ts:
 │  additionalInput: Record<string, unknown> | undefined;
 │  allTools: ToolDefinition[];
 │  toolCallCounts: Map<string, number>;
+│  toolCallsByName: Map<string, ToolCallInvocation[]>;
 │  messageToToolCallNumbers: Map<number, number[]>;
 │  toolNameToDefinitionNumber: Map<string, number>;
 │  inputMessageCount: number;
-⋮
-
-web/src/components/trace/contexts/SearchContext.tsx:
-⋮
-│interface SearchProviderProps {
-│  children: ReactNode;
 ⋮
 
 web/src/components/trace/lib/types.ts:
@@ -830,10 +783,22 @@ web/src/components/ui/chart.tsx:
 │  );
 ⋮
 
+web/src/components/ui/dialog.tsx:
+⋮
+│type DialogOverlayMode = "subtle" | "invisible" | "blocking";
+│
+⋮
+
 web/src/components/ui/layer.tsx:
 ⋮
 │export type LayerName = (typeof LAYER_ORDER)[number];
 │
+⋮
+
+web/src/components/ui/media/mediaUtils.ts:
+⋮
+│export type MediaDescriptor = NonNullable<
+│  ReturnType<typeof classifyMediaValue>
 ⋮
 
 web/src/components/ui/side-panel.tsx:
@@ -850,10 +815,10 @@ web/src/components/ui/side-panel.tsx:
 │      </Button>
 ⋮
 
-web/src/ee/features/billing/utils/stripeSubscriptionMetadata.ts:
+web/src/ee/features/in-app-agent/context.ts:
 ⋮
-│export type StripeSubscriptionMetadata = z.infer<
-│  typeof StripeSubscriptionMetadataSchema
+│type InAppAgentContext = AgUiRunAgentInput["context"];
+│
 ⋮
 
 web/src/ee/features/in-app-agent/schema.ts:
@@ -913,17 +878,6 @@ web/src/features/cloud-status-notification/types.ts:
 ⋮
 │export type CloudStatus = z.infer<typeof CloudStatus>;
 
-web/src/features/comments/components/MentionAutocomplete.tsx:
-⋮
-│interface MentionAutocompleteProps {
-│  users: User[];
-│  isLoading: boolean;
-│  selectedIndex: number;
-│  onSelect: (userId: string, displayName: string) => void;
-│  onClose: () => void;
-│  onSelectedIndexChange: (index: number) => void;
-⋮
-
 web/src/features/dashboard/components/EditDashboardDialog.tsx:
 ⋮
 │interface EditDashboardDialogProps {
@@ -933,12 +887,6 @@ web/src/features/dashboard/components/EditDashboardDialog.tsx:
 │  dashboardId: string;
 │  initialName: string;
 │  initialDescription: string;
-⋮
-
-web/src/features/datasets/lib/calculateBaselineDiff.ts:
-⋮
-│export type BaselineDiff = NumericDiff | CategoricalDiff | null;
-│
 ⋮
 
 web/src/features/datasets/lib/csv/types.ts:
@@ -965,8 +913,6 @@ web/src/features/datasets/lib/csv/types.ts:
 ⋮
 
 web/src/features/datasets/store/datasetsTableStore.ts:
-⋮
-│type RowSelectionUpdater = Updater<RowSelectionState>;
 ⋮
 │export type DatasetsTableStore = StoreApi<DatasetsTableStoreState>;
 │
@@ -1009,6 +955,11 @@ web/src/features/events/server/eventsService.ts:
 │
 ⋮
 
+web/src/features/experiments/store/experimentsTableStore.ts:
+⋮
+│type RowSelectionUpdater = Updater<RowSelectionState>;
+⋮
+
 web/src/features/experiments/types/charts.ts:
 ⋮
 │export type ScoreLevel = "obs" | "experiment";
@@ -1046,22 +997,17 @@ web/src/features/filters/lib/filter-config.ts:
 
 web/src/features/mcp/features/observations/tools/getObservationFilterValues.ts:
 ⋮
+│type FilterValueColumn = z.infer<typeof FilterValueColumnSchema>;
+│
+⋮
 │type FilterOption = {
 │  value: string | boolean;
 │  count?: number;
 ⋮
 
-web/src/features/mcp/server/registry.ts:
+web/src/features/mcp/server/bootstrap.ts:
 ⋮
-│export interface McpFeatureModule {
-│  /** Feature identifier (e.g., 'prompts', 'datasets') */
-│  name: string;
-│
-│  /** Feature description */
-│  description: string;
-│
-│  /** Tools provided by this feature */
-│  tools: RegisteredTool[];
+│export type McpToolName = McpFeature["tools"][number]["definition"]["name"];
 │
 ⋮
 
@@ -1077,6 +1023,14 @@ web/src/features/mcp/types.ts:
 │  /** Organization ID from authenticated API key */
 │  orgId: string;
 │
+⋮
+│export type InAppAgentContext =
+│  | {
+│      permissions: "read";
+│    }
+│  | {
+│      permissions: "single-tool-override";
+│      allowedToolName: McpToolName;
 ⋮
 
 web/src/features/navigate-detail-pages/context.tsx:
@@ -1105,6 +1059,18 @@ web/src/features/prompts/components/PromptSelectionDialog.tsx:
 web/src/features/prompts/components/ProtectedLabelsSettings.tsx:
 ⋮
 │type AddLabelFormSchemaType = z.infer<typeof AddLabelFormSchema>;
+│
+⋮
+
+web/src/features/public-api/components/ApiKeyCreateDialogContent.tsx:
+⋮
+│type ApiKeyScope = "project" | "organization";
+│
+⋮
+
+web/src/features/public-api/components/ApiKeyDetailContent.tsx:
+⋮
+│type ApiKeyScope = "project" | "organization";
 │
 ⋮
 
@@ -1187,6 +1153,9 @@ web/src/features/scores/components/multi-select-key-values.tsx:
 
 web/src/features/search-bar/lib/ast.ts:
 ⋮
+│export type Span = { from: number; to: number };
+│
+⋮
 │export type CompareOp =
 │  | "="
 │  | "exact"
@@ -1219,11 +1188,17 @@ web/src/features/slack/components/SlackConnectionCard.tsx:
 │  showConnectButton?: boolean;
 ⋮
 
-web/src/features/tracing-tables/observations/observationsTableStore.ts:
+web/src/features/trace-graph-view/components/ElkGraphRenderer.tsx:
 ⋮
-│type RowSelectionUpdater = Updater<RowSelectionState>;
-│type BooleanUpdater = Updater<boolean>;
+│type Transform = { x: number; y: number; k: number };
 │
+⋮
+
+web/src/features/trace-graph-view/types.ts:
+⋮
+│export type GraphCanvasData = {
+│  nodes: GraphNodeData[];
+│  edges: { from: string; to: string }[];
 ⋮
 
 web/src/features/web-callouts/components/WebCalloutSettingsPage.tsx:
@@ -1315,6 +1290,18 @@ worker/src/__tests__/periodicRunner.test.ts:
 │  }
 │
 │  protected get defaultIntervalMs(): number {
+⋮
+
+worker/src/features/batch-trace-deletion-cleaner/index.ts:
+⋮
+│type TraceDeletionBackend = "postgres" | "clickhouse";
+⋮
+
+worker/src/features/blobstorage/byteCounters.ts:
+⋮
+│export type TimedByteCounterStats = {
+│  sourceWaitMs: number;
+│  backpressureMs: number;
 ⋮
 
 worker/src/features/blobstorage/gzipStream.ts:
@@ -1455,32 +1442,10 @@ app/[section]/layout.tsx:
 │  params: Promise<{ section: string }>;
 ⋮
 
-app/api/voice-agent/route.ts:
+app/changelog/[...slug]/page.tsx:
 ⋮
-│export async function POST(_request: NextRequest) {
-│  const livekitUrl = process.env.LIVEKIT_URL;
-│  const livekitApiKey = process.env.LIVEKIT_API_KEY;
-│  const livekitApiSecret = process.env.LIVEKIT_API_SECRET;
-│
-│  if (!livekitUrl || !livekitApiKey || !livekitApiSecret) {
-│    return NextResponse.json(
-│      { error: "Voice agent is not configured" },
-│      { status: 503 },
-│    );
-⋮
-
-app/blog/page.tsx:
-⋮
-│export default function BlogIndexPage() {
-│  const pages = getBlogIndexPages();
-│
-│  return (
-│    <BlogPageClient pages={pages}>
-│      <ContentColumns
-│        leftSidebar={<BlogSidebar />}
-│        rightSidebar={<BlogAside />}
-│        className="min-h-screen"
-│        footerClassName="md:max-w-none xl:max-w-none px-6 sm:px-6 md:px-6"
+│type PageProps = {
+│  params: Promise<{ slug: string[] }>;
 ⋮
 
 app/cloud/layout.tsx:
@@ -1532,10 +1497,12 @@ app/layout.tsx:
 │  children,
 ⋮
 
-app/library/[[...slug]]/page.tsx:
+components/AppRootProvider.tsx:
 ⋮
-│type PageProps = {
-│  params: Promise<{ slug?: string[] }>;
+│export function AppRootProvider({
+│  children,
+│  theme,
+│  ...props
 ⋮
 
 components/Authors.tsx:
@@ -1780,19 +1747,6 @@ components/academy/TraceViewDiagram.tsx:
 │export interface TraceViewRow {
 ⋮
 
-components/academy/japan/AgentPromptCallout.tsx:
-⋮
-│export interface AgentPromptCalloutProps {
-│  /** Ribbon label, e.g. "Run with your agent". */
-│  ribbon?: string;
-│  /** Title shown above the lede. */
-│  title?: string;
-│  /** Lede paragraph beneath the title. */
-│  lede?: React.ReactNode;
-│  /** The exact text written to the clipboard. */
-│  prompt: string;
-⋮
-
 components/academy/japan/ErrorAnalysisProcessDiagram.tsx:
 ⋮
 │function estimateInitialScale(): number {
@@ -1810,19 +1764,6 @@ components/academy/japan/LoopDiagram.tsx:
 │    return Math.max(0.25, (vw - 32) / INNER_W);
 │  }
 │  return 0.56;
-⋮
-
-components/academy/japan/ManualGuideCallout.tsx:
-⋮
-│export interface ManualGuideCalloutProps {
-│  /** Where the card links to (cookbook URL or similar). */
-│  href: string;
-│  /** Topic shown in the ribbon after the static "Guide:" prefix, e.g. "error analysis". */
-│  topic: string;
-│  /** Lede paragraph beneath the ribbon. */
-│  lede?: React.ReactNode;
-│  /** CTA button text, default "Open the guide". */
-│  cta?: string;
 ⋮
 
 components/ai-elements/code-block.tsx:
@@ -1880,6 +1821,19 @@ components/analytics/ConversionTracker.tsx:
 │      reportLaunchAppConversion();
 │    };
 │
+⋮
+
+components/analytics/ahrefs.tsx:
+⋮
+│export function AhrefsAnalytics() {
+│  return (
+│    <Script
+│      id="ahrefs-analytics"
+│      src="https://analytics.ahrefs.com/analytics.js"
+│      data-key={AHREFS_ANALYTICS_KEY}
+│      strategy="afterInteractive"
+│    />
+│  );
 ⋮
 
 components/analytics/common-room.tsx:
@@ -1986,6 +1940,31 @@ components/blog/BlogPageClient.tsx:
 │export function BlogPageClient({
 │  pages,
 │  children,
+⋮
+
+components/careers/PolaroidFrame.tsx:
+⋮
+│export type PolaroidFrameProps = {
+│  /** Image URL (local `/images/...` or remote). */
+│  src: string;
+│  /** Accessible description. Defaults to the caption (description, or location + year). */
+│  alt?: string;
+│  /** Handwritten-style caption (F37 Analog). Renders a muted placeholder when empty. */
+│  description?: string;
+│  /** Location shown as a small label next to the date, e.g. "Berlin". */
+│  location?: string;
+│  /** Year or date caption (Geist Mono). Renders a dashed blank line when empty. */
+⋮
+
+components/careers/careers-polaroids.ts:
+⋮
+│export type OrderedPolaroidGallery = {
+│  /** "Langfuse is born" — always first. */
+│  anchor: CareersPolaroid;
+│  /** Most recent photo by date — shown beside the anchor when distinct. */
+│  newest: CareersPolaroid | null;
+│  /** Remaining photos, newest-first. */
+│  rest: CareersPolaroid[];
 ⋮
 
 components/customers/CustomerCarousel.tsx:
@@ -2179,7 +2158,7 @@ components/home/layout/RightSidebarHiringAndCommunity.tsx:
 │  /**
 │   * When the block is not under a previous section with `pb-px bg-line-structure`
 │   * (e.g. blog right aside: spacer + footer), a full-width top rule is needed so
-│   * the hiring row does not look flush/buggy next to the main nav surface. Home
+│   * the community row does not look flush next to the main nav surface. Home
 │   * `HomeAside` already gets a 1px rule from the TOC block above, so keep false.
 │   */
 │  withTopRule?: boolean;
@@ -3032,6 +3011,41 @@ langfuse/_client/client.py:
 │        metadata: Optional[Any] = None,
 │        version: Optional[str] = None,
 ⋮
+│    @overload
+│    def create_score(
+│        self,
+│        *,
+│        name: str,
+│        value: float,
+│        session_id: Optional[str] = None,
+│        dataset_run_id: Optional[str] = None,
+│        trace_id: Optional[str] = None,
+│        observation_id: Optional[str] = None,
+│        score_id: Optional[str] = None,
+⋮
+│    @overload
+│    def create_score(
+│        self,
+│        *,
+│        name: str,
+│        value: str,
+│        session_id: Optional[str] = None,
+│        dataset_run_id: Optional[str] = None,
+│        trace_id: Optional[str] = None,
+│        score_id: Optional[str] = None,
+│        observation_id: Optional[str] = None,
+⋮
+│    def create_score(
+│        self,
+│        *,
+│        name: str,
+│        value: Union[float, str],
+│        session_id: Optional[str] = None,
+│        dataset_run_id: Optional[str] = None,
+│        trace_id: Optional[str] = None,
+│        observation_id: Optional[str] = None,
+│        score_id: Optional[str] = None,
+⋮
 │    def run_experiment(
 │        self,
 │        *,
@@ -3470,6 +3484,16 @@ langfuse/api/core/enum.py:
 langfuse/api/core/file.py:
 ⋮
 │FileContent = Union[IO[bytes], bytes, str]
+│File = Union[
+│    # file (or bytes)
+│    FileContent,
+│    # (filename, file (or bytes))
+│    Tuple[Optional[str], FileContent],
+│    # (filename, file (or bytes), content_type)
+│    Tuple[Optional[str], FileContent, Optional[str]],
+│    # (filename, file (or bytes), content_type, headers)
+│    Tuple[
+│        Optional[str],
 ⋮
 │def with_content_type(*, file: File, default_content_type: str) -> File:
 ⋮
@@ -3495,6 +3519,9 @@ langfuse/api/core/http_sse/_models.py:
 ⋮
 │@dataclass(frozen=True)
 │class ServerSentEvent:
+│    event: str = "message"
+⋮
+│    def json(self) -> Any:
 ⋮
 
 langfuse/api/core/jsonable_encoder.py:
@@ -3526,8 +3553,6 @@ langfuse/api/core/pydantic_utilities.py:
 │    @classmethod
 │    def model_construct(
 │        cls: Type["Model"], _fields_set: Optional[Set[str]] = None, **values: Any
-⋮
-│    def json(self, **kwargs: Any) -> str:
 ⋮
 │    def dict(self, **kwargs: Any) -> Dict[str, Any]:
 ⋮
@@ -3600,27 +3625,6 @@ langfuse/api/dataset_run_items/types/paginated_dataset_run_items.py:
 │class PaginatedDatasetRunItems(UniversalBaseModel):
 ⋮
 
-langfuse/api/datasets/raw_client.py:
-⋮
-│class RawDatasetsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        dataset_name: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncRawDatasetsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        dataset_name: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
 langfuse/api/datasets/types/delete_dataset_run_response.py:
 ⋮
 │class DeleteDatasetRunResponse(UniversalBaseModel):
@@ -3634,6 +3638,21 @@ langfuse/api/datasets/types/paginated_dataset_runs.py:
 langfuse/api/datasets/types/paginated_datasets.py:
 ⋮
 │class PaginatedDatasets(UniversalBaseModel):
+⋮
+
+langfuse/api/experiments/types/experiment_items_response.py:
+⋮
+│class ExperimentItemsResponse(UniversalBaseModel):
+⋮
+
+langfuse/api/experiments/types/experiments_response.py:
+⋮
+│class ExperimentsResponse(UniversalBaseModel):
+⋮
+
+langfuse/api/experiments/types/experiments_response_meta.py:
+⋮
+│class ExperimentsResponseMeta(UniversalBaseModel):
 ⋮
 
 langfuse/api/health/types/health_response.py:
@@ -3731,6 +3750,27 @@ langfuse/api/legacy/metrics_v1/types/metrics_response.py:
 │class MetricsResponse(UniversalBaseModel):
 ⋮
 
+langfuse/api/legacy/observations_v1/client.py:
+⋮
+│class ObservationsV1Client:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        observation_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncObservationsV1Client:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        observation_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+
 langfuse/api/legacy/observations_v1/types/observations.py:
 ⋮
 │class Observations(UniversalBaseModel):
@@ -3754,6 +3794,36 @@ langfuse/api/llm_connections/types/delete_llm_connection_response.py:
 langfuse/api/llm_connections/types/paginated_llm_connections.py:
 ⋮
 │class PaginatedLlmConnections(UniversalBaseModel):
+⋮
+
+langfuse/api/media/client.py:
+⋮
+│class MediaClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncMediaClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+
+langfuse/api/media/raw_client.py:
+⋮
+│class RawMediaClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncRawMediaClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
 ⋮
 
 langfuse/api/metrics/types/metrics_v2response.py:
@@ -3813,12 +3883,6 @@ langfuse/api/organizations/types/organization_projects_response.py:
 
 langfuse/api/projects/client.py:
 ⋮
-│class ProjectsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, *, request_options: typing.Optional[RequestOptions] = None
-⋮
 │class AsyncProjectsClient:
 │    def __init__(self, *, client_wrapper: AsyncClientWrapper):
 ⋮
@@ -3846,9 +3910,9 @@ langfuse/api/projects/types/projects.py:
 │class Projects(UniversalBaseModel):
 ⋮
 
-langfuse/api/prompts/client.py:
+langfuse/api/prompts/raw_client.py:
 ⋮
-│class PromptsClient:
+│class RawPromptsClient:
 │    def __init__(self, *, client_wrapper: SyncClientWrapper):
 ⋮
 │    def get(
@@ -3860,7 +3924,7 @@ langfuse/api/prompts/client.py:
 │        resolve: typing.Optional[bool] = None,
 │        request_options: typing.Optional[RequestOptions] = None,
 ⋮
-│class AsyncPromptsClient:
+│class AsyncRawPromptsClient:
 │    def __init__(self, *, client_wrapper: AsyncClientWrapper):
 ⋮
 │    async def get(
@@ -3911,6 +3975,29 @@ langfuse/api/scim/types/scim_feature_support.py:
 langfuse/api/scim/types/scim_name.py:
 ⋮
 │class ScimName(UniversalBaseModel):
+⋮
+
+langfuse/api/score_configs/client.py:
+⋮
+│class ScoreConfigsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        *,
+│        page: typing.Optional[int] = None,
+│        limit: typing.Optional[int] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncScoreConfigsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        *,
+│        page: typing.Optional[int] = None,
+│        limit: typing.Optional[int] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/score_configs/types/score_configs.py:
@@ -4003,6 +4090,52 @@ langfuse/api/sessions/types/paginated_sessions.py:
 │class PaginatedSessions(UniversalBaseModel):
 ⋮
 
+langfuse/api/trace/client.py:
+⋮
+│class TraceClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        trace_id: str,
+│        *,
+│        fields: typing.Optional[str] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncTraceClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        trace_id: str,
+│        *,
+│        fields: typing.Optional[str] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+
+langfuse/api/trace/raw_client.py:
+⋮
+│class RawTraceClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        trace_id: str,
+│        *,
+│        fields: typing.Optional[str] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncRawTraceClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        trace_id: str,
+│        *,
+│        fields: typing.Optional[str] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+
 langfuse/api/trace/types/delete_trace_response.py:
 ⋮
 │class DeleteTraceResponse(UniversalBaseModel):
@@ -4078,6 +4211,26 @@ langfuse/api/unstable/commons/types/string_options_evaluation_rule_filter.py:
 │class StringOptionsEvaluationRuleFilter(UniversalBaseModel):
 ⋮
 
+langfuse/api/unstable/dashboard_widgets/types/dashboard_widget_default_sort.py:
+⋮
+│class DashboardWidgetDefaultSort(UniversalBaseModel):
+⋮
+
+langfuse/api/unstable/dashboard_widgets/types/dashboard_widget_dimension.py:
+⋮
+│class DashboardWidgetDimension(UniversalBaseModel):
+⋮
+
+langfuse/api/unstable/dashboard_widgets/types/dashboard_widget_filter.py:
+⋮
+│class DashboardWidgetFilter(UniversalBaseModel):
+⋮
+
+langfuse/api/unstable/dashboard_widgets/types/dashboard_widget_metric.py:
+⋮
+│class DashboardWidgetMetric(UniversalBaseModel):
+⋮
+
 langfuse/api/unstable/errors/errors/access_denied_error.py:
 ⋮
 │class AccessDeniedError(ApiError):
@@ -4106,6 +4259,27 @@ langfuse/api/unstable/errors/types/public_api_error.py:
 langfuse/api/unstable/errors/types/public_api_validation_issue.py:
 ⋮
 │class PublicApiValidationIssue(UniversalBaseModel):
+⋮
+
+langfuse/api/unstable/evaluation_rules/client.py:
+⋮
+│class EvaluationRulesClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        evaluation_rule_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncEvaluationRulesClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        evaluation_rule_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/unstable/evaluation_rules/types/code_evaluation_rule_evaluator_reference.py:
@@ -4185,6 +4359,16 @@ langfuse/langchain/CallbackHandler.py:
 ⋮
 │    def keys(self) -> List[str]:
 ⋮
+│class LangchainCallbackHandler(LangchainBaseCallbackHandler):
+│    def __init__(
+│        self,
+│        *,
+│        public_key: Optional[str] = None,
+│        trace_context: Optional[TraceContext] = None,
+⋮
+│    def get_langchain_run_name(
+│        self, serialized: Optional[Dict[str, Any]], **kwargs: Any
+⋮
 
 langfuse/media.py:
 ⋮
@@ -4220,6 +4404,34 @@ langfuse/openai.py:
 │    def get_langfuse_args(self) -> Any:
 ⋮
 │    def get_openai_args(self) -> Any:
+⋮
+│def _instrument_openai_stream(
+│    *,
+│    resource: OpenAiDefinition,
+│    response: Any,
+│    generation: LangfuseGeneration,
+│) -> Any:
+│    if not hasattr(response, "_iterator"):
+│        return LangfuseResponseGeneratorSync(
+│            resource=resource,
+│            response=response,
+│            generation=generation,
+⋮
+│    def finalize_once() -> None:
+⋮
+│def _instrument_openai_async_stream(
+│    *,
+│    resource: OpenAiDefinition,
+│    response: Any,
+│    generation: LangfuseGeneration,
+│) -> Any:
+│    if not hasattr(response, "_iterator"):
+│        return LangfuseResponseGeneratorAsync(
+│            resource=resource,
+│            response=response,
+│            generation=generation,
+⋮
+│    async def finalize_once() -> None:
 ⋮
 
 langfuse/types.py:
@@ -4262,15 +4474,6 @@ langfuse/types.py:
 │class TraceContext(TypedDict):
 ⋮
 
-tests/conftest.py:
-⋮
-│class InMemorySpanExporter(SpanExporter):
-│    """Simple in-memory exporter to collect spans for deterministic tests."""
-│
-⋮
-│    def get_finished_spans(self) -> list[ReadableSpan]:
-⋮
-
 tests/support/retry.py:
 ⋮
 │def retry_until_ready(
@@ -4292,6 +4495,15 @@ tests/unit/test_openai_prompt_extraction.py:
 │        created_at: datetime
 ⋮
 │        def model_dump(self, *args, **kwargs):
+⋮
+
+tests/unit/test_otel.py:
+⋮
+│class InMemorySpanExporter(SpanExporter):
+│    """Simple in-memory exporter to collect spans for testing."""
+│
+⋮
+│    def get_finished_spans(self) -> List[ReadableSpan]:
 ⋮
 
 tests/unit/test_version.py:
