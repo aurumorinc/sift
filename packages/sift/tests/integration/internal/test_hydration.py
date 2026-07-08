@@ -41,13 +41,17 @@ def test_end_to_end_hydration(mocker):
     )
     mock_generic_agent_forward.return_value = dspy.Prediction(answer="Mocked Answer")
 
+    from sift.modules.responses.schema import ResponseRequest
+    
     # Prepare request
-    req = AgentpredictRequest(
-        messages=[{"role": "user", "content": "What is the answer?"}]
+    req = ResponseRequest(
+        model="test-agent-model",
+        input=[{"role": "user", "content": "What is the answer?"}],
+        background=False
     )
 
     # Execute
-    res = predict_response("test-agent-model", req.messages, False)
+    res = predict_response(req)
 
     # Verify Langfuse was called
     mock_client.get_prompt.assert_called_once_with(
@@ -102,9 +106,12 @@ def test_end_to_end_hydration_multimodal(mocker):
     )
     mock_generic_agent_forward.return_value = dspy.Prediction(answer="It's a cat.")
 
+    from sift.modules.responses.schema import ResponseRequest
+    
     # Prepare multimodal request
-    req = AgentpredictRequest(
-        messages=[
+    req = ResponseRequest(
+        model="test-agent-vision",
+        input=[
             {
                 "role": "user",
                 "content": [
@@ -112,11 +119,12 @@ def test_end_to_end_hydration_multimodal(mocker):
                     {"type": "image_url", "image_url": {"url": "https://example.com/cat.jpg"}}
                 ]
             }
-        ]
+        ],
+        background=False
     )
 
     # Execute
-    res = predict_response("test-agent-vision", req.messages, False)
+    res = predict_response(req)
 
     # Verify Langfuse was called
     mock_client.get_prompt.assert_called_once_with(
