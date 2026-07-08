@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Union
 from worldline import structlog
 
 from sift.modules.agents.repository.langfuse import get_agent
-from sift.modules.agents.service import AgentModule
+from sift.modules.agents.service import AgentModule, _hydrate_multimodal_messages
 from sift.modules.responses.schema import (
     ResponsesAPIResponse,
     ResponseAPIUsage,
@@ -72,12 +72,18 @@ def predict_response(
     # Get the input fields from the predictor's signature
     assert main_predictor.signature is not None, "Predictor must have a signature"
     input_fields = main_predictor.signature.input_fields
+    
+    # Hydrate if input is multimodal
+    hydrated_input = input
+    if isinstance(input, list):
+        hydrated_input = _hydrate_multimodal_messages(input)
+        
     if input_fields:
         first_input_field = list(input_fields.keys())[0]
-        inputs[first_input_field] = input
+        inputs[first_input_field] = hydrated_input
     else:
         # Fallback if no input fields
-        inputs["messages"] = input
+        inputs["messages"] = hydrated_input
 
     logger.debug("mapped_inputs", inputs_keys=list(inputs.keys()))
 

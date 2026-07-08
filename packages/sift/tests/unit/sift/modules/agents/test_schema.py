@@ -18,6 +18,24 @@ def test_dspy_training_example_missing_extras():
     assert example.model_extra is None or len(example.model_extra) == 0
 
 
+def test_dspy_training_example_messages():
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "What's in this image?"},
+                {"type": "image_url", "image_url": {"url": "https://example.com/image.png"}}
+            ]
+        }
+    ]
+    example = DSPyTrainingExample(messages=messages, score=1.0)
+    assert example.score == 1.0
+    assert len(example.messages) == 1
+    assert example.messages[0]["role"] == "user"
+    assert len(example.messages[0]["content"]) == 2
+    assert example.messages[0]["content"][1]["type"] == "image_url"
+
+
 def test_agent_name_auto_generation():
     agent = Agent(
         agent_card_params={},

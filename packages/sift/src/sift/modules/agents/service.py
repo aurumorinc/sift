@@ -1,8 +1,32 @@
 import dspy
-from typing import Any, Dict
+from typing import Any, Dict, List
 from worldline import structlog
 
 logger = structlog.get_logger(__name__)
+
+
+def _hydrate_multimodal_messages(messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Recursively parses multimodal messages and hydrates image_url dicts into native dspy.Image instances."""
+    hydrated = []
+    for msg in messages:
+        if isinstance(msg.get("content"), list):
+            new_content = []
+            for part in msg["content"]:
+                if isinstance(part, dict) and part.get("type") == "image_url" and isinstance(part.get("image_url"), dict):
+                    url = part["image_url"].get("url")
+                    if url:
+                        new_content.append(dspy.Image(url=url))
+                    else:
+                        new_content.append(part)
+                else:
+                    new_content.append(part)
+            # Create a shallow copy and update content
+            new_msg = dict(msg)
+            new_msg["content"] = new_content
+            hydrated.append(new_msg)
+        else:
+            hydrated.append(msg)
+    return hydrated
 
 
 class AgentModule(dspy.Module):
@@ -63,6 +87,15 @@ class AgentModule(dspy.Module):
 
             setattr(self, key, predictor)
 
+    def load_state(self, state_dict: Dict[str, Any]):
+        # Hydrate messages arrays in demos
+        for key, pred_state in state_dict.items():
+            if isinstance(pred_state, dict) and "demos" in pred_state:
+                for demo in pred_state["demos"]:
+                    if "messages" in demo and isinstance(demo["messages"], list):
+                        demo["messages"] = _hydrate_multimodal_messages(demo["messages"])
+        super().load_state(state_dict)
+
     def forward(self, **kwargs):
         # We assume the first predictor is the main entry point
         # For a generic agent, we just pass the kwargs to the first predictor.
@@ -92,8 +125,10 @@ def compile_and_save_agent(payload: Dict[str, Any]) -> None:
             # Convert DSPyTrainingExample to dict, omitting unset optional fields
             example_dict = first_example.model_dump(exclude_unset=True)
             inferred_fields = []
-            for k in example_dict.keys():
+            for k, v in example_dict.items():
                 if k in ["trace_id", "score", "feedback"]:
+                    continue
+                if k == "messages" and not v:
                     continue
                 # Categorize inputs/outputs based on common naming
                 if (
@@ -155,6 +190,11 @@ def compile_and_save_agent(payload: Dict[str, Any]) -> None:
     for key, pred_state in raw_state.items():
         for example_dict in pred_state.get("train", []):
             filtered_dict = {k: v for k, v in example_dict.items() if k != "trace_id"}
+            
+            if "messages" in filtered_dict and not filtered_dict["messages"]:
+                del filtered_dict["messages"]
+            elif "messages" in filtered_dict and isinstance(filtered_dict["messages"], list):
+                filtered_dict["messages"] = _hydrate_multimodal_messages(filtered_dict["messages"])
 
             # Determine inputs vs labels
             sig_fields = pred_state.get("signature", {}).get("fields", [])
