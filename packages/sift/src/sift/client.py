@@ -45,10 +45,13 @@ class SiftClient:
         agent_id: str,
         input: Union[str, List[Dict[str, Any]]],
         background: bool = False,
+        **kwargs: Any
     ) -> "ResponsesAPIResponse":
         from sift.modules.responses.service import predict_response
+        from sift.modules.responses.schema import ResponseRequest
 
         logger.debug(
             "predict_response_called", agent_id=agent_id, background=background
         )
-        return predict_response(agent_id, input, background)
+        request = ResponseRequest(model=agent_id, input=input, background=background, **kwargs)
+        return predict_response(request)
