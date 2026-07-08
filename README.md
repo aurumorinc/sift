@@ -132,8 +132,12 @@ payload = {
                         "score": 1.0
                     },
                     {
-                        "messages": "How many ounces in a cup?",
-                        "response": "There are 8 fluid ounces in a cup.",
+                        "messages": "Extract: Alice is a 30yo doctor.",
+                        "response": {
+                            "name": "Alice",
+                            "age": 30,
+                            "profession": "doctor"
+                        },
                         "score": 1.0
                     }
                 ],
@@ -266,6 +270,37 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
       }
     ],
     "background": false
+  }'
+```
+
+#### Example Request: Synchronous Structured JSON Output (cURL)
+
+Sift supports LiteLLM's `ResponsesAPI` parameters, allowing you to enforce strict JSON schemas via `text.format`.
+
+```bash
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
+  -H "Authorization: Bearer YOUR_WML_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "extraction_agent",
+    "input": "Extract details: John Doe is 28 years old.",
+    "temperature": 0.2,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "UserDetails",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "age": {"type": "integer"}
+            },
+            "required": ["name", "age"]
+          }
+        }
+      }
+    }
   }'
 ```
 
