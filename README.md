@@ -61,6 +61,11 @@ Compiles, saves, and configures new DSPy agents to Langfuse. **All fields in the
 - If `agent_name` is omitted, Sift will auto-generate a new UUID for the agent.
 - If `agent_name` matches an existing agent, Sift will perform a **deep merge** with the agent's historical state. This means you only need to provide the fields you want to override (e.g., just updating the `optimizer`, `litellm_params`, or `train` dataset), and Sift will preserve the rest of your agent's configuration and trigger re-optimization automatically.
 - If creating a new agent with only `train` data and no explicit `signature.fields`, Sift will automatically infer the inputs and outputs from your dataset.
+- **Dynamic Optimizer Selection:** If an `optimizer` is not explicitly provided, Sift will automatically select the best strategy based on your `train` dataset size:
+  - `BootstrapFewShot` for datasets ≤ 5 examples
+  - `BootstrapFewShotWithRandomSearch` for datasets between 6 and 20 examples
+  - `MIPROv2` for datasets > 20 examples
+- **LLM-as-a-Judge Evaluation:** Sift will automatically route the evaluation of predictions during the DSPy optimization loop to an LLM Judge that scores the model based on expected output, original scores, and feedback defined in your training examples.
 
 #### Example Request: Synchronous (cURL)
 
