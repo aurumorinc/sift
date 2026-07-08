@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from worldline import structlog
 
@@ -17,6 +17,7 @@ def main(
     input: Union[str, List[Dict]],
     background: bool = False,
     webhook: Optional[Dict] = None,
+    **kwargs: Any
 ) -> ResponseResponse:
     """Inference endpoint mapping standard Responses API payload."""
     request = ResponseRequest(
@@ -24,6 +25,7 @@ def main(
         input=input,
         background=background,
         webhook=webhook,
+        **kwargs
     )
 
     logger.info("processing_response_request", agent_id=request.model)
@@ -36,7 +38,10 @@ def main(
 
         # Execute inference via SiftClient
         background_val = request.background if request.background is not None else False
-        response_data = client.predict_response(agent_id, request.input, background_val)
+        
+        # Extract kwargs to pass through
+        passthrough_kwargs = request.model_dump(exclude={"model", "input", "background", "webhook"}, exclude_unset=True)
+        response_data = client.predict_response(agent_id, request.input, background_val, **passthrough_kwargs)
 
         response = ResponseResponse(
             success=True,
