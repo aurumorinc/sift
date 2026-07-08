@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -13,7 +13,9 @@ class DSPySignatureState(BaseModel):
 
 
 class DSPyTrainingExample(BaseModel):
-    messages: List[Dict[str, Any]] = Field(default_factory=list)
+    messages: Union[str, List[Dict[str, Any]]] = Field(default_factory=list)
+    response: Optional[Union[str, Dict[str, Any]]] = None
+    output: Optional[Union[str, Dict[str, Any]]] = None
     trace_id: Optional[str] = None
     score: Optional[float] = None
     feedback: Optional[str] = None
@@ -56,5 +58,5 @@ class AgentResponse(Agent):
 
 class AgentpredictRequest(BaseModel):
     # Payload sent to execute the agent (e.g. standard message history or inputs)
-    messages: List[Dict[str, Any]]
+    messages: Union[str, List[Dict[str, Any]]]
     model_config = ConfigDict(extra="allow")
