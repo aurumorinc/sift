@@ -35,6 +35,17 @@ def test_dspy_training_example_messages():
     assert len(example.messages[0]["content"]) == 2
     assert example.messages[0]["content"][1]["type"] == "image_url"
 
+def test_dspy_training_example_string_messages_and_structured_response():
+    example = DSPyTrainingExample(
+        messages="What is the capital of France?",
+        response={"capital": "Paris", "country": "France"},
+        output="Just Paris"
+    )
+    assert example.messages == "What is the capital of France?"
+    assert isinstance(example.response, dict)
+    assert example.response["capital"] == "Paris"
+    assert example.output == "Just Paris"
+
 
 def test_agent_name_auto_generation():
     agent = Agent(

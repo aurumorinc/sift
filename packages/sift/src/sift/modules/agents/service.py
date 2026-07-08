@@ -130,6 +130,8 @@ def compile_and_save_agent(payload: Dict[str, Any]) -> None:
                     continue
                 if k == "messages" and not v:
                     continue
+                if v is None:
+                    continue
                 # Categorize inputs/outputs based on common naming
                 if (
                     "response" in k.lower()

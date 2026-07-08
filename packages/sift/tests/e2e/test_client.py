@@ -98,3 +98,47 @@ def test_workflow_multimodal():
     output_item = cast(dict, response.output[0])
     text_content = output_item["content"][0]["text"].lower()
     assert len(text_content) > 0
+
+
+@pytest.mark.vcr
+@pytest.mark.skip(reason="Requires valid credentials and openai setup")
+def test_workflow_structured_responses():
+    import json
+    client = SiftClient()
+
+    agent_name = "e2e-test-structured-agent"
+
+    # 1. Compile and save agent
+    payload = {
+        "agent_name": agent_name,
+        "agent_card_params": {},
+        "litellm_params": {
+            "model": "openai/gpt-4o-mini",
+            "temperature": 0.0,
+        },
+        "dspy_params": {
+            "optimizer": None,
+            "state": {"predict": dspy.Predict("messages -> response").dump_state()},
+        },
+    }
+    client.compile_and_save_agent(payload)
+
+    # 2. Predict response with structured output format
+    messages = [{"role": "user", "content": "Extract details: John Doe is 28 years old."}]
+    response = client.predict_response(
+        agent_id=agent_name,
+        input=messages,
+        text={"format": {"type": "json_object"}}
+    )
+
+    assert response is not None
+    assert response.model == agent_name
+
+    # Verify the model returned output
+    assert len(response.output) > 0
+    output_item = cast(dict, response.output[0])
+    text_content = output_item["content"][0]["text"]
+    
+    # Try parsing to make sure it's valid JSON
+    parsed = json.loads(text_content)
+    assert isinstance(parsed, dict)

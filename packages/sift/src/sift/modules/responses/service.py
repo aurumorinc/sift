@@ -7,6 +7,7 @@ from worldline import structlog
 from sift.modules.agents.repository.langfuse import get_agent
 from sift.modules.agents.service import AgentModule, _hydrate_multimodal_messages
 from sift.modules.responses.schema import (
+    ResponseRequest,
     ResponsesAPIResponse,
     ResponseAPIUsage,
 )
@@ -14,15 +15,30 @@ from sift.modules.responses.schema import (
 logger = structlog.get_logger(__name__)
 
 
-def predict_response(
-    agent_id: str, input: Union[str, List[Dict[str, Any]]], background: bool = False
-) -> ResponsesAPIResponse:
+def predict_response(request: ResponseRequest) -> ResponsesAPIResponse:
+    agent_id = request.model
+    input = request.input
+    
     # 1. Fetch Agent schema from repository
     agent = get_agent(agent_id)
     logger.info("fetched_agent", agent_id=agent_id)
 
     # 2. Extract litellm_params and initialize LM
     litellm_params = agent.litellm_params.copy()
+    
+    # Merge optional Litellm fields into litellm_params
+    litellm_kwargs = request.model_dump(exclude={"model", "input", "background", "webhook"}, exclude_unset=True)
+    
+    # Map text.format to response_format for DSPy mapping
+    if "text" in litellm_kwargs and isinstance(litellm_kwargs["text"], dict):
+        if "format" in litellm_kwargs["text"]:
+            litellm_params["response_format"] = litellm_kwargs["text"]["format"]
+        
+        # Remove text so it isn't passed down as an invalid kwarg to dspy.LM
+        del litellm_kwargs["text"]
+            
+    litellm_params.update(litellm_kwargs)
+    
     lm = dspy.LM(**litellm_params)
     dspy.settings.configure(lm=lm)
 
