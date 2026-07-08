@@ -1357,7 +1357,6 @@ ALTER TABLE users ALTER COLUMN first_name SET NOT NULL;
 ALTER TABLE users RENAME COLUMN full_name TO first_name;
 ALTER TABLE users ADD COLUMN last_name VARCHAR(255) NOT NULL;
 ```
-
 # Repository Map
 
 ```python
@@ -1366,11 +1365,11 @@ ALTER TABLE users ADD COLUMN last_name VARCHAR(255) NOT NULL;
 
 .agents/rules/architecture-business.md
 
-.agents/rules/architecture-data.md
-
 .agents/rules/architecture-integration.md
 
 .agents/rules/architecture-technology.md
+
+.agents/rules/language-python/anti-patterns.md
 
 .agents/rules/language-python/architecture-and-structure.md
 
@@ -1388,7 +1387,11 @@ ALTER TABLE users ADD COLUMN last_name VARCHAR(255) NOT NULL;
 
 .agents/rules/language-python/naming-conventions.md
 
+.agents/rules/language-python/performance-and-optimization.md
+
 .agents/rules/language-python/security-and-validation.md
+
+.agents/rules/language-python/testing-standards.md
 
 .agents/rules/language-python/type-safety.md
 
@@ -1396,15 +1399,9 @@ ALTER TABLE users ADD COLUMN last_name VARCHAR(255) NOT NULL;
 
 .agents/skills/langfuse/SKILL.md
 
-.agents/skills/litellm/SKILL.md
-
 .agents/skills/windmill/SKILL.md
 
 .agents/skills/worldline-python/SKILL.md
-
-.github/pull_request_template.md
-
-.github/workflows/release.yaml
 
 .github/workflows/sync.yaml
 
@@ -1417,8 +1414,6 @@ AGENTS.md
 CHANGELOG.md
 
 LICENSE
-
-README.md
 
 apps/sift-api/.claude/skills/cli-commands/SKILL.md
 
@@ -1436,10 +1431,6 @@ apps/sift-api/.claude/skills/write-script-bash/SKILL.md
 
 apps/sift-api/.claude/skills/write-script-bigquery/SKILL.md
 
-apps/sift-api/.claude/skills/write-script-bun/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-bunnative/SKILL.md
-
 apps/sift-api/.claude/skills/write-script-csharp/SKILL.md
 
 apps/sift-api/.claude/skills/write-script-deno/SKILL.md
@@ -1448,15 +1439,9 @@ apps/sift-api/.claude/skills/write-script-duckdb/SKILL.md
 
 apps/sift-api/.claude/skills/write-script-go/SKILL.md
 
-apps/sift-api/.claude/skills/write-script-graphql/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-java/SKILL.md
-
 apps/sift-api/.claude/skills/write-script-mssql/SKILL.md
 
 apps/sift-api/.claude/skills/write-script-mysql/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-nativets/SKILL.md
 
 apps/sift-api/.claude/skills/write-script-php/SKILL.md
 
@@ -1487,6 +1472,10 @@ apps/sift-api/f/sift/responses.py:
 │@webhook_dispatch
 │def main(request: ResponseRequest) -> ResponseResponse:
 ⋮
+
+apps/sift-api/f/sift/responses.script.lock
+
+apps/sift-api/f/sift/responses.script.yaml
 
 apps/sift-api/rt.d.ts:
 ⋮
@@ -2535,10 +2524,6 @@ apps/sift-api/wmill-lock.yaml
 
 apps/sift-api/wmill.yaml
 
-packages/sift/pdm.lock
-
-packages/sift/pyproject.toml
-
 packages/sift/src/sift/__init__.py
 
 packages/sift/src/sift/client.py:
@@ -2575,9 +2560,12 @@ packages/sift/src/sift/integrations/langfuse/service.py:
 │def get_langfuse_client() -> Langfuse:
 ⋮
 
-packages/sift/src/sift/modules/__init__.py
-
 packages/sift/src/sift/modules/agents/__init__.py
+
+packages/sift/src/sift/modules/agents/metric.py:
+⋮
+│def dynamic_api_metric(example: dspy.Example, pred: dspy.Prediction, trace: Optional[Any] = None) -
+⋮
 
 packages/sift/src/sift/modules/agents/repository/langfuse.py:
 ⋮
@@ -2589,6 +2577,8 @@ packages/sift/src/sift/modules/agents/repository/langfuse.py:
 packages/sift/src/sift/modules/agents/schema.py:
 ⋮
 │class DSPySignatureState(BaseModel):
+⋮
+│class DSPyTrainingExample(BaseModel):
 ⋮
 │class DSPyPredictorState(BaseModel):
 ⋮
@@ -2620,12 +2610,6 @@ packages/sift/src/sift/modules/agents/service.py:
 │    def forward(self, **kwargs):
 ⋮
 │def compile_and_save_agent(payload: Dict[str, Any]) -> None:
-│    from sift.modules.agents.schema import Agent, DSPyPredictorState, DSPySignatureState
-⋮
-│    if trainset:
-│        logger.info("compiling_agent_started", trainset_size=len(trainset))
-│
-│        def dummy_metric(*args, **kwargs):
 ⋮
 
 packages/sift/src/sift/modules/responses/__init__.py
@@ -2642,6 +2626,8 @@ packages/sift/src/sift/modules/responses/service.py:
 │def predict_response(
 │    agent_id: str, input: Union[str, List[Dict[str, Any]]], background: bool = False
 ⋮
+
+packages/sift/src/sift/use_cases/agents/schema.py
 
 packages/sift/src/sift/utils/__init__.py
 
@@ -2679,8 +2665,6 @@ packages/sift/tests/conftest.py:
 │def setup_environment():
 ⋮
 
-packages/sift/tests/e2e/__init__.py
-
 packages/sift/tests/e2e/cassettes/test_workflow.yaml
 
 packages/sift/tests/e2e/test_client.py:
@@ -2698,7 +2682,7 @@ packages/sift/tests/integration/internal/test_hydration.py:
 │def test_end_to_end_hydration(mocker):
 ⋮
 
-packages/sift/tests/unit/sift/__init__.py
+packages/sift/tests/unit/sift/modules/__init__.py
 
 packages/sift/tests/unit/sift/modules/agents/repository/test_langfuse.py:
 ⋮
@@ -2714,6 +2698,24 @@ packages/sift/tests/unit/sift/modules/agents/repository/test_langfuse.py:
 │def test_get_agent_defaults_agent_name(mock_langfuse_client):
 ⋮
 
+packages/sift/tests/unit/sift/modules/agents/test_metric.py:
+⋮
+│def test_feedback_metric():
+⋮
+│def test_pre_scored_metric():
+⋮
+│def test_fallback_metric():
+⋮
+│def test_fallback_metric_no_output_keys():
+⋮
+
+packages/sift/tests/unit/sift/modules/agents/test_schema.py:
+⋮
+│def test_dspy_training_example_valid_schema():
+⋮
+│def test_dspy_training_example_missing_extras():
+⋮
+
 packages/sift/tests/unit/sift/modules/agents/test_service.py:
 ⋮
 │@patch("dspy.teleprompt.BootstrapFewShot")
@@ -2724,6 +2726,13 @@ packages/sift/tests/unit/sift/modules/agents/test_service.py:
 │@patch("dspy.teleprompt.BootstrapFewShot")
 │@patch("sift.modules.agents.repository.langfuse.save_agent")
 │def test_compile_and_save_agent_no_trainset(mock_save_agent, mock_bootstrap):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@patch("dspy.teleprompt.MIPROv2")
+│def test_compile_and_save_agent_dynamic_optimizer(mock_miprov2, mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│def test_compile_and_save_agent_invalid_optimizer(mock_save_agent):
 ⋮
 
 packages/sift/tests/unit/sift/test_client.py:
@@ -2780,8 +2789,6 @@ packages/sift/tests/unit/sift/utils/webhook/test_service.py:
 ⋮
 │def test_webhook_dispatch_no_webhook():
 ⋮
-
-pdm.lock
 
 pyproject.toml
 
