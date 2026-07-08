@@ -46,3 +46,55 @@ def test_workflow():
     output_item = cast(dict, response.output[0])
     text_content = output_item["content"][0]["text"].lower()
     assert "hello world" in text_content
+
+
+@pytest.mark.vcr
+@pytest.mark.skip(reason="Requires valid credentials and multimodal cassette")
+def test_workflow_multimodal():
+    client = SiftClient()
+
+    agent_name = "e2e-test-multimodal-agent"
+
+    # 1. Compile and save agent
+    payload = {
+        "agent_name": agent_name,
+        "agent_card_params": {},
+        "litellm_params": {
+            "model": "gemini/gemini-2.5-flash",
+            "temperature": 0.0,
+        },
+        "dspy_params": {
+            "optimizer": None,
+            "state": {"predict": dspy.Predict("messages -> answer").dump_state()},
+        },
+    }
+    client.compile_and_save_agent(payload)
+
+    # 2. Get agent to ensure it was saved correctly
+    agent = client.get_agent(agent_name)
+    assert agent is not None
+    assert agent.agent_name == agent_name
+
+    # 3. Predict response with multimodal input
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "What is the primary color in this image?"},
+                {
+                    "type": "image_url",
+                    "image_url": {"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Synthese%2B.svg/200px-Synthese%2B.svg.png"}
+                }
+            ]
+        }
+    ]
+    response = client.predict_response(agent_name, messages)
+
+    assert response is not None
+    assert response.model == agent_name
+
+    # Verify the model returned output
+    assert len(response.output) > 0
+    output_item = cast(dict, response.output[0])
+    text_content = output_item["content"][0]["text"].lower()
+    assert len(text_content) > 0

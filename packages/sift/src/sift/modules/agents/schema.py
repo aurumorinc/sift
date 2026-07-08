@@ -13,6 +13,7 @@ class DSPySignatureState(BaseModel):
 
 
 class DSPyTrainingExample(BaseModel):
+    messages: List[Dict[str, Any]] = Field(default_factory=list)
     trace_id: Optional[str] = None
     score: Optional[float] = None
     feedback: Optional[str] = None

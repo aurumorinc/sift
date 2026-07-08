@@ -245,6 +245,30 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
   }'
 ```
 
+#### Example Request: Synchronous Multimodal Input (cURL)
+
+```bash
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
+  -H "Authorization: Bearer YOUR_WML_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "vision_agent",
+    "input": [
+      {
+        "role": "user",
+        "content": [
+          {"type": "text", "text": "What is the primary color in this image?"},
+          {
+            "type": "image_url",
+            "image_url": {"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Synthese%2B.svg/200px-Synthese%2B.svg.png"}
+          }
+        ]
+      }
+    ],
+    "background": false
+  }'
+```
+
 #### Example Request: Asynchronous Background Request (Python)
 
 If `background` is true, the server can acknowledge the request quickly, and the heavy processing will send the result back to your webhook URL.
