@@ -93,3 +93,52 @@ def test_agents_existing_agent_merge(mock_get_agent_safe, mock_client):
     assert train_example["q"] == "old"
     assert train_example["a"] == "old"
     assert payload["dspy_params"]["state"]["predict"]["signature"]["instructions"] == "old"
+
+
+@patch("sift.use_cases.agents.service.client")
+@patch("sift.use_cases.agents.service.get_agent_safe")
+@patch("sift.utils.webhook.service.dispatch_webhook")
+def test_agents_main_optional_args_populated(mock_dispatch_webhook, mock_get_agent_safe, mock_client):
+    mock_get_agent_safe.return_value = None
+
+    response = main(
+        agent_name="test_opts",
+        agent_card_params={},
+        litellm_params={},
+        dspy_params={"state": {}},
+        object_permission={"read": True},
+        labels=["test_label"],
+        webhook={"url": "http://example.com/hook"}
+    )
+
+    assert response.success is True
+    mock_client.compile_and_save_agent.assert_called_once()
+    payload = mock_client.compile_and_save_agent.call_args[0][0]
+    
+    assert payload.get("object_permission") == {"read": True}
+    assert payload.get("labels") == ["test_label"]
+    # Webhook is excluded from the payload sent to compile_and_save_agent
+    assert "webhook" not in payload
+    assert response.webhook is not None
+    assert str(response.webhook.url) == "http://example.com/hook"
+
+
+@patch("sift.use_cases.agents.service.client")
+@patch("sift.use_cases.agents.service.get_agent_safe")
+@patch("sift.utils.webhook.service.dispatch_webhook")
+def test_agents_main_catches_exception(mock_dispatch_webhook, mock_get_agent_safe, mock_client):
+    mock_get_agent_safe.return_value = None
+    mock_client.compile_and_save_agent.side_effect = RuntimeError("Mocked compilation error")
+
+    response = main(
+        agent_name="error_test",
+        agent_card_params={},
+        litellm_params={},
+        dspy_params={"state": {}},
+        webhook={"url": "http://example.com/hook"}
+    )
+
+    assert response.success is False
+    assert response.error == "Mocked compilation error"
+    assert response.webhook is not None
+    assert str(response.webhook.url) == "http://example.com/hook"

@@ -7,8 +7,7 @@ def filter_response(response):
     return response
 
 
-@pytest.fixture(scope="module")
-def vcr_config():
+def _get_vcr_config():
     """Configure VCR to scrub sensitive headers."""
     return {
         "filter_headers": [
@@ -20,16 +19,19 @@ def vcr_config():
             ("api_key", "DUMMY_API_KEY"),
             ("key", "DUMMY_API_KEY"),
         ],
-        # Sometimes secrets are in post bodies. We could use filter_post_data_parameters
-        # if we know specific keys to filter.
         "match_on": ["method", "scheme", "host", "port", "path", "query"],
         "before_record_response": filter_response,
         "record_mode": "once",
     }
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_environment():
+@pytest.fixture(scope="module")
+def vcr_config():
+    """Configure VCR to scrub sensitive headers."""
+    return _get_vcr_config()
+
+
+def _setup_environment():
     """Ensure environment variables are set for dummy/playback if not running live."""
     from dotenv import load_dotenv
 
@@ -45,3 +47,8 @@ def setup_environment():
         os.environ["LANGFUSE_PUBLIC_KEY"] = "pk-lf-dummy"
     if not os.environ.get("LANGFUSE_BASE_URL"):
         os.environ["LANGFUSE_BASE_URL"] = "https://cloud.langfuse.com"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_environment():
+    _setup_environment()

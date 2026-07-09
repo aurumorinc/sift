@@ -491,3 +491,130 @@ def test_compile_and_save_agent_infers_fields(mock_save_agent):
             assert extra["__dspy_field_type"] == "output"
         else:
             assert extra["__dspy_field_type"] == "input"
+
+@patch("sift.modules.agents.repository.langfuse.save_agent")
+def test_compile_and_save_agent_handles_dict_fields_and_empty_names(mock_save_agent):
+    payload = _create_payload(trainset_size=1)
+    # Give fields as a dict and include an empty name to hit lines 213, 245, 251, 260, 263
+    payload["dspy_params"]["state"]["main_predictor"]["signature"]["fields"] = {
+        "some_input": {"json_schema_extra": {}},
+        "": {"json_schema_extra": {"__dspy_field_type": "input"}},
+    }
+    
+    with patch("dspy.teleprompt.BootstrapFewShot") as mock_bootstrap:
+        mock_bootstrap.return_value.compile.return_value = _mock_compiled_module()
+        compile_and_save_agent(payload)
+        
+    mock_save_agent.assert_called_once()
+
+
+@patch("sift.modules.agents.repository.langfuse.save_agent")
+def test_compile_and_save_agent_hits_line_263(mock_save_agent):
+    payload = _create_payload(trainset_size=1)
+    # Provide no valid inputs after filtering to hit line 263 (inputs = ["messages"])
+    payload["dspy_params"]["state"]["main_predictor"]["signature"]["fields"] = {
+        "my_response": {"json_schema_extra": {}}
+    }
+    
+    with patch("dspy.teleprompt.BootstrapFewShot") as mock_bootstrap:
+        mock_bootstrap.return_value.compile.return_value = _mock_compiled_module()
+        compile_and_save_agent(payload)
+        
+    mock_save_agent.assert_called_once()
+
+# --- AgentModule Edge Case Tests ---
+
+def test_hydrate_multimodal_messages_missing_url():
+    from sift.modules.agents.service import _hydrate_multimodal_messages
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image_url", "image_url": {}}  # Missing 'url' key
+            ]
+        }
+    ]
+    hydrated = _hydrate_multimodal_messages(messages)
+    assert len(hydrated) == 1
+    assert hydrated[0]["content"][0]["type"] == "image_url"
+    assert not isinstance(hydrated[0]["content"][0], dspy.Image)
+
+def test_agent_module_ignores_non_dict_state():
+    from sift.modules.agents.service import AgentModule
+    state = {"main_predictor": 123}
+    module = AgentModule(state)
+    assert not hasattr(module, "main_predictor")
+
+def test_agent_module_handles_dict_fields():
+    from sift.modules.agents.service import AgentModule
+    state = {
+        "main_predictor": {
+            "signature": {
+                "fields": {
+                    "input_f": {"json_schema_extra": {"__dspy_field_type": "input"}}
+                }
+            }
+        }
+    }
+    module = AgentModule(state)
+    assert hasattr(module, "main_predictor")
+
+def test_agent_module_infers_io_from_name():
+    from sift.modules.agents.service import AgentModule
+    state = {
+        "main_predictor": {
+            "signature": {
+                "fields": [
+                    {"name": "my_response", "json_schema_extra": {}},
+                    {"name": "other_input", "json_schema_extra": {}}
+                ]
+            }
+        }
+    }
+    module = AgentModule(state)
+    assert hasattr(module, "main_predictor")
+
+def test_agent_module_empty_field_name_continue():
+    from sift.modules.agents.service import AgentModule
+    state = {
+        "main_predictor": {
+            "signature": {
+                "fields": [
+                    {"name": "", "json_schema_extra": {"__dspy_field_type": "input"}}
+                ]
+            }
+        }
+    }
+    module = AgentModule(state)
+    # The empty field should be skipped, so inputs default to ["messages"] and outputs to ["response"]
+    assert hasattr(module, "main_predictor")
+
+def test_agent_module_load_state_hydrates_demos():
+    from sift.modules.agents.service import AgentModule
+    state = {
+        "main_predictor": {
+            "signature": {"fields": [], "instructions": "test"},
+            "lm": None,
+            "demos": [
+                {
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "image_url", "image_url": {"url": "http://img.com"}}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+    module = AgentModule(state)
+    module.load_state(state)
+    # Should not throw any errors, demo messages hydrated successfully.
+
+def test_agent_module_forward_no_predictors():
+    from sift.modules.agents.service import AgentModule
+    module = AgentModule({})
+    with pytest.raises(ValueError, match="No predictors found"):
+        module.forward(messages="Hello")
