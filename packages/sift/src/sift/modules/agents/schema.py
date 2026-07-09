@@ -2,6 +2,7 @@ import uuid
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
+from litellm.types.agents import AgentResponse as LiteLLMAgentResponse
 
 from sift.utils.webhook.schema import Webhook
 
@@ -49,16 +50,29 @@ class Agent(BaseModel):
 
 
 class AgentRequest(Agent):
+    tpm_limit: Optional[int] = None
+    rpm_limit: Optional[int] = None
+    session_tpm_limit: Optional[int] = None
+    session_rpm_limit: Optional[int] = None
+    static_headers: Optional[Dict[str, str]] = None
+    extra_headers: Optional[List[str]] = None
     webhook: Optional[Webhook] = None
 
 
-class AgentResponse(Agent):
+class AgentResponse(LiteLLMAgentResponse):
     success: bool
     error: Optional[str] = None
     webhook: Optional[Webhook] = None
+    dspy_params: Optional[DSPyParams] = None
+    labels: Optional[List[str]] = None
 
 
 class AgentpredictRequest(BaseModel):
     # Payload sent to execute the agent (e.g. standard message history or inputs)
     messages: Union[str, List[Dict[str, Any]]]
     model_config = ConfigDict(extra="allow")
+
+from sift.modules.responses.schema import ResponseResponse
+Webhook.model_rebuild(_types_namespace={"AgentResponse": AgentResponse, "ResponseResponse": ResponseResponse})
+AgentRequest.model_rebuild()
+AgentResponse.model_rebuild()
