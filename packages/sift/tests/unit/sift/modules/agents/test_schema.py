@@ -62,3 +62,26 @@ def test_agent_name_auto_generation():
     assert agent.agent_name is not None
     assert isinstance(agent.agent_name, str)
     assert len(agent.agent_name) == 32
+
+
+def test_agent_sparse_parsing():
+    """Assert that Agent.model_validate({}) succeeds and auto-creates defaults."""
+    agent = Agent.model_validate({})
+    assert isinstance(agent.agent_card_params, dict)
+    assert len(agent.agent_card_params) == 0
+    assert isinstance(agent.litellm_params, dict)
+    assert len(agent.litellm_params) == 0
+    assert isinstance(agent.dspy_params, DSPyParams)
+    assert "predict" in agent.dspy_params.state
+    assert agent.dspy_params.state["predict"].signature.instructions == ""
+    assert isinstance(agent.dspy_params.state["predict"].signature.fields, list)
+    assert len(agent.dspy_params.state["predict"].signature.fields) == 0
+
+
+def test_dspy_predictor_state_sparse_parsing():
+    """Assert parsing a predictor state with missing signature auto-injects defaults."""
+    from sift.modules.agents.schema import DSPyPredictorState
+    state = DSPyPredictorState.model_validate({"train": []})
+    assert state.signature is not None
+    assert state.signature.instructions == ""
+    assert state.signature.fields == []

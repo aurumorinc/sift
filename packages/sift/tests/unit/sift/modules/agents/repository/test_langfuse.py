@@ -117,6 +117,25 @@ def test_get_agent_defaults_agent_name(mock_langfuse_client):
     assert agent.agent_name == "missing-name-agent"
 
 
+def test_legacy_config_parsing(mock_langfuse_client):
+    # Setup mock prompt response with MISSING required fields (simulating legacy config)
+    mock_prompt = MagicMock()
+    mock_prompt.prompt = "ignored"
+    mock_prompt.config = {
+        "agent_name": "legacy-agent"
+        # missing agent_card_params, litellm_params, and dspy_params
+    }
+    mock_langfuse_client.get_prompt.return_value = mock_prompt
+
+    agent = get_agent("legacy-agent")
+
+    assert agent.agent_name == "legacy-agent"
+    # Ensure it didn't throw a validation error and defaults were set
+    assert isinstance(agent.agent_card_params, dict)
+    assert isinstance(agent.litellm_params, dict)
+    assert isinstance(agent.dspy_params, DSPyParams)
+
+
 def test_get_agent_safe_returns_agent(mock_langfuse_client):
     mock_prompt = MagicMock()
     mock_prompt.config = {
