@@ -127,14 +127,14 @@ class AgentModule(dspy.Module):
 
             setattr(self, key, predictor)
 
-    def load_state(self, state: Dict[str, Any]):
+    def load_state(self, state: Dict[str, Any], allow_unsafe_lm_state: bool = False, **kwargs: Any):
         # Hydrate messages arrays in demos
         for key, pred_state in state.items():
             if isinstance(pred_state, dict) and "demos" in pred_state:
                 for demo in pred_state["demos"]:
                     if "messages" in demo and isinstance(demo["messages"], list):
                         demo["messages"] = _hydrate_multimodal_messages(demo["messages"])
-        super().load_state(state)
+        super().load_state(state, allow_unsafe_lm_state=allow_unsafe_lm_state, **kwargs)
 
     def forward(self, **kwargs):
         # We assume the first predictor is the main entry point
