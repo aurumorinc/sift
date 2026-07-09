@@ -67,6 +67,7 @@ def main(
         client.compile_and_save_agent(request.model_dump(exclude={"webhook"}))
         response = AgentResponse(
             **request.model_dump(exclude={"webhook"}),
+            agent_id=request.agent_name,
             webhook=request.webhook,
             success=True,
             error=None,
@@ -78,6 +79,7 @@ def main(
         logger.exception("agent_processing_failed")
         response = AgentResponse(
             **request.model_dump(exclude={"webhook"}),
+            agent_id=request.agent_name,
             webhook=request.webhook,
             success=False,
             error=error_msg,

@@ -43,10 +43,12 @@ def main(
         passthrough_kwargs = request.model_dump(exclude={"model", "input", "background", "webhook"}, exclude_unset=True)
         response_data = client.predict_response(agent_id, request.input, background_val, **passthrough_kwargs)
 
+        response_dict = response_data.model_dump()
+        response_dict.pop("error", None)
         response = ResponseResponse(
+            **response_dict,
             success=True,
             error=None,
-            response=response_data,
             webhook=request.webhook,
         )
         logger.info("response_processing_completed")
@@ -54,10 +56,15 @@ def main(
     except Exception as e:
         error_msg = str(e)
         logger.exception("response_processing_failed")
+        import time
         response = ResponseResponse(
+            id="error",
+            created_at=int(time.time()),
+            model=request.model,
+            object="error",
+            output=[],
             success=False,
             error=error_msg,
-            response=None,
             webhook=request.webhook,
         )
         return response

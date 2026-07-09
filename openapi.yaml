@@ -44,6 +44,28 @@ components:
           items:
             type: string
           description: Langfuse labels.
+        tpm_limit:
+          type: integer
+          nullable: true
+        rpm_limit:
+          type: integer
+          nullable: true
+        session_tpm_limit:
+          type: integer
+          nullable: true
+        session_rpm_limit:
+          type: integer
+          nullable: true
+        static_headers:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+        extra_headers:
+          type: array
+          items:
+            type: string
+          nullable: true
         webhook:
           $ref: '#/components/schemas/Webhook'
     
@@ -51,15 +73,17 @@ components:
       type: object
       required:
         - success
+        - agent_id
+        - agent_name
         - agent_card_params
-        - litellm_params
-        - dspy_params
       properties:
         success:
           type: boolean
         error:
           type: string
           nullable: true
+        agent_id:
+          type: string
         agent_name:
           type: string
         agent_card_params:
@@ -68,15 +92,61 @@ components:
         litellm_params:
           type: object
           additionalProperties: true
-        dspy_params:
-          $ref: '#/components/schemas/DSPyParams'
         object_permission:
           type: object
           additionalProperties: true
+        dspy_params:
+          $ref: '#/components/schemas/DSPyParams'
         labels:
           type: array
           items:
             type: string
+        spend:
+          type: number
+          format: float
+          nullable: true
+        tpm_limit:
+          type: integer
+          nullable: true
+        rpm_limit:
+          type: integer
+          nullable: true
+        session_tpm_limit:
+          type: integer
+          nullable: true
+        session_rpm_limit:
+          type: integer
+          nullable: true
+        static_headers:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+        extra_headers:
+          type: array
+          items:
+            type: string
+          nullable: true
+        keys:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_by:
+          type: string
+          nullable: true
+        updated_by:
+          type: string
+          nullable: true
         webhook:
           $ref: '#/components/schemas/Webhook'
           
@@ -260,8 +330,30 @@ components:
         error:
           type: string
           nullable: true
-        response:
-          $ref: '#/components/schemas/ResponsesAPIResponse'
+        id:
+          type: string
+        object:
+          type: string
+        created_at:
+          type: integer
+        model:
+          type: string
+        status:
+          type: string
+        output:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        usage:
+          type: object
+          properties:
+            input_tokens:
+              type: integer
+            output_tokens:
+              type: integer
+            total_tokens:
+              type: integer
         webhook:
           $ref: '#/components/schemas/Webhook'
           
@@ -286,6 +378,10 @@ components:
             type: string
             enum: [started, completed, failed]
           default: [started, completed, failed]
+        data:
+          type: object
+          additionalProperties: true
+          description: Contains the serialized AgentResponse or ResponseResponse object during asynchronous dispatches.
           
     ResponsesAPIResponse:
       type: object
