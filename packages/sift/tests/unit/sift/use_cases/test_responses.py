@@ -24,8 +24,7 @@ def test_responses_main_extracts_agent_name(mock_client):
     )
     
     assert response.success is True
-    assert response.response is not None
-    assert response.response.id == "resp_123"
+    assert response.id == "resp_123"
     
     mock_client.predict_response.assert_called_once()
     # The first positional arg should be the agent_id
@@ -46,6 +45,5 @@ def test_responses_main_catches_exception(mock_dispatch_webhook, mock_client):
     
     assert response.success is False
     assert response.error == "Mocked response error"
-    assert response.response is None
     assert response.webhook is not None
     assert str(response.webhook.url) == "http://example.com/"

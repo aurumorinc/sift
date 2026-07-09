@@ -4,6 +4,8 @@ from litellm.types.llms.openai import (
     ResponseOutputItem,
     ResponsesAPIResponse,
     ResponseAPIUsage,
+    ResponsesAPIOptionalRequestParams,
+    ResponsesAPIRequestParams,
 )
 
 from sift.utils.webhook.schema import Webhook
@@ -14,6 +16,8 @@ __all__ = [
     "ResponsesAPIResponse",
     "ResponseAPIUsage",
     "ResponseOutputItem",
+    "ResponsesAPIOptionalRequestParams",
+    "ResponsesAPIRequestParams",
 ]
 
 
@@ -53,9 +57,13 @@ class ResponseRequest(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-class ResponseResponse(BaseModel):
+class ResponseResponse(ResponsesAPIResponse):
     success: bool
     error: Optional[str] = None
-    response: Optional[ResponsesAPIResponse] = None
     webhook: Optional[Webhook] = None
     model_config = ConfigDict(arbitrary_types_allowed=True)
+
+from sift.modules.agents.schema import AgentResponse
+Webhook.model_rebuild(_types_namespace={"AgentResponse": AgentResponse, "ResponseResponse": ResponseResponse})
+ResponseRequest.model_rebuild()
+ResponseResponse.model_rebuild()
