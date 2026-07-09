@@ -1,0 +1,169 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_multimodal
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA5VV227cNhD9lcGgD62hvfqSRG82kqZBE6BIjD40ayxG5EhiwotKDtdZG/vvBaVd
+        u+lT+iRqSJ4zczRz9IhGY40XTO3q/IJmLy7panZxuX4xe6muzmcX5+0lvVqyerXWWKGKTML6WrDG
+        9XJ9NVu+mC1f3a4u6/XLen01v1pd/YUV5kH/yLEhhi+s5F1JQLm/Ja9XD2q5XHakl9yv4+phr/mZ
+        9WaPNV7/8W666YaCjhV6cow17lTcCifZUsdeti5bMS5osljhjmMywWO9qlD2Qzku/E2wQpOulZgd
+        Yy0xc4Uq+NZ0WD/iBPMD4FNIUdTbgSK5hPXjoUJrhK11zzF0QbPFGjt2xpvF9Jidz1ez1lLqZ+UG
+        HioMTVFlO3B0Jk15+2xthToN+3/hhUGMMw8cT/tPgadDUzwJCZcbQ2RtlJSlRFKcsP58V5W18dNS
+        swsl+oiUO8deWJ+kcZwSdTztxmCLLjlxxFE1YS/jzvf6jo8aX3NS0TQM0psExlHHczxUT6fHyDbH
+        oufzusZeZEj1YhHpft4Z6XNTGI90cxXcgnLMLkTj1SKZVhaOjF98fHP9+sObudN4uDvcVRg5DcGn
+        wnTbMwwx7IxmPSUCJgHBWyO/5QYiDyEZCXEPEwg05D1HaEMEgmPHghixrGGDn979ervBOWz8xv/O
+        e2DLRbUEoQXp+cTglc2a641fzeHs7Lbcrs/OoCRzH+IzUMlFmzRY2pf0PFiKHVfQBKsraCypr5DI
+        p1niaFpog5f5xq8L6KfcyAn3hm24H/nHUAVGINE+wQZvsrEaetP1s4FjG6IjrxgSU1Q9kNcQWaLh
+        Hdmx5n3IEd6//wA0DNYoEhN8mm9w488L658mZbJwE8lr47tjUfEoapK9NQ+sKyit7siaJGBDFyD4
+        MT3LrUDLJDka3wFBYzNDx8GVJBSkngaGn8kDNam0rBSpNvgLqOCGkFgXoRPvOJKF5MhajtDYoL4m
+        CBESj02c5ht/MYok+2flw3jLguZkOl8yVpbJV+UrtzxOHtlq1KSMbvQVZDHWPEyp3vdGGBpSX7sY
+        stdwb6SflC0NGikJlPYfAQjSwMq0U02aS9pjrUXjUYnQhQpU8Mmk0twTmrDqvVFkSzGad2zDwHHW
+        BpVL7RKCNb6bY2nyUkQRcpx045PErMavNdlka9jqaXiPpvY00BV+ScFvk+rZ0Za/SaSCsd2OhjNe
+        3J4G1Q9ZRgPm1nzDGj8cQWos5pEU1vjT4wn5gIcy5Ee+pyn8H3why38IPx5RviM8QRfCu2K+bvK+
+        w6G8UMP2aIaHCoW6o++dNj6X/4me1MISLlaPd8XXnDNyLPHkppFTsLmcfRtp6I+4/wBhC/v9SAcA
+        AA==
+    headers:
+      connection:
+      - keep-alive
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 15:33:20 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"szynnl8si71fs"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name":"vcr_test_agent_multimodal","prompt":"","config":{"agent_name":"vcr_test_agent_multimodal","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":[{"role":"user","content":[{"type":"text","text":"Describe
+      this image."},{"type":"image_url","image_url":"https://raw.githubusercontent.com/aurumorinc/sift/main/README.md"}]}],"response":"The
+      provided image is a GitHub repository README banner for a project titled \"SIFT\".
+      \n\nKey elements of the image include:\n1. **Title:** The word \"SIFT\" is displayed
+      in large, bold, black sans-serif font.\n2. **Subtitle:** Below the title, it
+      says \"Build high-performance search and retrieval for your LLM applications.\"\n3.
+      **Visual Branding:** There is a stylized, minimalist logo on the left featuring
+      a blue geometric shape (an abstract \"S\") composed of several smaller blocks
+      or segments.\n4. **Style:** The overall design is clean, professional, and modern,
+      utilizing a white background with high-contrast text and a specific shade of
+      blue for the logo, consistent with technical or developer-focused tooling."}],"signature":{"instructions":"","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null}}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '1612'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA5VVTW/cNhD9K4NBD62h/XScpLrZSNoajYEiMXpo1liMyJHEmB8qOVxnbex/Lyjt
+        2k1P6UnUkHzvzdPM6AmNxhpp+ZZfry6aGa2b1exVu1rPGq0uZkv9Vp83eq3p4g1WqCKTsL4UrHG9
+        XL+eLd/Mlj/fri7q8/N6vZxfrF//hRXmQX/PsSGGL6zkughQ7m/J69WjWi6XHekl9+u4etxrfmG9
+        2mONl39cTzfdUNCxQk+OscadilvhJFvq2MvWZSvGBU0WK9xxTCZ4rNcVyn4ox4W/ClZo0qUSs2Os
+        fba2QhV8azqsn3CC+Q7wKaQo6u1AkVzC+ulQoTXC1rqXGLqg2WKNHTvjzWJ6zM7nq1lrKfWzcgMP
+        FYamuLIdODqTJt2TOJ2G/b/wwiDGmUeOp/3nwPOhKZ6EhMuNIbI2SspSIilOWH++q8ra+Gmp2YUS
+        fULKnWMvrLGWmLlCxylRx9NuDLb4khNHHF0T9jLufOvv+KjxHScVTcMgvUlgHHU8x0P1fHqMbHMs
+        fr6sa+xFhlQvFpEe5p2RPjeF8Ug3V8EtKMfsQjReLZJpZeHI+MXH95fvbt7PncbD3eGuwshpCD4V
+        ptueYYhhZzTrSQiYBAS/GvktNxB5CMlIiHuYQKAh7zlCGyIQHCsWxIhlDRv8dP3L7QbnsPEb/zvv
+        gS0X1xKEFqTnE4NXNmuuN341h7Oz23K7PjuDIuYhxBegokWbNFjaF3keLMWOK2iC1RU0ltQ9JPJp
+        ljiaFtrgZb7x6wL6KTdywr1iGx5G/jFUgRFItE+wwatsrIbedP1s4NiG6MgrhsQUVQ/kNUSWaHhH
+        dsx5H3KEDx9ugIbBGkVigk/zDW78eWH906RMFq4ieW18d0wqHk1NsrfmkXUFpdQdWZMEbOgCBD/K
+        s9wKtEySo/EdEDQ2M3QcXBGhIPU0MPxIHqhJpWSlWLXBn0AFN4TEuhideMeRLCRH1nKExgZ1nyBE
+        SDwWcZpv/KvRJNm/OB/GWxY0J9P5olhZJl+Vr9zy2Hlkq9GT0rrRV5DFWPM4SX3ojTA0pO67GLLX
+        8GCkn5wtBRopCZTyHwEI0sDKtFNOmovsMdfi8ehE6EIFKvhkUinuCU1Y9d4osiUZzTu2YeA4a4PK
+        JXcJwRrfzbEUeUmiGDl2uvFJYlbj15rGZGvY6ql5j0PtuaEr/JKC3ybVs6Mtf5VIBWO7HQfOeHF7
+        alQ/ZBkHMLfmK9Z4cwSpsQyPpLDGH55OyAc8lCY/8j134f/gC1n+Q/jxiPIN4Qm6EN6V4eum2Xc4
+        lBdq2B6H4aFCoe44904bn8v/RE9uYQmXUY93Za45Z+SY4hHgH233vFkxBwAA
+    headers:
+      connection:
+      - keep-alive
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 15:33:20 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"1xre9okrg01f5"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 201
+      message: Created
+version: 1

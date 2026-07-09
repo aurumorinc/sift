@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -12,6 +13,8 @@ class Settings(LoggingSettings, BaseSettings):
     langfuse_public_key: Optional[str] = ""
     langfuse_secret_key: Optional[str] = ""
     langfuse_host: str = "https://cloud.langfuse.com"
+    dspy_cachedir: str = "/tmp/dspy_cache"
 
 
 settings = Settings()
+os.environ["DSPY_CACHEDIR"] = settings.dspy_cachedir

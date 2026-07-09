@@ -5,5 +5,40 @@ kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
-  properties: {}
+  properties:
+    agent_card_params:
+      type: object
+      description: ''
+      default: null
+      format: resource-Dict
+    agent_name:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    dspy_params:
+      type: object
+      description: ''
+      default: null
+      format: resource-Dict
+    labels:
+      type: object
+      description: ''
+      default: null
+      format: resource-List
+    litellm_params:
+      type: object
+      description: ''
+      default: null
+      format: resource-Dict
+    object_permission:
+      type: object
+      description: ''
+      default: null
+      format: resource-Dict
+    webhook:
+      type: object
+      description: ''
+      default: null
+      format: resource-Dict
   required: []

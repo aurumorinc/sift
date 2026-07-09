@@ -5,5 +5,25 @@ kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
-  properties: {}
-  required: []
+  properties:
+    background:
+      type: boolean
+      description: ''
+      default: false
+    input:
+      type: ''
+      description: ''
+      default: null
+    model:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    webhook:
+      type: object
+      description: ''
+      default: null
+      format: resource-Dict
+  required:
+    - model
+    - input

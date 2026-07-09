@@ -4,10 +4,18 @@
 # ]
 # ///
 
+import wmill
 from typing import Dict, List, Optional, Union
 
 from sift.modules.responses.schema import ResponseResponse
 from sift.use_cases.responses.service import main as responses_main
+
+
+os.environ["GEMINI_API_KEY"] = wmill.get_variable("f/sift/gemini_api_key")
+os.environ["LANGFUSE_SECRET_KEY"] = wmill.get_variable("f/sift/langfuse_secret_key")
+os.environ["LANGFUSE_PUBLIC_KEY"] = wmill.get_variable("f/sift/langfuse_public_key")
+os.environ["LANGFUSE_BASE_URL"] = wmill.get_variable("f/sift/langfuse_base_url")
+os.environ["LANGFUSE_HOST"] = wmill.get_variable("f/sift/langfuse_host")
 
 
 def main(

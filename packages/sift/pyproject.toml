@@ -37,6 +37,8 @@ pythonpath = [
   "src",
   "../../apps/sift-api"
 ]
+norecursedirs = ["../../apps/sift-api/tests/manual"]
+markers = ["manual: marks tests as manual (deselect with '-m \"not manual\"')"]
 
 [tool.pyrefly]
 project-includes = [
