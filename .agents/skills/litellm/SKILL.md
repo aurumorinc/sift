@@ -219,19 +219,6 @@ litellm/llms/custom_httpx/httpx_handler.py:
 │class HTTPHandler:
 ⋮
 
-litellm/llms/sap/chat/models.py:
-⋮
-│class FunctionTool(BaseModel):
-│    description: str = ""
-⋮
-│    def model_dump(self, **kwargs) -> dict:
-⋮
-│class ChatCompletionTool(BaseModel):
-│    type_: Literal["function"] = Field(default="function", alias="type")
-⋮
-│    def model_dump(self, **kwargs) -> dict:
-⋮
-
 litellm/models/mcp_server.py:
 ⋮
 │class MCPEnvVarScope(str, enum.Enum):
@@ -283,9 +270,6 @@ litellm/proxy/_experimental/out/_next/static/chunks/07.fwfv-sinb5.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/081.4arb-o0e0.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
 litellm/proxy/_experimental/out/_next/static/chunks/08o64zaid_juv.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
@@ -310,9 +294,6 @@ litellm/proxy/_experimental/out/_next/static/chunks/0ivj_wax-joap.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0lg.6rbfsd-l9.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
 litellm/proxy/_experimental/out/_next/static/chunks/0m6zdocif1gl4.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
@@ -335,7 +316,7 @@ litellm/proxy/_experimental/out/_next/static/chunks/0piozaeodiue..js:
 │Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0x.73w57rn4ou.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0q6~n4y84cejn.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/0ys10755n8os_.js:
@@ -371,17 +352,6 @@ litellm/proxy/common_utils/swagger_utils.py:
 litellm/proxy/guardrails/guardrail_hooks/custom_code/primitives.py:
 ⋮
 │def lower(text: str) -> str:
-⋮
-
-litellm/proxy/proxy_server.py:
-⋮
-│@router.post(
-│    "/utils/token_counter",
-│    tags=["llm utils"],
-│    dependencies=[Depends(user_api_key_auth)],
-│    response_model=TokenCountResponse,
-│)
-│async def token_counter(request: TokenCountRequest, call_endpoint: bool = False):
 ⋮
 
 litellm/proxy/swagger/swagger-ui-bundle.js:
@@ -476,6 +446,9 @@ litellm/types/interactions/generated.py:
 litellm/types/llms/base.py:
 ⋮
 │class HiddenParams(OpenAIObject):
+│    original_response: Optional[Union[str, Any]] = None
+⋮
+│    def model_dump(self, **kwargs):
 ⋮
 
 litellm/types/llms/openai.py:
@@ -484,8 +457,6 @@ litellm/types/llms/openai.py:
 ⋮
 
 litellm/types/llms/vertex_ai.py:
-⋮
-│class FunctionCall(TypedDict, total=False):
 ⋮
 │class Date(TypedDict):
 ⋮
@@ -531,6 +502,8 @@ litellm/types/router.py:
 ⋮
 
 litellm/types/utils.py:
+⋮
+│class FunctionCall(OpenAIObject):
 ⋮
 │class Function(OpenAIObject):
 ⋮
@@ -608,8 +581,6 @@ tests/e2e/e2e_http.py:
 ⋮
 │class UnauthorizedError(BaseModel):
 ⋮
-│class StreamingResponse(BaseModel):
-⋮
 
 tests/e2e/models.py:
 ⋮
@@ -639,26 +610,6 @@ tests/llm_translation/reasoning_effort_grid/grid_spec.py:
 │class ModelEntry:
 ⋮
 
-tests/llm_translation/test_openai.py:
-⋮
-│@patch("litellm.main.openai_chat_completions._get_openai_client")
-│def test_openai_image_generation_forwards_organization(mock_get_openai_client):
-│    """Ensure organization flows to OpenAI client for image generation."""
-│
-│    class _DummyImages:
-│        def generate(self, **kwargs):  # type: ignore
-│            class _Resp:
-│                def model_dump(self_inner):  # minimal OpenAI ImagesResponse shape
-│                    return {
-│                        "created": 123,
-│                        "data": [{"url": "http://example.com/image.png"}],
-│                        "usage": {
-│                            "input_tokens": 0,
-│                            "output_tokens": 0,
-│                            "total_tokens": 0,
-│                        },
-⋮
-
 tests/local_testing/test_streaming.py:
 ⋮
 │class Function(BaseModel):
@@ -684,18 +635,6 @@ tests/test_litellm/integrations/code_interpreter_interception/test_handler.py:
 │    def post_call(self, *args, **kwargs):
 ⋮
 
-tests/test_litellm/integrations/test_mlflow.py:
-⋮
-│def test_mlflow_stream_handler_uses_async_complete_response():
-│    modules = _mock_mlflow_modules()
-│    with patch.dict("sys.modules", modules):
-│        from litellm.integrations.mlflow import MlflowLogger
-│
-⋮
-│        class DummyDelta:
-│            def model_dump(self, exclude_none=True):
-⋮
-
 tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
 ⋮
 │def test_clean_strings_are_not_run_through_replace():
@@ -711,6 +650,14 @@ tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
 │        def replace(self, *args, **kwargs):
 ⋮
 
+tests/test_litellm/llms/azure/test_azure_fine_tuning_api.py:
+⋮
+│class _MockSDKResponse:
+│    def __init__(self, payload: dict):
+⋮
+│    def model_dump(self) -> dict:
+⋮
+
 tests/test_litellm/llms/bedrock/batches/test_handler.py:
 ⋮
 │def test_extract_region_swallows_unexpected_split_errors():
@@ -720,32 +667,24 @@ tests/test_litellm/llms/bedrock/batches/test_handler.py:
 │        def split(self, _sep):
 ⋮
 
-tests/test_litellm/llms/github_copilot/test_github_copilot_transformation.py:
+tests/test_litellm/proxy/_experimental/mcp_server/test_mcp_server.py:
 ⋮
-│@patch("litellm.llms.openai.openai.OpenAIChatCompletion._get_openai_client")
-⋮
-│def test_openai_handler_repairs_github_copilot_empty_choices(
-│    mock_request, mock_get_client
-│):
+│@pytest.mark.asyncio
+│async def test_stateful_mcp_get_stream_does_not_block_post():
 │    """
-│    The OpenAI SDK handler calls convert_to_model_response_object directly on the
-│    SDK's parsed output, bypassing transform_response. convert raises APIError on
-│    empty choices, so the handler must route github_copilot responses through
-│    transform_parsed_response_dict first. Removing that wiring (or resolving a
-│    config without the override) fails this test with APIError.
-│
-│    See: https://github.com/BerriAI/litellm/issues/30927
+│    A long-lived GET (server-to-client SSE stream) on a stateful session
+│    must NOT hold the per-session lock — otherwise subsequent POSTs on the
+│    same mcp-session-id hang for the lifetime of the stream.
 ⋮
-│    class _FakeSDKResponse:
-│        def model_dump(self):
-│            return {
-│                "id": "msg_vrtx_01",
-│                "model": "claude-opus-4.8",
-│                "object": "chat.completion",
-│                "choices": [],
-│                "content": [{"type": "text", "text": "Hi there"}],
-│                "stop_reason": "end_turn",
-│                "usage": {"input_tokens": 12, "output_tokens": 3},
+│    async def call(method: str, body: bytes = b""):
+⋮
+│@pytest.mark.asyncio
+│async def test_truncated_jsonrpc_response_with_nested_method_skips_lock():
+│    """Regression: a large JSON-RPC *response* POST whose ``result`` payload
+│    nests a ``method`` key must skip the per-session lock so it does not
+│    deadlock behind the in-flight request POST that is holding the lock while
+⋮
+│    async def call(body: bytes):
 ⋮
 
 tests/test_litellm/proxy/guardrails/guardrail_hooks/test_noma_v2.py:
@@ -783,30 +722,6 @@ tests/test_litellm/proxy/guardrails/guardrail_hooks/test_presidio.py:
 │        def __init__(self):
 ⋮
 │        def add_litellm_callback(self, cb):
-⋮
-
-tests/test_litellm/proxy/hooks/test_parallel_request_limiter_v3.py:
-⋮
-│@pytest.mark.asyncio
-│async def test_per_tag_rate_limit_independent_counters_v3(monkeypatch):
-│    """
-│    A single key with per-tag RPM limits tracks each tag independently: a tag
-│    at its limit returns 429 while a different (unlimited) tag keeps flowing,
-│    governed only by the generous key-level limit.
-⋮
-│    async def call(tag: str) -> None:
-⋮
-│@pytest.mark.asyncio
-│async def test_per_tag_untagged_request_governed_by_key_limit_v3(monkeypatch):
-│    """
-│    Per-tag limits are opt-in sub-limits under the key-level ceiling, not a
-│    standalone enforcement boundary: a request that carries no tag (or a tag
-│    without a configured limit) is not rejected by any tag counter, but it is
-│    still bounded by the key-level rpm_limit. This pins the documented
-│    untagged-fallback behavior so a future "fail closed on missing tag" change
-│    would fail here instead of silently breaking it.
-⋮
-│    async def call(metadata: dict) -> None:
 ⋮
 
 tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
@@ -859,6 +774,23 @@ tests/test_litellm/router_utils/test_add_retry_fallback_headers.py:
 │    class Response:
 ⋮
 
+tests/test_litellm/sandbox/test_opensandbox_sandbox.py:
+⋮
+│class FakeHTTPClient:
+│    def __init__(
+│        self,
+│        *,
+│        create_json=None,
+│        sandbox_states=None,
+│        endpoint_json=None,
+│        endpoint_responses=None,
+│        execute_lines=None,
+│        delete_status=204,
+│        execute_raises=None,
+⋮
+│    async def get(self, url, headers=None, params=None, **kwargs):
+⋮
+
 ui/litellm-dashboard/src/app/(dashboard)/access-groups/components/AccessGroupsModal/AccessGroupBaseF
 ⋮
 │interface AccessGroupBaseFormProps {
@@ -871,6 +803,17 @@ ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/add_margin_for
 │                const numValue = parseFloat(value);
 ⋮
 │                const numValue = parseFloat(value);
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/pricing_calculator/types.ts:
+⋮
+│export interface ModelEntry {
+│  id: string;
+│  model: string;
+│  input_tokens: number;
+│  output_tokens: number;
+│  num_requests_per_day?: number;
+│  num_requests_per_month?: number;
 ⋮
 
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/types.ts:
@@ -957,6 +900,15 @@ ui/litellm-dashboard/src/components/Settings/LoggingAndAlerts/LoggingCallbacks/t
 │  OPENMETER_API_KEY: string | null;
 ⋮
 
+ui/litellm-dashboard/src/components/chat/ChatShell.tsx:
+⋮
+│interface NavItemProps {
+│  icon: React.ReactNode;
+│  label: string;
+│  onClick: () => void;
+│  active?: boolean;
+⋮
+
 ui/litellm-dashboard/src/components/chat/ConversationList.tsx:
 ⋮
 │type DateGroup = "Recents" | "Yesterday" | "Last 7 Days" | "Older";
@@ -985,6 +937,20 @@ ui/litellm-dashboard/src/components/chat_ui/ResponseMetrics.tsx:
 │  totalTokens?: number;
 │  reasoningTokens?: number;
 │  cost?: number;
+⋮
+
+ui/litellm-dashboard/src/components/chat_ui/mode_endpoint_mapping.tsx:
+⋮
+│export enum EndpointType {
+│  IMAGE = "image",
+│  VIDEO = "video",
+│  CHAT = "chat",
+│  RESPONSES = "responses",
+│  IMAGE_EDITS = "image_edits",
+│  ANTHROPIC_MESSAGES = "anthropic_messages",
+│  EMBEDDINGS = "embeddings",
+│  SPEECH = "speech",
+│  TRANSCRIPTION = "transcription",
 ⋮
 
 ui/litellm-dashboard/src/components/chat_ui/types.ts:
@@ -1022,6 +988,20 @@ ui/litellm-dashboard/src/components/common_components/TableHeaderSortDropdown/Ta
 ⋮
 │export type SortState = "asc" | "desc" | false;
 │
+⋮
+
+ui/litellm-dashboard/src/components/guardrails/add_guardrail_form.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
 ⋮
 
 ui/litellm-dashboard/src/components/guardrails/content_filter/CompetitorIntentConfiguration.tsx:
@@ -1062,6 +1042,34 @@ ui/litellm-dashboard/src/components/guardrails/guardrail_info.tsx:
 │  dict_value_type?: string;
 ⋮
 
+ui/litellm-dashboard/src/components/guardrails/guardrail_optional_params.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
+⋮
+
+ui/litellm-dashboard/src/components/guardrails/guardrail_provider_fields.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string | number;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
+⋮
+
 ui/litellm-dashboard/src/components/guardrails/types.ts:
 ⋮
 │export enum GuardrailDefinitionLocation {
@@ -1074,6 +1082,17 @@ ui/litellm-dashboard/src/components/key_team_helpers/BudgetWindowsEditor.tsx:
 │interface BudgetWindowsEditorProps {
 │  value: BudgetWindowEntry[];
 │  onChange: (v: BudgetWindowEntry[]) => void;
+⋮
+
+ui/litellm-dashboard/src/components/key_team_helpers/key_list.tsx:
+⋮
+│interface UseKeyListReturn {
+│  keys: KeyResponse[];
+│  isLoading: boolean;
+│  error: Error | null;
+│  pagination: PaginationData;
+│  refresh: (params?: Record<string, unknown>) => Promise<void>;
+│  setKeys: Setter<KeyResponse[]>;
 ⋮
 
 ui/litellm-dashboard/src/components/logging_settings_view.tsx:
@@ -1101,17 +1120,6 @@ ui/litellm-dashboard/src/components/mcp_tools/mcp_tools.test.tsx:
 ⋮
 
 ui/litellm-dashboard/src/components/mcp_tools/types.tsx:
-⋮
-│export interface MCPEvent {
-│  type: string;
-│  sequence_number?: number;
-│  output_index?: number;
-│  item_id?: string;
-│  item?: {
-│    id?: string;
-│    type?: string;
-│    server_label?: string;
-│    tools?: Array<{
 ⋮
 │export type MCPEnvVarScope = "global" | "user";
 │

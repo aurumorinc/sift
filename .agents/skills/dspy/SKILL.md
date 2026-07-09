@@ -165,6 +165,12 @@ dspy/adapters/types/citation.py:
 │    def from_dict_list(cls, citations_dicts: list[dict[str, Any]]) -> "Citations":
 ⋮
 
+dspy/adapters/types/document.py:
+⋮
+│@experimental(version="3.0.4")
+│class Document(Type):
+⋮
+
 dspy/adapters/types/reasoning.py:
 ⋮
 │class Reasoning(Type):
@@ -415,9 +421,6 @@ dspy/core/types.py:
 │    @classmethod
 │    def from_kwargs(cls, **kwargs: Any) -> LMConfig:
 ⋮
-│@dataclass
-│class LMRequestPatch:
-⋮
 │class LMRequest(BaseModel):
 │    """A normalized request passed to a `LanguageModel`."""
 │
@@ -461,6 +464,8 @@ dspy/core/types.py:
 ⋮
 
 dspy/dsp/utils/dpr.py:
+⋮
+│def DPR_tokenize(text):  # noqa: N802
 ⋮
 │def DPR_normalize(text):  # noqa: N802
 ⋮
@@ -533,6 +538,11 @@ dspy/predict/parallel.py:
 
 dspy/predict/parameter.py:
 │class Parameter:
+⋮
+
+dspy/predict/predict.py:
+⋮
+│class Predict(Module, Parameter):
 ⋮
 
 dspy/primitives/base_module.py:
@@ -756,12 +766,6 @@ dspy/propose/propose_base.py:
 │    def propose_instructions_for_program(self):
 ⋮
 │    def propose_instruction_for_predictor(self):
-⋮
-
-dspy/retrievers/databricks_rm.py:
-⋮
-│@dataclass
-│class Document:
 ⋮
 
 dspy/retrievers/embeddings.py:
@@ -1116,12 +1120,15 @@ tests/teleprompt/test_gepa.py:
 
 tests/teleprompt/test_knn_fewshot.py:
 ⋮
-│def mock_example(question: str, answer: str) -> dspy.Example:
-⋮
 │class SimpleModule(dspy.Module):
 │    def __init__(self, signature):
 │        super().__init__()
 ⋮
 │    def reset_copy(self):
+⋮
+
+tests/teleprompt/test_utils.py:
+⋮
+│class DummyModule(dspy.Module):
 ⋮
 ```

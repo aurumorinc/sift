@@ -46,15 +46,6 @@ packages/shared/scripts/seeder/scenarios/types.ts:
 │  baseUrl: string;
 │  log: (message: string) => void;
 ⋮
-│export class SeedError extends Error {
-│  public readonly fix?: string;
-│
-│  constructor(message: string, fix?: string) {
-│    super(message);
-│    this.name = "SeedError";
-│    this.fix = fix;
-│  }
-⋮
 
 packages/shared/scripts/seeder/utils/types.ts:
 ⋮
@@ -99,7 +90,11 @@ packages/shared/src/domain/table-view-presets.ts:
 │  Experiments = "experiments",
 │  ExperimentItems = "experiment-items",
 ⋮
-│export type TableViewPresetDomain = z.infer<typeof TableViewPresetDomainSchema>;
+│export enum SystemTableViewPresetCategory {
+│  SlowCalls = "slow-calls",
+│  Errors = "errors",
+│  CostRegression = "cost-regression",
+⋮
 │export type TableViewPresetState = Pick<
 │  TableViewPresetDomain,
 │  "filters" | "columnOrder" | "columnVisibility" | "orderBy"
@@ -341,6 +336,12 @@ packages/shared/src/server/instrumentation/index.ts:
 │  tracestate?: string;
 ⋮
 
+packages/shared/src/server/llm/ai-sdk/providers/types.ts:
+⋮
+│export type TranslatedProviderOptions =
+│  | { ok: true; value: Record<string, unknown> | undefined }
+⋮
+
 packages/shared/src/server/llm/baseUrlValidation.ts:
 ⋮
 │export type LlmBaseUrlValidationWhitelist = OutboundUrlValidationWhitelist;
@@ -360,6 +361,17 @@ packages/shared/src/server/llm/internalTraceEvents.ts:
 │  itemExpectedOutput?: unknown;
 │  itemMetadata?: Record<string, unknown> | null;
 ⋮
+│type InternalTraceSnapshot = {
+│  spanId: string;
+│  traceId: string;
+│  parentSpanId?: string;
+│  name?: string;
+│  type: "SPAN" | "GENERATION";
+│  environment?: string;
+│  version?: string;
+│  release?: string;
+│  startTimeISO?: string;
+⋮
 
 packages/shared/src/server/llm/types.ts:
 ⋮
@@ -375,6 +387,11 @@ packages/shared/src/server/llm/types.ts:
 ⋮
 │export type OpenAIModel = (typeof openAIModels)[number];
 │
+⋮
+│export type ProcessedTraceEvent = {
+│  type: string;
+│  timestamp: string;
+│  body: Record<string, unknown>;
 ⋮
 │export type InternalTraceWriteInput = {
 │  rootSpanId: string;
@@ -655,11 +672,6 @@ web/src/components/table/peek/store/peekPanelStore.ts:
 │  actions: {
 ⋮
 
-web/src/components/table/table-selection-store.ts:
-⋮
-│type RowSelectionUpdater = Updater<RowSelectionState>;
-⋮
-
 web/src/components/table/types.ts:
 ⋮
 │export type DataTableCellPadding = "compact" | "comfortable" | "none";
@@ -813,12 +825,6 @@ web/src/components/ui/side-panel.tsx:
 │      </Button>
 ⋮
 
-web/src/ee/features/in-app-agent/context.ts:
-⋮
-│type InAppAgentContext = AgUiRunAgentInput["context"];
-│
-⋮
-
 web/src/ee/features/in-app-agent/schema.ts:
 ⋮
 │export type InAppAgentMessageSource = z.infer<
@@ -951,6 +957,11 @@ web/src/features/events/server/eventsService.ts:
 ⋮
 │type TimeFilter = z.infer<typeof timeFilter>;
 │
+⋮
+
+web/src/features/experiments/store/experimentsTableStore.ts:
+⋮
+│type RowSelectionUpdater = Updater<RowSelectionState>;
 ⋮
 
 web/src/features/experiments/types/charts.ts:
@@ -1146,9 +1157,6 @@ web/src/features/scores/components/multi-select-key-values.tsx:
 
 web/src/features/search-bar/lib/ast.ts:
 ⋮
-│export type Span = { from: number; to: number };
-│
-⋮
 │export type CompareOp =
 │  | "="
 │  | "exact"
@@ -1166,6 +1174,9 @@ web/src/features/search-bar/lib/fields.ts:
 │  | { type: "field"; field: FieldDef }
 │  | { type: "metadata"; key: string }
 │  | { type: "scores"; key: string; level: "observation" | "trace" }
+⋮
+│function label(op: CompareOp): string {
+│  return OP_LABEL[op] ?? op;
 ⋮
 
 web/src/features/slack/components/SlackConnectionCard.tsx:
@@ -1235,8 +1246,6 @@ web/src/utils/clientSideDomainTypes.ts:
 ⋮
 
 web/src/utils/date-range-utils.ts:
-⋮
-│export type DashboardDateRangeAggregationOption =
 ⋮
 │export type TimeRange = RelativeTimeRange | AbsoluteTimeRange;
 │
@@ -1428,6 +1437,12 @@ worker/src/utils/RedisLock.ts:
 ### AST Map: `modules/langfuse-docs`
 
 ```python
+app/(home)/page.tsx:
+⋮
+│export default function HomePage() {
+│  return <Home />;
+⋮
+
 app/[section]/layout.tsx:
 ⋮
 │type LayoutProps = {
@@ -1435,27 +1450,13 @@ app/[section]/layout.tsx:
 │  params: Promise<{ section: string }>;
 ⋮
 
-app/blog/page.tsx:
+app/changelog/page.tsx:
 ⋮
-│export default function BlogIndexPage() {
-│  const pages = getBlogIndexPages();
-│
-│  return (
-│    <BlogPageClient pages={pages}>
-│      <ContentColumns
-│        leftSidebar={<BlogSidebar />}
-│        rightSidebar={<BlogAside />}
-│        className="min-h-screen"
-│        footerClassName="md:max-w-none xl:max-w-none px-6 sm:px-6 md:px-6"
+│type PageProps = {
+│  searchParams: Promise<{ page?: string }>;
 ⋮
 
-app/cloud/layout.tsx:
-⋮
-│export default function CloudLayout({
-│  children,
-⋮
-
-app/faq/[[...slug]]/page.tsx:
+app/guides/[[...slug]]/page.tsx:
 ⋮
 │type PageProps = {
 │  params: Promise<{ slug?: string[] }>;
@@ -1685,19 +1686,6 @@ components/TocCommunity.tsx:
 │  className?: string;
 ⋮
 
-components/academy/AgentPromptCallout.tsx:
-⋮
-│export interface AgentPromptCalloutProps {
-│  /** Ribbon label, e.g. "Run with your agent". */
-│  ribbon?: string;
-│  /** Title shown above the lede. */
-│  title?: string;
-│  /** Lede paragraph beneath the title. */
-│  lede?: React.ReactNode;
-│  /** The exact text written to the clipboard. */
-│  prompt: string;
-⋮
-
 components/academy/ErrorAnalysisProcessDiagram.tsx:
 ⋮
 │function estimateInitialScale(): number {
@@ -1733,6 +1721,19 @@ components/academy/LoopDiagram.tsx:
 
 components/academy/TraceViewDiagram.tsx:
 │export interface TraceViewRow {
+⋮
+
+components/academy/japan/AgentPromptCallout.tsx:
+⋮
+│export interface AgentPromptCalloutProps {
+│  /** Ribbon label, e.g. "Run with your agent". */
+│  ribbon?: string;
+│  /** Title shown above the lede. */
+│  title?: string;
+│  /** Lede paragraph beneath the title. */
+│  lede?: React.ReactNode;
+│  /** The exact text written to the clipboard. */
+│  prompt: string;
 ⋮
 
 components/academy/japan/ErrorAnalysisProcessDiagram.tsx:
@@ -3012,6 +3013,41 @@ langfuse/_client/client.py:
 │        metadata: Optional[Any] = None,
 │        version: Optional[str] = None,
 ⋮
+│    @overload
+│    def create_score(
+│        self,
+│        *,
+│        name: str,
+│        value: float,
+│        session_id: Optional[str] = None,
+│        dataset_run_id: Optional[str] = None,
+│        trace_id: Optional[str] = None,
+│        observation_id: Optional[str] = None,
+│        score_id: Optional[str] = None,
+⋮
+│    @overload
+│    def create_score(
+│        self,
+│        *,
+│        name: str,
+│        value: str,
+│        session_id: Optional[str] = None,
+│        dataset_run_id: Optional[str] = None,
+│        trace_id: Optional[str] = None,
+│        score_id: Optional[str] = None,
+│        observation_id: Optional[str] = None,
+⋮
+│    def create_score(
+│        self,
+│        *,
+│        name: str,
+│        value: Union[float, str],
+│        session_id: Optional[str] = None,
+│        dataset_run_id: Optional[str] = None,
+│        trace_id: Optional[str] = None,
+│        observation_id: Optional[str] = None,
+│        score_id: Optional[str] = None,
+⋮
 │    def run_experiment(
 │        self,
 │        *,
@@ -3270,6 +3306,8 @@ langfuse/_utils/parse_error.py:
 ⋮
 │def generate_error_message_fern(error: Error) -> str:
 ⋮
+│def generate_error_message(exception: Union[APIError, APIErrors, Exception]) -> str:
+⋮
 
 langfuse/_utils/prompt_cache.py:
 ⋮
@@ -3347,6 +3385,35 @@ langfuse/api/blob_storage_integrations/types/blob_storage_integration_deletion_r
 langfuse/api/blob_storage_integrations/types/blob_storage_integrations_response.py:
 ⋮
 │class BlobStorageIntegrationsResponse(UniversalBaseModel):
+⋮
+
+langfuse/api/comments/client.py:
+⋮
+│class CommentsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        *,
+│        page: typing.Optional[int] = None,
+│        limit: typing.Optional[int] = None,
+│        object_type: typing.Optional[str] = None,
+│        object_id: typing.Optional[str] = None,
+│        author_user_id: typing.Optional[str] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncCommentsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        *,
+│        page: typing.Optional[int] = None,
+│        limit: typing.Optional[int] = None,
+│        object_type: typing.Optional[str] = None,
+│        object_id: typing.Optional[str] = None,
+│        author_user_id: typing.Optional[str] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/comments/types/create_comment_response.py:
@@ -3445,6 +3512,23 @@ langfuse/api/core/enum.py:
 │    class StrEnum(str, enum.Enum):
 ⋮
 
+langfuse/api/core/file.py:
+⋮
+│FileContent = Union[IO[bytes], bytes, str]
+│File = Union[
+│    # file (or bytes)
+│    FileContent,
+│    # (filename, file (or bytes))
+│    Tuple[Optional[str], FileContent],
+│    # (filename, file (or bytes), content_type)
+│    Tuple[Optional[str], FileContent, Optional[str]],
+│    # (filename, file (or bytes), content_type, headers)
+│    Tuple[
+│        Optional[str],
+⋮
+│def with_content_type(*, file: File, default_content_type: str) -> File:
+⋮
+
 langfuse/api/core/force_multipart.py:
 ⋮
 │class ForceMultipartDict(Dict[str, Any]):
@@ -3460,6 +3544,15 @@ langfuse/api/core/http_response.py:
 langfuse/api/core/http_sse/_exceptions.py:
 ⋮
 │class SSEError(httpx.TransportError):
+⋮
+
+langfuse/api/core/http_sse/_models.py:
+⋮
+│@dataclass(frozen=True)
+│class ServerSentEvent:
+│    event: str = "message"
+⋮
+│    def json(self) -> Any:
 ⋮
 
 langfuse/api/core/jsonable_encoder.py:
@@ -3492,8 +3585,6 @@ langfuse/api/core/pydantic_utilities.py:
 │    def model_construct(
 │        cls: Type["Model"], _fields_set: Optional[Set[str]] = None, **values: Any
 ⋮
-│    def json(self, **kwargs: Any) -> str:
-⋮
 │    def dict(self, **kwargs: Any) -> Dict[str, Any]:
 ⋮
 │def deep_union_pydantic_dicts(
@@ -3506,6 +3597,8 @@ langfuse/api/core/query_encoder.py:
 ⋮
 │def traverse_query_dict(
 │    dict_flat: Dict[str, Any], key_prefix: Optional[str] = None
+⋮
+│def single_query_encoder(query_key: str, query_value: Any) -> List[Tuple[str, Any]]:
 ⋮
 
 langfuse/api/core/request_options.py:
@@ -3548,6 +3641,21 @@ langfuse/api/core/serialization.py:
 │    aliases_to_field_names: typing.Dict[str, str],
 ⋮
 
+langfuse/api/dataset_items/client.py:
+⋮
+│class DatasetItemsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncDatasetItemsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+
 langfuse/api/dataset_items/raw_client.py:
 ⋮
 │class RawDatasetItemsClient:
@@ -3576,6 +3684,27 @@ langfuse/api/dataset_items/types/paginated_dataset_items.py:
 langfuse/api/dataset_run_items/types/paginated_dataset_run_items.py:
 ⋮
 │class PaginatedDatasetRunItems(UniversalBaseModel):
+⋮
+
+langfuse/api/datasets/raw_client.py:
+⋮
+│class RawDatasetsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        dataset_name: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncRawDatasetsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        dataset_name: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/datasets/types/delete_dataset_run_response.py:
@@ -3728,6 +3857,21 @@ langfuse/api/llm_connections/types/paginated_llm_connections.py:
 │class PaginatedLlmConnections(UniversalBaseModel):
 ⋮
 
+langfuse/api/media/raw_client.py:
+⋮
+│class RawMediaClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncRawMediaClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+
 langfuse/api/metrics/types/metrics_v2response.py:
 ⋮
 │class MetricsV2Response(UniversalBaseModel):
@@ -3783,6 +3927,36 @@ langfuse/api/organizations/types/organization_projects_response.py:
 │class OrganizationProjectsResponse(UniversalBaseModel):
 ⋮
 
+langfuse/api/projects/client.py:
+⋮
+│class ProjectsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncProjectsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+
+langfuse/api/projects/raw_client.py:
+⋮
+│class RawProjectsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncRawProjectsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+
 langfuse/api/projects/types/api_key_deletion_response.py:
 ⋮
 │class ApiKeyDeletionResponse(UniversalBaseModel):
@@ -3801,6 +3975,33 @@ langfuse/api/projects/types/project_deletion_response.py:
 langfuse/api/projects/types/projects.py:
 ⋮
 │class Projects(UniversalBaseModel):
+⋮
+
+langfuse/api/prompts/raw_client.py:
+⋮
+│class RawPromptsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        prompt_name: str,
+│        *,
+│        version: typing.Optional[int] = None,
+│        label: typing.Optional[str] = None,
+│        resolve: typing.Optional[bool] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncRawPromptsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        prompt_name: str,
+│        *,
+│        version: typing.Optional[int] = None,
+│        label: typing.Optional[str] = None,
+│        resolve: typing.Optional[bool] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/prompts/types/chat_prompt.py:
@@ -3841,29 +4042,6 @@ langfuse/api/scim/types/scim_feature_support.py:
 langfuse/api/scim/types/scim_name.py:
 ⋮
 │class ScimName(UniversalBaseModel):
-⋮
-
-langfuse/api/score_configs/raw_client.py:
-⋮
-│class RawScoreConfigsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        *,
-│        page: typing.Optional[int] = None,
-│        limit: typing.Optional[int] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncRawScoreConfigsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        *,
-│        page: typing.Optional[int] = None,
-│        limit: typing.Optional[int] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/score_configs/types/score_configs.py:
@@ -3949,6 +4127,27 @@ langfuse/api/scores_v3/types/score_subject_trace_v3.py:
 langfuse/api/scores_v3/types/text_score_v3.py:
 ⋮
 │class TextScoreV3(BaseScoreV3):
+⋮
+
+langfuse/api/sessions/raw_client.py:
+⋮
+│class RawSessionsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        session_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncRawSessionsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        session_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/sessions/types/paginated_sessions.py:
@@ -4193,6 +4392,34 @@ langfuse/openai.py:
 │    def get_langfuse_args(self) -> Any:
 ⋮
 │    def get_openai_args(self) -> Any:
+⋮
+│def _instrument_openai_stream(
+│    *,
+│    resource: OpenAiDefinition,
+│    response: Any,
+│    generation: LangfuseGeneration,
+│) -> Any:
+│    if not hasattr(response, "_iterator"):
+│        return LangfuseResponseGeneratorSync(
+│            resource=resource,
+│            response=response,
+│            generation=generation,
+⋮
+│    def finalize_once() -> None:
+⋮
+│def _instrument_openai_async_stream(
+│    *,
+│    resource: OpenAiDefinition,
+│    response: Any,
+│    generation: LangfuseGeneration,
+│) -> Any:
+│    if not hasattr(response, "_iterator"):
+│        return LangfuseResponseGeneratorAsync(
+│            resource=resource,
+│            response=response,
+│            generation=generation,
+⋮
+│    async def finalize_once() -> None:
 ⋮
 
 langfuse/types.py:
