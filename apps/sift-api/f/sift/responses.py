@@ -10,7 +10,7 @@ import wmill
 from typing import Dict, List, Optional, Union
 
 from sift.modules.responses.schema import ResponseResponse
-from sift.use_cases.responses.service import main as responses_main
+from sift.use_cases.responses.service import main as _main
 
 
 os.environ["GEMINI_API_KEY"] = wmill.get_variable("f/sift/gemini_api_key")
@@ -27,7 +27,7 @@ def main(
     webhook: Optional[Dict] = None,
 ) -> ResponseResponse:
     """Inference endpoint mapping standard Responses API payload."""
-    return responses_main(
+    return _main(
         model=model,
         input=input,
         background=background,
