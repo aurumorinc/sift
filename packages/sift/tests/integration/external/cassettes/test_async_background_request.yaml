@@ -1,0 +1,51 @@
+interactions:
+- request:
+    body: '{"event":"started","payload":{"model":"vcr_test_resp_agent","input":"Hello","background":true,"webhook":{"url":"https://httpbin.org/post","token":"dummy"},"kwargs":{}}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '168'
+      content-type:
+      - application/json
+      host:
+      - httpbin.org
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: https://httpbin.org/post
+  response:
+    body:
+      string: "{\n  \"args\": {}, \n  \"data\": \"{\\\"event\\\":\\\"started\\\",\\\"payload\\\":{\\\"model\\\":\\\"vcr_test_resp_agent\\\",\\\"input\\\":\\\"Hello\\\",\\\"background\\\":true,\\\"webhook\\\":{\\\"url\\\":\\\"https://httpbin.org/post\\\",\\\"token\\\":\\\"dummy\\\"},\\\"kwargs\\\":{}}}\",
+        \n  \"files\": {}, \n  \"form\": {}, \n  \"headers\": {\n    \"Accept\": \"*/*\",
+        \n    \"Accept-Encoding\": \"gzip, deflate\", \n    \"Content-Length\": \"168\",
+        \n    \"Content-Type\": \"application/json\", \n    \"Host\": \"httpbin.org\",
+        \n    \"User-Agent\": \"python-httpx/0.28.1\", \n    \"X-Amzn-Trace-Id\":
+        \"Root=1-6a4fbf4e-7d9ea2ca3e3471537fa02e6f\"\n  }, \n  \"json\": {\n    \"event\":
+        \"started\", \n    \"payload\": {\n      \"background\": true, \n      \"input\":
+        \"Hello\", \n      \"kwargs\": {}, \n      \"model\": \"vcr_test_resp_agent\",
+        \n      \"webhook\": {\n        \"token\": \"dummy\", \n        \"url\": \"https://httpbin.org/post\"\n
+        \     }\n    }\n  }, \n  \"origin\": \"34.93.13.18\", \n  \"url\": \"https://httpbin.org/post\"\n}\n"
+    headers:
+      access-control-allow-credentials:
+      - 'true'
+      access-control-allow-origin:
+      - '*'
+      connection:
+      - keep-alive
+      content-length:
+      - '890'
+      content-type:
+      - application/json
+      date:
+      - Thu, 09 Jul 2026 15:33:34 GMT
+      server:
+      - gunicorn/19.9.0
+    status:
+      code: 200
+      message: OK
+version: 1

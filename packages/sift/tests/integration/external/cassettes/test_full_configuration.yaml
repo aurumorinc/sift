@@ -1,0 +1,146 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_full_config
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA41TTXPTMBD9K2YvXORiu22ofem0B2gODMzABTqZjCqtHVF9Ia1a0oz/O6PYSYFL
+        e/J6d9/br6cdKAkdnLf9QvayLuvz5qw8a9tF2VaLu7KqRYMLUct6cQoMREBOKK8IOmiqZlFW78uq
+        /Vafd81F1zQnbXvxAxgkL1+T5oP7iYKWuQFhflFq6idRVdXAZYWbJtRPW4nPVa+30MHVl+WEND6z
+        f3ep4AELXmxQ+z7pgseoInFLJ8DAcoPQwYMIa8JIaz6gpXWftF4LZ3s1AIMHDFE5C13NgLY+5xP+
+        JmCg4pUg9YDQUUjIYIZ0O5h4XsM++QQPcu154CZCtxsZaEWotXn2gXESNXQwoFFWvZs+5elJXfaa
+        x02ZETAycHd5Z2uPwag4NW6T1gxk9Nu/+JwnZdQTBujg2jmKFLj/gI9fNy7PdgwfIRNLJE6Y8T6g
+        VIKySYELjNDdrli2lZ1MicZl7w54GgxaQnnYlMEY+ZAxcINaO2AQMHpnIx5cb4ob91gIbovl/nbF
+        1qWCnOTbSxjZC5zucX/1rUuX/1Iv35pCOmWHYsiiYQVtuL3fc/cuFDzeKztMpWeCOf1QecUgqsFy
+        SmG/BmUjhSRIORtf1luvUMtpJ7M4jl3nfUURlKf9zWBpfaLiGM4jz5DjOP9DPifKmGN8XGUlmel0
+        45h/+B3q+ZYjA+LDfLZD4DY/HTnNA9mdhQurrG1jFH2a2jmIIWB0OuXcj4H7zcz7B5xu0r8zBAAA
+    headers:
+      connection:
+      - keep-alive
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 15:33:19 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"yj17tg4w3ntv"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name":"vcr_test_agent_full_config","prompt":"You are a helpful assistant.","config":{"agent_name":"vcr_test_agent_full_config","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":"BootstrapFewShot","optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":"Hello","response":"Hello!
+      How can I help you today?"},{"augmented":true,"messages":"How are you?","response":"I''m
+      doing great, thank you for asking! How are you doing today?"}],"signature":{"instructions":"You
+      are a helpful assistant.","fields":[{"name":"messages","description":"Input
+      messages"},{"name":"response","description":"Output response"}]},"lm":null}}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '823'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA41TTXPTMBD9K2IvXORiJ01Kdem0B6Y5MDADF+hkMoq0dkT1hbRucTP574xiNwUu
+        9OT17r63H2+1B6NBwMVi2c62bVPVqBbVuWxU9X55jtXyYnG+0NstajUHDiqhJNTXBAJm9WxZ1RdV
+        ffm1WYj5XDSXZ4tm+R049FG/Ji2m8AMVrUoDyv2kftY8qbquO6lr3M1S8zRofKl6M4CA68+rEeli
+        Yf8WeiYTMsl2aGPbWyZzNpmkpzPg4KVDEPCg0oYw00Z26GnT9tZuVPCt6YDDA6Zsggcx40BDLPmE
+        vwg4mHytyDwgCN9by2GCiD2MPK9hH31KJr2JMkmXQewPHKwhtNa9+MAFjRYEdOiMN+/GTzU/a6rW
+        yryrCgIOHMK27GwTMTmTx8bH7nSOwx98IZJx5gkTCLgJgTIlGT/g45ddKLOdwifIyJJJEhZ8TKiN
+        omJSkgoziLs1L7bxo6nRheLdg+w7h55Qg6DUIweHOcuuYOAWrQ3AIWGOwWd8dr1ht+GRKenZ6qgd
+        G0LPKGg5XMGB/4czPB5VH0J/9Tf16q1jOhjfsa4cDWe0k/7+yN2GxGS+N74bS08EU/pz5TWHbDov
+        qU/HNRifKfWKTPD5//fWGrR63Ml0HKeuy76ySibSUTNY+dgTO4XLyBPkNM6/kE89FcwpfliXS3Kj
+        dIdD+ZFbtJOWBw4ku0m258BdeTp6nAeKuxwurMttO2fo49jORPAbk4Qq9xwEAAA=
+    headers:
+      connection:
+      - keep-alive
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 15:33:19 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"35qhzzytm0t8"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 201
+      message: Created
+version: 1

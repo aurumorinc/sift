@@ -1,0 +1,118 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_async_webhook
+  response:
+    body:
+      string: '{"id":"2930ee02-d87c-4ff1-b090-888ac8b7cb2f","createdAt":"2026-07-09T15:28:33.659Z","updatedAt":"2026-07-09T15:28:33.659Z","projectId":"cmqtu21zc000gad0eh2r1zyde","createdBy":"API","prompt":"","name":"vcr_test_agent_async_webhook","version":1,"type":"text","isActive":true,"config":{"agent_name":"vcr_test_agent_async_webhook","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{}},"labels":null},"tags":[],"labels":["production","latest"],"commitMessage":null,"resolutionGraph":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '603'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 15:33:32 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"m5cpl7bkaygr"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name":"vcr_test_agent_async_webhook","prompt":"","config":{"agent_name":"vcr_test_agent_async_webhook","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '351'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: '{"id":"56ca41ba-a0f6-432c-9678-2c61cc5ef3e6","createdAt":"2026-07-09T15:33:32.701Z","updatedAt":"2026-07-09T15:33:32.701Z","projectId":"cmqtu21zc000gad0eh2r1zyde","createdBy":"API","prompt":"","name":"vcr_test_agent_async_webhook","version":2,"type":"text","isActive":null,"config":{"agent_name":"vcr_test_agent_async_webhook","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{}},"labels":null},"tags":[],"labels":["production","latest"],"commitMessage":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '580'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 15:33:32 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"u358fs9b65g4"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 201
+      message: Created
+version: 1
