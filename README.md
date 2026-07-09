@@ -295,6 +295,7 @@ Returns the original agent configuration appended with execution success/error s
 
 ```json
 {
+  "agent_id": "support_agent",
   "agent_name": "support_agent",
   "agent_card_params": {},
   "litellm_params": {
@@ -434,27 +435,25 @@ Returns a wrapper containing success states and a LiteLLM/OpenAI-compliant respo
   "success": true,
   "error": null,
   "webhook": null,
-  "response": {
-    "id": "resp_abc123",
-    "object": "response",
-    "created_at": 1718000000,
-    "model": "support_agent",
-    "status": "completed",
-    "output": [
-      {
-        "content": [
-          {
-            "type": "output_text",
-            "text": "To reset your password, click the 'Forgot Password' link on the login page."
-          }
-        ]
-      }
-    ],
-    "usage": {
-      "input_tokens": 12,
-      "output_tokens": 18,
-      "total_tokens": 30
+  "id": "resp_abc123",
+  "object": "response",
+  "created_at": 1718000000,
+  "model": "support_agent",
+  "status": "completed",
+  "output": [
+    {
+      "content": [
+        {
+          "type": "output_text",
+          "text": "To reset your password, click the 'Forgot Password' link on the login page."
+        }
+      ]
     }
+  ],
+  "usage": {
+    "input_tokens": 12,
+    "output_tokens": 18,
+    "total_tokens": 30
   }
 }
 ```
@@ -480,14 +479,13 @@ When Sift fires a webhook to your server, the `POST` payload will look like this
   "payload": {
     "success": true,
     "error": null,
-    "response": {
-       "id": "resp_123",
-       "output": [{"content": [{"text": "Completed task!"}]}]
-    },
+    "id": "resp_123",
+    "output": [{"content": [{"text": "Completed task!"}]}],
     "webhook": {
       "url": "https://your-server.com/webhook",
       "events": ["started", "completed", "failed"],
-      "metadata": {"job_id": "999"}
+      "metadata": {"job_id": "999"},
+      "data": null
     }
   },
   "metadata": {
@@ -495,6 +493,9 @@ When Sift fires a webhook to your server, the `POST` payload will look like this
   }
 }
 ```
+
+### Webhook Data Context
+You can optionally include a `data` parameter in your `webhook` configuration payload. When provided, Sift will dynamically insert the current response payload (i.e. the `AgentResponse` or `ResponseResponse`) into this `data` field during execution. This allows you to construct flexible webhook architectures that pass around their execution context efficiently.
 
 ---
 
