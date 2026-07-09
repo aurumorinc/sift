@@ -43,7 +43,8 @@ def main(
         "signature": {"instructions": "", "fields": []}
     }
 
-    overrides = {"agent_name": agent_name}
+    from typing import Any
+    overrides: Dict[str, Any] = {"agent_name": agent_name}
     if agent_card_params is not None:
         overrides["agent_card_params"] = agent_card_params
     if litellm_params is not None:
