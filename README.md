@@ -125,8 +125,6 @@ headers = {"Authorization": "Bearer YOUR_WML_TOKEN", "Content-Type": "applicatio
 
 payload = {
     "agent_name": "train_data_agent",
-    "agent_card_params": {},
-    "litellm_params": {},
     "dspy_params": {
         "state": {
             "default_predictor": {
@@ -166,7 +164,6 @@ headers = {"Authorization": "Bearer YOUR_WML_TOKEN", "Content-Type": "applicatio
 
 payload = {
     "agent_name": "vision_agent",
-    "agent_card_params": {},
     "litellm_params": {"model": "gpt-4o"},
     "dspy_params": {
         "state": {
@@ -204,8 +201,6 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
   -H "Content-Type: application/json" \
   -d '{
     "agent_name": "existing_support_agent",
-    "agent_card_params": {},
-    "litellm_params": {},
     "dspy_params": {
       "state": {
         "default_predictor": {
@@ -236,14 +231,12 @@ headers = {
 
 payload = {
     "agent_name": "async_support_agent",
-    "agent_card_params": {},
     "litellm_params": {"model": "gpt-4o"},
     "dspy_params": {
         "state": {
             "default_predictor": {
                 "signature": {
-                    "instructions": "You are a helpful assistant.",
-                    "fields": {}
+                    "instructions": "You are a helpful assistant."
                 }
             }
         }
@@ -493,14 +486,11 @@ agent_payload = {
         "state": {
             "default_predictor": {
                 "signature": {
-                    "instructions": "You are a comedian.",
-                    "fields": {}
+                    "instructions": "You are a comedian."
                 }
             }
         }
-    },
-    "litellm_params": {},
-    "agent_card_params": {}
+    }
 }
 client.compile_and_save_agent(agent_payload)
 ```

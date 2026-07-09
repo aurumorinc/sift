@@ -14,10 +14,6 @@ components:
   schemas:
     AgentRequest:
       type: object
-      required:
-        - agent_card_params
-        - litellm_params
-        - dspy_params
       properties:
         agent_name:
           type: string
@@ -79,8 +75,6 @@ components:
           
     DSPyParams:
       type: object
-      required:
-        - state
       properties:
         optimizer:
           type: string
@@ -94,8 +88,6 @@ components:
             
     DSPyPredictorState:
       type: object
-      required:
-        - signature
       properties:
         traces:
           type: array
@@ -117,9 +109,6 @@ components:
           
     DSPySignatureState:
       type: object
-      required:
-        - instructions
-        - fields
       properties:
         instructions:
           type: string
