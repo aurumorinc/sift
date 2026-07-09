@@ -41,7 +41,15 @@ def test_responses_main_structured_format_integration(mock_get_agent):
             )
             
             assert resp.success is True
-            assert resp.response.output[0]["content"][0]["text"] == '{"extracted": True}'
+            assert resp.response is not None
+            out_dict = resp.response.output[0].model_dump() if hasattr(resp.response.output[0], "model_dump") else resp.response.output[0]
+            if "content" in out_dict and isinstance(out_dict["content"], list):
+                text_content = out_dict["content"][0].get("text")
+            elif "message" in out_dict:
+                text_content = out_dict["message"].get("content")
+            else:
+                text_content = out_dict.get("text", "")
+            assert text_content == '{"extracted": True}'
             
             # verify the dspy.LM was instantiated with response_format and temperature
             mock_lm_class.assert_called_once()
