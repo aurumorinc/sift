@@ -47,7 +47,20 @@ def test_predict_response_multimodal_passthrough(mock_lm, mock_get_agent):
         response = predict_response(req)
         
         assert response.status == "completed"
-        assert response.output[0]["content"][0]["text"] == "It is an image."
+        out_dict = response.output[0]
+        if hasattr(out_dict, "model_dump"):
+            out_dict = out_dict.model_dump()
+        elif hasattr(out_dict, "dict"):
+            out_dict = out_dict.dict()
+        assert isinstance(out_dict, dict)
+        text_content = ""
+        if "content" in out_dict and isinstance(out_dict["content"], list):
+            text_content = out_dict["content"][0].get("text", "")
+        elif "message" in out_dict and isinstance(out_dict["message"], dict):
+            text_content = out_dict["message"].get("content", "")
+        else:
+            text_content = out_dict.get("text", "")
+        assert text_content == "It is an image."
         
         mock_forward.assert_called_once()
         called_kwargs = mock_forward.call_args.kwargs

@@ -24,4 +24,4 @@ def test_response_request_extra_fields():
         input="test_input",
         extra_param="extra_value"
     )
-    assert req.extra_param == "extra_value"
+    assert req.model_extra is not None and req.model_extra.get("extra_param") == "extra_value"

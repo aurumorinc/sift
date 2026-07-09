@@ -42,10 +42,15 @@ def test_responses_main_structured_format_integration(mock_get_agent):
             
             assert resp.success is True
             assert resp.response is not None
-            out_dict = resp.response.output[0].model_dump() if hasattr(resp.response.output[0], "model_dump") else resp.response.output[0]
+            out_dict = resp.response.output[0]
+            if hasattr(out_dict, "model_dump"):
+                out_dict = out_dict.model_dump()
+            elif hasattr(out_dict, "dict"):
+                out_dict = out_dict.dict()
+            assert isinstance(out_dict, dict)
             if "content" in out_dict and isinstance(out_dict["content"], list):
                 text_content = out_dict["content"][0].get("text")
-            elif "message" in out_dict:
+            elif "message" in out_dict and isinstance(out_dict["message"], dict):
                 text_content = out_dict["message"].get("content")
             else:
                 text_content = out_dict.get("text", "")
