@@ -194,6 +194,8 @@ def compile_and_save_agent(payload: Dict[str, Any]) -> None:
 
     # 2. Extract litellm_params and initialize LM
     litellm_params = agent.litellm_params.copy()
+    if "model" not in litellm_params:
+        litellm_params["model"] = "gemini/gemini-3.1-flash-lite"
     lm = dspy.LM(**litellm_params)
     dspy.settings.configure(lm=lm)
 

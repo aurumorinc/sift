@@ -7,8 +7,8 @@ from sift.utils.webhook.schema import Webhook
 
 
 class DSPySignatureState(BaseModel):
-    instructions: str
-    fields: Any
+    instructions: str = ""
+    fields: Any = Field(default_factory=list)
     model_config = ConfigDict(extra="allow")
 
 
@@ -26,7 +26,7 @@ class DSPyPredictorState(BaseModel):
     traces: List[Any] = Field(default_factory=list)
     train: List[DSPyTrainingExample] = Field(default_factory=list)
     demos: List[Dict[str, Any]] = Field(default_factory=list)
-    signature: DSPySignatureState
+    signature: DSPySignatureState = Field(default_factory=DSPySignatureState)
     lm: Optional[Dict[str, Any]] = None
     model_config = ConfigDict(extra="allow")
 
@@ -34,15 +34,17 @@ class DSPyPredictorState(BaseModel):
 class DSPyParams(BaseModel):
     optimizer: Optional[str] = None
     optimizer_params: Optional[Dict[str, Any]] = None
-    state: Dict[str, DSPyPredictorState]
+    state: Dict[str, DSPyPredictorState] = Field(
+        default_factory=lambda: {"predict": DSPyPredictorState()}
+    )
 
 
 class Agent(BaseModel):
     agent_name: str = Field(default_factory=lambda: uuid.uuid4().hex)
-    agent_card_params: Dict[str, Any]
-    litellm_params: Dict[str, Any]
+    agent_card_params: Dict[str, Any] = Field(default_factory=dict)
+    litellm_params: Dict[str, Any] = Field(default_factory=dict)
     object_permission: Optional[Dict[str, Any]] = None
-    dspy_params: DSPyParams
+    dspy_params: DSPyParams = Field(default_factory=DSPyParams)
     labels: Optional[List[str]] = None
 
 
