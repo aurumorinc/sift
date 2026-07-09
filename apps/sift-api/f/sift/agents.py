@@ -10,6 +10,13 @@ from sift.modules.agents.schema import AgentResponse
 from sift.use_cases.agents.service import main as agents_main
 
 
+os.environ["GEMINI_API_KEY"] = wmill.get_variable("f/sift/gemini_api_key")
+os.environ["LANGFUSE_SECRET_KEY"] = wmill.get_variable("f/sift/langfuse_secret_key")
+os.environ["LANGFUSE_PUBLIC_KEY"] = wmill.get_variable("f/sift/langfuse_public_key")
+os.environ["LANGFUSE_BASE_URL"] = wmill.get_variable("f/sift/langfuse_base_url")
+os.environ["LANGFUSE_HOST"] = wmill.get_variable("f/sift/langfuse_host")
+
+
 def main(
     agent_name: Optional[str] = None,
     agent_card_params: Optional[Dict] = None,
