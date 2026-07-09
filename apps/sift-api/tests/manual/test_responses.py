@@ -7,8 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 WINDMILL_ACCESS_TOKEN = os.getenv("WINDMILL_ACCESS_TOKEN")
-WINDMILL_BASE_URL = os.getenv("WINDMILL_BASE_URL", "https://windmill.aurumor.com")
-WORKSPACE = "sift"
+WINDMILL_BASE_URL = os.getenv("WINDMILL_BASE_URL")
 
 pytestmark = pytest.mark.manual
 
@@ -22,7 +21,7 @@ def check_token():
 @pytest.fixture(scope="module")
 def setup_test_agent():
     agent_name = f"test_windmill_resp_agent_{uuid.uuid4().hex[:8]}"
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/agents"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/agents"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -45,7 +44,7 @@ def setup_test_agent():
 
 
 def test_windmill_simple_text(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -59,7 +58,7 @@ def test_windmill_simple_text(setup_test_agent):
 
 
 def test_windmill_conversational(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -77,7 +76,7 @@ def test_windmill_conversational(setup_test_agent):
 
 
 def test_windmill_multimodal(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -99,7 +98,7 @@ def test_windmill_multimodal(setup_test_agent):
 
 
 def test_windmill_structured_json(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -129,7 +128,7 @@ def test_windmill_structured_json(setup_test_agent):
 def test_windmill_async_background(setup_test_agent):
     # This one we use standard /run because it's in the background anyway, or /run/wait?
     # If we want the wait for the background trigger, we can use /run/wait
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"

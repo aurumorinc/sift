@@ -7,8 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 WINDMILL_ACCESS_TOKEN = os.getenv("WINDMILL_ACCESS_TOKEN")
-WINDMILL_BASE_URL = os.getenv("WINDMILL_BASE_URL", "https://windmill.aurumor.com")
-WORKSPACE = "sift"
+WINDMILL_BASE_URL = os.getenv("WINDMILL_BASE_URL")
 
 pytestmark = pytest.mark.manual
 
@@ -21,7 +20,7 @@ def check_token():
 
 def test_windmill_full_configuration():
     agent_name = f"test_windmill_agent_{uuid.uuid4().hex[:8]}"
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/f/sift/agents"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/agents"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -59,7 +58,7 @@ def test_windmill_full_configuration():
 
 def test_windmill_zero_config():
     agent_name = f"test_windmill_agent_{uuid.uuid4().hex[:8]}"
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/agents"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/agents"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -83,7 +82,7 @@ def test_windmill_zero_config():
     
 def test_windmill_multimodal():
     agent_name = f"test_windmill_agent_{uuid.uuid4().hex[:8]}"
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/agents"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/agents"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -117,7 +116,7 @@ def test_windmill_multimodal():
 
 def test_windmill_deep_merge():
     agent_name = f"test_windmill_agent_{uuid.uuid4().hex[:8]}"
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/agents"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/agents"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -149,7 +148,7 @@ def test_windmill_deep_merge():
 
 def test_windmill_async_webhook():
     agent_name = f"test_windmill_agent_{uuid.uuid4().hex[:8]}"
-    url = f"{WINDMILL_BASE_URL}/api/w/{WORKSPACE}/jobs/run/wait/f/sift/agents"
+    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/agents"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
