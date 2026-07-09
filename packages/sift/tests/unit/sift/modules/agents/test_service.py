@@ -255,6 +255,84 @@ def test_compile_and_save_agent_preserves_signature_fields(
 
 @patch("dspy.teleprompt.BootstrapFewShot")
 @patch("sift.modules.agents.repository.langfuse.save_agent")
+def test_compile_and_save_agent_hydrates_multimodal_train_data(mock_save_agent, mock_bootstrap):
+    payload = {
+        "agent_name": "test-agent-vision",
+        "agent_card_params": {},
+        "litellm_params": {"model": "openai/gpt-4o"},
+        "dspy_params": {
+            "optimizer": "BootstrapFewShot",
+            "state": {
+                "main_predictor": {
+                    "signature": {
+                        "instructions": "Vision task",
+                        "fields": [
+                            {"name": "messages", "json_schema_extra": {"__dspy_field_type": "input"}},
+                            {"name": "response", "json_schema_extra": {"__dspy_field_type": "output"}},
+                        ],
+                    },
+                    "train": [
+                        {
+                            "messages": [
+                                {
+                                    "role": "user",
+                                    "content": [
+                                        {"type": "text", "text": "What is this?"},
+                                        {"type": "image_url", "image_url": {"url": "https://example.com/image.png"}}
+                                    ]
+                                }
+                            ],
+                            "response": "An image.",
+                            "score": 1.0
+                        }
+                    ],
+                    "traces": [],
+                    "demos": [],
+                }
+            }
+        },
+    }
+
+    mock_optimizer = MagicMock()
+    mock_compiled_module = MagicMock()
+    mock_compiled_module.dump_state.return_value = {
+        "main_predictor": {
+            "signature": {
+                "instructions": "Vision task optimized",
+                "fields": [],
+            },
+            "train": [],
+            "traces": [],
+            "demos": [],
+            "lm": None,
+        }
+    }
+    mock_optimizer.compile.return_value = mock_compiled_module
+    mock_bootstrap.return_value = mock_optimizer
+
+    compile_and_save_agent(payload)
+
+    # Verify that the trainset passed to compile() had its image_url hydrated into dspy.Image
+    mock_optimizer.compile.assert_called_once()
+    kwargs = mock_optimizer.compile.call_args.kwargs
+    trainset = kwargs.get("trainset")
+    assert trainset is not None
+    assert len(trainset) == 1
+
+    first_example = trainset[0]
+    assert hasattr(first_example, "messages")
+    messages = first_example.messages
+    assert isinstance(messages, list)
+    assert len(messages) == 1
+    content = messages[0]["content"]
+    assert isinstance(content, list)
+    assert len(content) == 2
+    assert isinstance(content[1], dspy.Image)
+    assert content[1].url == "https://example.com/image.png"
+
+
+@patch("dspy.teleprompt.BootstrapFewShot")
+@patch("sift.modules.agents.repository.langfuse.save_agent")
 def test_compile_and_save_agent_no_trainset(mock_save_agent, mock_bootstrap):
     original_fields = [
         {"name": "input_a", "json_schema_extra": {"__dspy_field_type": "input"}},
