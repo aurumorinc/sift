@@ -9,7 +9,7 @@ import wmill
 from typing import Dict, List, Optional
 
 from sift.modules.agents.schema import AgentResponse
-from sift.use_cases.agents.service import main as agents_main
+from sift.use_cases.agents.service import main as _main
 
 os.environ["GEMINI_API_KEY"] = wmill.get_variable("f/sift/gemini_api_key")
 os.environ["LANGFUSE_SECRET_KEY"] = wmill.get_variable("f/sift/langfuse_secret_key")
@@ -28,7 +28,7 @@ def main(
     webhook: Optional[Dict] = None,
 ) -> AgentResponse:
     """Create/compile agents and trigger webhooks."""
-    return agents_main(
+    return _main(
         agent_name=agent_name,
         agent_card_params=agent_card_params,
         litellm_params=litellm_params,
