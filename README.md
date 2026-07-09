@@ -67,7 +67,8 @@ Compiles, saves, and configures new DSPy agents to Langfuse. **All fields in the
   - `MIPROv2` for datasets > 20 examples
 - **LLM-as-a-Judge Evaluation:** Sift will automatically route the evaluation of predictions during the DSPy optimization loop to an LLM Judge that scores the model based on expected output, original scores, and feedback defined in your training examples.
 
-#### Example Request: Synchronous (cURL)
+#### Variation 1: Full Configuration (cURL)
+Explicitly configure a detailed agent with signatures, optimizer settings, and LiteLLM parameters.
 
 ```bash
 curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents" \
@@ -113,9 +114,8 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
   }'
 ```
 
-#### Example Request: Compile/Optimize using only Train Data (Python)
-
-If you omit the `optimizer` configurations and only provide `train` data, Sift automatically defaults to compiling your agent using those static examples (via `BootstrapFewShot`).
+#### Variation 2: Zero-Config Auto Inference (Python)
+If you omit the `optimizer` configurations and only provide `train` data, Sift automatically defaults to compiling your agent using those static examples (via `BootstrapFewShot`) and infers the signature fields.
 
 ```python
 import requests
@@ -123,10 +123,10 @@ import requests
 url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents"
 headers = {"Authorization": "Bearer YOUR_WML_TOKEN", "Content-Type": "application/json"}
 
-# Because of the deep merge and auto-inference features, you only need to provide
-# the fields you actually want to configure or override.
 payload = {
     "agent_name": "train_data_agent",
+    "agent_card_params": {},
+    "litellm_params": {},
     "dspy_params": {
         "state": {
             "default_predictor": {
@@ -145,10 +145,7 @@ payload = {
                         },
                         "score": 1.0
                     }
-                ],
-                # If creating a brand new agent, Sift can infer fields if omitted.
-                # If updating an existing agent, Sift will deep-merge this train
-                # data and automatically re-optimize using the existing signature.
+                ]
             }
         }
     }
@@ -158,7 +155,35 @@ response = requests.post(url, json=payload, headers=headers)
 print(response.json())
 ```
 
-#### Example Request: Asynchronous with Webhook (Python)
+#### Variation 3: Update Agent with Deep Merge (cURL)
+Provide just your `agent_name` and new `train` data. Sift will preserve your existing configurations, append the new training data, and re-optimize.
+
+```bash
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents" \
+  -H "Authorization: Bearer YOUR_WML_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent_name": "existing_support_agent",
+    "agent_card_params": {},
+    "litellm_params": {},
+    "dspy_params": {
+      "state": {
+        "default_predictor": {
+          "train": [
+            {
+              "messages": "Can I get a refund?",
+              "response": "Refunds are processed within 5-7 business days.",
+              "score": 1.0
+            }
+          ]
+        }
+      }
+    }
+  }'
+```
+
+#### Variation 4: Async Compilation with Webhook (Python)
+Heavy optimizers (like `MIPROv2`) can take a long time. Pass a `webhook` configuration to process the agent compilation in the background.
 
 ```python
 import requests
@@ -225,7 +250,8 @@ Returns the original agent configuration appended with execution success/error s
 
 Executes an existing agent against user input and returns a standard API response.
 
-#### Example Request: Synchronous Text Input (cURL)
+#### Variation 1: Simple Text Input (cURL)
+Standard single-shot prompt.
 
 ```bash
 curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
@@ -238,7 +264,8 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
   }'
 ```
 
-#### Example Request: Synchronous Messages Array Input (cURL)
+#### Variation 2: Conversational Messages Array Input (cURL)
+Multi-turn chat history utilizing OpenAI-style role definitions.
 
 ```bash
 curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
@@ -254,7 +281,8 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
   }'
 ```
 
-#### Example Request: Synchronous Multimodal Input (cURL)
+#### Variation 3: Multimodal Vision Input (cURL)
+Pass an image URL within the message content array for analysis (e.g., receipt extraction or image classification).
 
 ```bash
 curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
@@ -278,9 +306,8 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
   }'
 ```
 
-#### Example Request: Synchronous Structured JSON Output (cURL)
-
-Sift supports LiteLLM's `ResponsesAPI` parameters, allowing you to enforce strict JSON schemas via `text.format`.
+#### Variation 4: Structured JSON Schema Output (cURL)
+Sift supports LiteLLM's parameters, allowing you to enforce strict JSON schemas via `response_format`.
 
 ```bash
 curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
@@ -290,28 +317,25 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
     "model": "extraction_agent",
     "input": "Extract details: John Doe is 28 years old.",
     "temperature": 0.2,
-    "text": {
-      "format": {
-        "type": "json_schema",
-        "json_schema": {
-          "name": "UserDetails",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "name": {"type": "string"},
-              "age": {"type": "integer"}
-            },
-            "required": ["name", "age"]
-          }
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "UserDetails",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {"type": "string"},
+            "age": {"type": "integer"}
+          },
+          "required": ["name", "age"]
         }
       }
     }
   }'
 ```
 
-#### Example Request: Asynchronous Background Request (Python)
-
-If `background` is true, the server can acknowledge the request quickly, and the heavy processing will send the result back to your webhook URL.
+#### Variation 5: Asynchronous Background Request (Python)
+Execute a slow inference task in the background using `background: true` and a `webhook`.
 
 ```python
 import requests
