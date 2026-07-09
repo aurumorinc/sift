@@ -1,31 +1,27 @@
-# Changelog v0.10.0
+# Changelog v0.11.0
 
-## Breaking Changes
+## Features
 
-* **API Endpoint Structure Update**
-  All API endpoints now require a workspace identifier in the URL path. You must update your API client calls to include this identifier (e.g., `/api/v1/resource` becomes `/api/v1/{workspace}/resource`). Ensure the `WINDMILL_WORKSPACE` environment variable is configured in your deployment environment.
-  Commit: [4d45212](https://github.com/aurumorinc/sift/commit/4d452129)
+* **Sparse Payload Support**
+  Implemented support for Agent schema and DSPy states while maintaining backward compatibility.
+  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
 
-* **Fixture Renaming**
-  The `check_token` fixture has been renamed to `check_env`. Please update your test suites to reference the new fixture name.
-  Commit: [4d45212](https://github.com/aurumorinc/sift/commit/4d452129)
+* **Model Fallbacks**
+  Added `gemini/gemini-3.1-flash-lite` as a default model to prevent validation errors during model initialization.
+  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
+
+## Improvements
+
+* **Schema Refactoring**
+  Updated model fields to utilize `default_factory` and simplified the internal agent initialization logic.
+  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
+
+* **Integration Testing**
+  Added comprehensive test coverage for edge cases, specifically targeting empty payloads and null overrides.
+  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
 
 ## Fixes
 
-* **Test Validation Assertions**
-  Added explicit Content-Type JSON assertions to all test cases to ensure strict API response validation.
-  Commit: [4d45212](https://github.com/aurumorinc/sift/commit/4d452129)
-
-## Other
-
-* **Dependency Updates**
-  Updated `huggingface-hub` to 1.23.0 and `sift` to the latest version.
-  Commits: [0cb1790](https://github.com/aurumorinc/sift/commit/0cb17900), [745f3bc](https://github.com/aurumorinc/sift/commit/745f3bc2), [559072f](https://github.com/aurumorinc/sift/commit/559072f2)
-
-* **New Dependency Additions**
-  Added `wmill` 1.753.0 and `windmill-api` to the project dependencies.
-  Commits: [0cb1790](https://github.com/aurumorinc/sift/commit/0cb17900), [745f3bc](https://github.com/aurumorinc/sift/commit/745f3bc2), [559072f](https://github.com/aurumorinc/sift/commit/559072f2)
-
-* **Code Import Corrections**
-  Added missing `os` module imports to the agents and responses modules to resolve runtime import errors.
-  Commits: [0cb1790](https://github.com/aurumorinc/sift/commit/0cb17900), [745f3bc](https://github.com/aurumorinc/sift/commit/745f3bc2), [559072f](https://github.com/aurumorinc/sift/commit/559072f2)
+* **Windmill Integration Compatibility**
+  Resolved platform-specific bugs to ensure stability when running within the Windmill environment.
+  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)

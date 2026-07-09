@@ -1,6 +1,6 @@
 # /// script
 # dependencies = [
-#   "sift @ git+https://github.com/aurumorinc/sift.git@0.10.0#subdirectory=packages/sift",
+#   "sift @ git+https://github.com/aurumorinc/sift.git@0.11.0#subdirectory=packages/sift",
 #   "wmill",
 # ]
 # ///
