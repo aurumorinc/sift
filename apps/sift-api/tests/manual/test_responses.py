@@ -8,20 +8,23 @@ load_dotenv()
 
 WINDMILL_ACCESS_TOKEN = os.getenv("WINDMILL_ACCESS_TOKEN")
 WINDMILL_BASE_URL = os.getenv("WINDMILL_BASE_URL")
+WINDMILL_WORKSPACE = os.getenv("WINDMILL_WORKSPACE")
 
 pytestmark = pytest.mark.manual
 
 
 @pytest.fixture(autouse=True)
-def check_token():
+def check_env():
     if not WINDMILL_ACCESS_TOKEN:
         pytest.skip("WINDMILL_ACCESS_TOKEN is not set")
+    if not WINDMILL_WORKSPACE:
+        pytest.skip("WINDMILL_WORKSPACE is not set")
 
 
 @pytest.fixture(scope="module")
 def setup_test_agent():
     agent_name = f"test_windmill_resp_agent_{uuid.uuid4().hex[:8]}"
-    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/agents"
+    url = f"{WINDMILL_BASE_URL}/api/w/{WINDMILL_WORKSPACE}/jobs/run_wait_result/p/f/sift/agents"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -44,7 +47,7 @@ def setup_test_agent():
 
 
 def test_windmill_simple_text(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/api/w/{WINDMILL_WORKSPACE}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -55,10 +58,11 @@ def test_windmill_simple_text(setup_test_agent):
     }
     response = requests.post(url, headers=headers, json=payload)
     assert response.status_code == 200, f"Failed: {response.text}"
+    assert "application/json" in response.headers.get("Content-Type", ""), f"Response was not JSON: {response.text}"
 
 
 def test_windmill_conversational(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/api/w/{WINDMILL_WORKSPACE}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -73,10 +77,11 @@ def test_windmill_conversational(setup_test_agent):
     }
     response = requests.post(url, headers=headers, json=payload)
     assert response.status_code == 200, f"Failed: {response.text}"
+    assert "application/json" in response.headers.get("Content-Type", ""), f"Response was not JSON: {response.text}"
 
 
 def test_windmill_multimodal(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/api/w/{WINDMILL_WORKSPACE}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -95,10 +100,11 @@ def test_windmill_multimodal(setup_test_agent):
     }
     response = requests.post(url, headers=headers, json=payload)
     assert response.status_code == 200, f"Failed: {response.text}"
+    assert "application/json" in response.headers.get("Content-Type", ""), f"Response was not JSON: {response.text}"
 
 
 def test_windmill_structured_json(setup_test_agent):
-    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/api/w/{WINDMILL_WORKSPACE}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -123,12 +129,13 @@ def test_windmill_structured_json(setup_test_agent):
     }
     response = requests.post(url, headers=headers, json=payload)
     assert response.status_code == 200, f"Failed: {response.text}"
+    assert "application/json" in response.headers.get("Content-Type", ""), f"Response was not JSON: {response.text}"
 
 
 def test_windmill_async_background(setup_test_agent):
     # This one we use standard /run because it's in the background anyway, or /run/wait?
     # If we want the wait for the background trigger, we can use /run/wait
-    url = f"{WINDMILL_BASE_URL}/jobs/run_wait_result/p/f/sift/responses"
+    url = f"{WINDMILL_BASE_URL}/api/w/{WINDMILL_WORKSPACE}/jobs/run_wait_result/p/f/sift/responses"
     headers = {
         "Authorization": f"Bearer {WINDMILL_ACCESS_TOKEN}",
         "Content-Type": "application/json"
@@ -144,3 +151,4 @@ def test_windmill_async_background(setup_test_agent):
     }
     response = requests.post(url, headers=headers, json=payload)
     assert response.status_code == 200, f"Failed: {response.text}"
+    assert "application/json" in response.headers.get("Content-Type", ""), f"Response was not JSON: {response.text}"

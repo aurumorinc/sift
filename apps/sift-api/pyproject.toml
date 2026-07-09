@@ -28,6 +28,9 @@ search_path = ["../../packages/sift/src"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "../../packages/sift/src"]
+markers = [
+    "manual: marks tests as manual (deselect with '-m \"not manual\"')",
+]
 
 [dependency-groups]
 dev = [

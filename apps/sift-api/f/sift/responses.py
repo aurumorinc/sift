@@ -1,9 +1,11 @@
 # /// script
 # dependencies = [
 #   "sift @ git+https://github.com/aurumorinc/sift.git@0.9.0#subdirectory=packages/sift",
+#   "wmill",
 # ]
 # ///
 
+import os
 import wmill
 from typing import Dict, List, Optional, Union
 
