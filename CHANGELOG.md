@@ -1,44 +1,33 @@
-# Changelog v0.8.0
+# Changelog v0.9.0
 
 ## Breaking Changes
 
-*   **Unsafe LM State Loading Support**
-    The `load_state` method has been updated to require explicit permission for unsafe state loading.
-    *   **Migration:** Update existing calls to `load_state` to include the new `allow_unsafe_lm_state` parameter. If your implementation requires unsafe state loading, you must explicitly set `allow_unsafe_lm_state=True`.
-    *   Commit: [498a1fd](https://github.com/aurumorinc/sift/commit/498a1fd91)
+*   **Windmill API Endpoint Path Update**
+    The Windmill API endpoints have been updated to the new path format `/jobs/run_wait_result/p/f/...`. You must update all existing calls to the Windmill API to reflect this new structure.
+    *   Commit: [0376d14](https://github.com/aurumorinc/sift/commit/0376d148)
 
-## Improvements
+*   **Removal of Windmill Base URL Fallback**
+    The default fallback for `WINDMILL_BASE_URL` has been removed. You must now explicitly set the `WINDMILL_BASE_URL` environment variable in your configuration to ensure successful API connectivity.
+    *   Commit: [0376d14](https://github.com/aurumorinc/sift/commit/0376d148)
 
-*   **Centralization of Metric Logic**
-    Consolidated metric logic and LLM judge evaluation into dedicated service modules to improve modularity.
-    *   Commits: [9b09f87](https://github.com/aurumorinc/sift/commit/9b09f87d), [1995940](https://github.com/aurumorinc/sift/commit/1995940e), [1965a21](https://github.com/aurumorinc/sift/commit/1965a2171)
-*   **Codebase Structural Refactoring**
-    Reorganized type definitions and file structure to enhance maintainability and code navigation.
-    *   Commits: [df078db](https://github.com/aurumorinc/sift/commit/df078dbe), [1422d4c](https://github.com/aurumorinc/sift/commit/1422d4cc14), [1783bad](https://github.com/aurumorinc/sift/commit/1783badc76)
-*   **Agent Logic Restructuring**
-    Moved webhook-decorated functions to `use_cases` and consolidated core agent logic.
-    *   Commit: [18d92ce](https://github.com/aurumorinc/sift/commit/18d92ce834)
+## Features
 
-## Bug Fixes
+*   **Workspace Configuration Schema**
+    Added formal schema definitions for environment variables to improve configuration validation.
+    *   Commits: [e3ed77b](https://github.com/aurumorinc/sift/commit/e3ed77b1), [85d7ca3](https://github.com/aurumorinc/sift/commit/85d7ca3b), [8aa56dd](https://github.com/aurumorinc/sift/commit/8aa56ddc)
 
-*   **Robust Model Serialization**
-    Updated test assertions to ensure compatibility with both Pydantic v1 and v2, and improved internal type hints.
-    *   Commits: [5f99d6c](https://github.com/aurumorinc/sift/commit/5f99d6c04), [6034937](https://github.com/aurumorinc/sift/commit/6034937e6), [77c74f8](https://github.com/aurumorinc/sift/commit/77c74f8a56)
+*   **Automatic Environment Variable Propagation**
+    Implemented automatic propagation for workspace configuration variables to streamline environment setup.
+    *   Commits: [e3ed77b](https://github.com/aurumorinc/sift/commit/e3ed77b1), [85d7ca3](https://github.com/aurumorinc/sift/commit/85d7ca3b), [8aa56dd](https://github.com/aurumorinc/sift/commit/8aa56ddc)
 
-## Infrastructure
+## Fixes
 
-*   **Dependency Management Updates**
-    Added `pytest-asyncio` and `pytest-cov` to the test suite and updated project lock files.
-    *   Commits: [11e417c](https://github.com/aurumorinc/sift/commit/11e417c20a), [1281bf5](https://github.com/aurumorinc/sift/commit/1281bf586f)
-
-## Documentation
-
-*   **API Examples and Variations**
-    Added documentation covering multimodal training workflows and dynamic optimizer selection.
-    *   Commits: [13cf0f6](https://github.com/aurumorinc/sift/commit/13cf0f6079), [15ae4bd](https://github.com/aurumorinc/sift/commit/15ae4bd2d0), [163da26](https://github.com/aurumorinc/sift/commit/163da26956)
+*   **Codebase Standardization**
+    Resolved missing imports and standardized code formatting across the repository to improve maintainability.
+    *   Commit: [1faa062](https://github.com/aurumorinc/sift/commit/1faa062e)
 
 ## Other
 
-*   **Comprehensive Testing Suite**
-    Added new unit and integration tests covering client operations and multimodal data handling.
-    *   Commits: [3299594](https://github.com/aurumorinc/sift/commit/32995940e), [8269c5b](https://github.com/aurumorinc/sift/commit/8269c5bdd), [108d412](https://github.com/aurumorinc/sift/commit/108d412d5e)
+*   **Integration Testing Suite**
+    Implemented comprehensive integration tests, including the use of VCR cassettes to ensure reliable and reproducible test scenarios.
+    *   Commit: [9831244](https://github.com/aurumorinc/sift/commit/98312440)
