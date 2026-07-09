@@ -155,7 +155,47 @@ response = requests.post(url, json=payload, headers=headers)
 print(response.json())
 ```
 
-#### Variation 3: Update Agent with Deep Merge (cURL)
+#### Variation 3: Multimodal Vision Training Data (Python)
+You can directly pass conversational arrays or multimodal image URLs inside the `messages` array of your training data. Sift natively hydrates these arrays for DSPy.
+
+```python
+import requests
+
+url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents"
+headers = {"Authorization": "Bearer YOUR_WML_TOKEN", "Content-Type": "application/json"}
+
+payload = {
+    "agent_name": "vision_agent",
+    "agent_card_params": {},
+    "litellm_params": {"model": "gpt-4o"},
+    "dspy_params": {
+        "state": {
+            "default_predictor": {
+                "train": [
+                    {
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {"type": "text", "text": "What is the primary color in this image?"},
+                                    {"type": "image_url", "image_url": {"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Synthese%2B.svg/200px-Synthese%2B.svg.png"}}
+                                ]
+                            }
+                        ],
+                        "response": "Red",
+                        "score": 1.0
+                    }
+                ]
+            }
+        }
+    }
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())
+```
+
+#### Variation 4: Update Agent with Deep Merge (cURL)
 Provide just your `agent_name` and new `train` data. Sift will preserve your existing configurations, append the new training data, and re-optimize.
 
 ```bash
@@ -182,7 +222,7 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
   }'
 ```
 
-#### Variation 4: Async Compilation with Webhook (Python)
+#### Variation 5: Async Compilation with Webhook (Python)
 Heavy optimizers (like `MIPROv2`) can take a long time. Pass a `webhook` configuration to process the agent compilation in the background.
 
 ```python

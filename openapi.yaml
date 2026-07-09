@@ -335,6 +335,27 @@ paths:
                               age: 30
                               profession: "doctor"
                             score: 1.0
+              Multimodal_Train_Data:
+                summary: Multimodal Vision Training Data
+                value:
+                  agent_name: "vision_agent"
+                  agent_card_params: {}
+                  litellm_params:
+                    model: "gpt-4o"
+                  dspy_params:
+                    state:
+                      default_predictor:
+                        train:
+                          - messages:
+                              - role: "user"
+                                content:
+                                  - type: "text"
+                                    text: "What is the primary color in this image?"
+                                  - type: "image_url"
+                                    image_url:
+                                      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Synthese%2B.svg/200px-Synthese%2B.svg.png"
+                            response: "Red"
+                            score: 1.0
               Update_Deep_Merge:
                 summary: Update Agent (Deep Merge)
                 value:
