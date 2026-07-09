@@ -1,7 +1,12 @@
+from __future__ import annotations
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
 
 from pydantic import BaseModel, Field, HttpUrl
+
+if TYPE_CHECKING:
+    from sift.modules.agents.schema import AgentResponse
+    from sift.modules.responses.schema import ResponseResponse
 
 
 class WebhookEvent(str, Enum):
@@ -32,3 +37,4 @@ class Webhook(BaseModel):
         ],
         description="A filter list of specific event types to receive. If omitted, all supported events are sent.",
     )
+    data: Optional[Union['AgentResponse', 'ResponseResponse']] = Field(default=None)
