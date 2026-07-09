@@ -39,9 +39,7 @@ def main(
         agent_name = uuid.uuid4().hex
 
     existing_agent = get_agent_safe(agent_name)
-    existing_agent_dict = existing_agent.model_dump() if existing_agent else {
-        "signature": {"instructions": "", "fields": []}
-    }
+    existing_agent_dict = existing_agent.model_dump() if existing_agent else {}
 
     from typing import Any
     overrides: Dict[str, Any] = {"agent_name": agent_name}
