@@ -184,6 +184,63 @@ components:
         top_p:
           type: number
           format: float
+        instructions:
+          type: string
+        max_output_tokens:
+          type: integer
+        metadata:
+          type: object
+          additionalProperties: true
+        parallel_tool_calls:
+          type: boolean
+        previous_response_id:
+          type: string
+        reasoning:
+          type: object
+          additionalProperties: true
+        store:
+          type: boolean
+        stream:
+          type: boolean
+        tool_choice:
+          oneOf:
+            - type: string
+            - type: object
+              additionalProperties: true
+        tools:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        truncation:
+          type: object
+          additionalProperties: true
+        user:
+          type: string
+        service_tier:
+          type: string
+        safety_identifier:
+          type: string
+        prompt:
+          type: string
+        max_tool_calls:
+          type: integer
+        prompt_cache_key:
+          type: string
+        prompt_cache_retention:
+          type: integer
+        stream_options:
+          type: object
+          additionalProperties: true
+        top_logprobs:
+          type: integer
+        partial_images:
+          type: boolean
+        context_management:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
       additionalProperties: true
           
     ResponseResponse:
@@ -253,7 +310,7 @@ components:
       additionalProperties: true
 
 paths:
-  /jobs/run/wait/result/p/f/sift/agents:
+  /jobs/run_wait_result/p/f/sift/agents:
     post:
       summary: Create/Compile Agent
       description: Compiles and saves a DSPy agent to Langfuse.
@@ -282,7 +339,7 @@ paths:
                       max_bootstrapped_demos: 4
                       max_labeled_demos: 16
                     state:
-                      default_predictor:
+                      predict:
                         traces: []
                         train:
                           - messages: "How do I reset my password?"
@@ -294,13 +351,9 @@ paths:
                           instructions: "You are a helpful customer support agent."
                           fields:
                             - name: "messages"
-                              json_schema_extra:
-                                desc: "User input"
-                                __dspy_field_type: "input"
+                              description: "User input"
                             - name: "response"
-                              json_schema_extra:
-                                desc: "Agent output"
-                                __dspy_field_type: "output"
+                              description: "Agent output"
                         lm: null
                   labels:
                     - "support"
@@ -313,7 +366,7 @@ paths:
                   litellm_params: {}
                   dspy_params:
                     state:
-                      default_predictor:
+                      predict:
                         train:
                           - messages: "What is the capital of France?"
                             response: "Paris."
@@ -333,7 +386,7 @@ paths:
                     model: "gpt-4o"
                   dspy_params:
                     state:
-                      default_predictor:
+                      predict:
                         train:
                           - messages:
                               - role: "user"
@@ -353,7 +406,7 @@ paths:
                   litellm_params: {}
                   dspy_params:
                     state:
-                      default_predictor:
+                      predict:
                         train:
                           - messages: "Can I get a refund?"
                             response: "Refunds are processed within 5-7 business days."
@@ -367,7 +420,7 @@ paths:
                     model: "gpt-4o"
                   dspy_params:
                     state:
-                      default_predictor:
+                      predict:
                         signature:
                           instructions: "You are a helpful assistant."
                           fields: {}
@@ -404,7 +457,7 @@ paths:
                       - "production"
                     webhook: null
                 
-  /jobs/run/wait/result/p/f/sift/responses:
+  /jobs/run_wait_result/p/f/sift/responses:
     post:
       summary: Predict Response
       description: Executes an existing agent against user input.
@@ -503,3 +556,35 @@ paths:
                         input_tokens: 12
                         output_tokens: 18
                         total_tokens: 30
+
+  /jobs_u/completed/get_result_maybe/{uuid}:
+    get:
+      summary: Poll Job Result
+      description: Fetches the result of an asynchronously executed Windmill job.
+      tags:
+        - Jobs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The UUID of the job returned by the async run endpoint.
+      responses:
+        '200':
+          description: Job status and result if completed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  completed:
+                    type: boolean
+                    description: True if the job has finished executing.
+                  result:
+                    type: object
+                    additionalProperties: true
+                    description: The final result of the job (only present if completed is true).

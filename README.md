@@ -49,13 +49,50 @@ curl -H "Authorization: Bearer $WML_TOKEN" \
 ### Authentication & Base URL
 - **Authentication**: All API requests to Windmill require a Bearer token. Provide it via the `Authorization: Bearer <TOKEN>` header.
 - **Base URL**: The default Sift deployment is located at `https://windmill.aurumor.com/api/w/aurumor`.
-- **Windmill Job Runs**: To run a Windmill script synchronously and wait for the result, use the path format: `/jobs/run/wait/result/p/f/sift/<script-name>`.
+
+### Executing Windmill Jobs
+
+You can execute Windmill jobs either synchronously or asynchronously.
+
+#### Synchronous Execution
+To run a script synchronously and wait for the result, use the `/jobs/run_wait_result/` path prefix.
+
+```bash
+TOKEN='your-wml-token'
+BODY='{"model":"","input":null,"background":false,"webhook":null}'
+URL='https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/responses'
+RESULT=$(curl -s -H 'Content-Type: application/json' -H "Authorization: Bearer $TOKEN" -X POST -d "$BODY" $URL)
+
+echo -E $RESULT | jq
+```
+
+#### Asynchronous Execution & Polling
+To run a script asynchronously, use the `/jobs/run/` path prefix. This returns a Job UUID which you can then poll using the `/jobs_u/completed/get_result_maybe/` endpoint.
+
+```bash
+TOKEN='your-wml-token'
+BODY='{"model":"","input":null,"background":false,"webhook":null}'
+URL='https://windmill.aurumor.com/api/w/aurumor/jobs/run/p/f/sift/responses'
+UUID=$(curl -s -H 'Content-Type: application/json' -H "Authorization: Bearer $TOKEN" -X POST -d "$BODY" $URL)
+
+POLL_URL="https://windmill.aurumor.com/api/w/aurumor/jobs_u/completed/get_result_maybe/$UUID"
+while true; do
+  curl -s -H "Authorization: Bearer $TOKEN" $POLL_URL -o res.json
+  COMPLETED=$(cat res.json | jq .completed)
+  if [ "$COMPLETED" = "true" ]; then
+    cat res.json | jq .result
+    break
+  else
+    sleep 1
+  fi
+done
+```
 
 ---
 
 ### 1. Create / Compile Agent
 
-**Endpoint:** `POST /jobs/run/wait/result/p/f/sift/agents`
+**Endpoint:** `POST /jobs/run_wait_result/p/f/sift/agents`
 
 Compiles, saves, and configures new DSPy agents to Langfuse. **All fields in the payload are optional.**
 - If `agent_name` is omitted, Sift will auto-generate a new UUID for the agent.
@@ -71,7 +108,7 @@ Compiles, saves, and configures new DSPy agents to Langfuse. **All fields in the
 Explicitly configure a detailed agent with signatures, optimizer settings, and LiteLLM parameters.
 
 ```bash
-curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents" \
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/agents" \
   -H "Authorization: Bearer YOUR_WML_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -88,7 +125,7 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
         "max_labeled_demos": 16
       },
       "state": {
-        "default_predictor": {
+        "predict": {
           "traces": [],
           "train": [
             {
@@ -120,14 +157,14 @@ If you omit the `optimizer` configurations and only provide `train` data, Sift a
 ```python
 import requests
 
-url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents"
+url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/agents"
 headers = {"Authorization": "Bearer YOUR_WML_TOKEN", "Content-Type": "application/json"}
 
 payload = {
     "agent_name": "train_data_agent",
     "dspy_params": {
         "state": {
-            "default_predictor": {
+            "predict": {
                 "train": [
                     {
                         "messages": "What is the capital of France?",
@@ -159,7 +196,7 @@ You can directly pass conversational arrays or multimodal image URLs inside the 
 ```python
 import requests
 
-url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents"
+url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/agents"
 headers = {"Authorization": "Bearer YOUR_WML_TOKEN", "Content-Type": "application/json"}
 
 payload = {
@@ -167,7 +204,7 @@ payload = {
     "litellm_params": {"model": "gpt-4o"},
     "dspy_params": {
         "state": {
-            "default_predictor": {
+            "predict": {
                 "train": [
                     {
                         "messages": [
@@ -196,14 +233,14 @@ print(response.json())
 Provide just your `agent_name` and new `train` data. Sift will preserve your existing configurations, append the new training data, and re-optimize.
 
 ```bash
-curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents" \
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/agents" \
   -H "Authorization: Bearer YOUR_WML_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "agent_name": "existing_support_agent",
     "dspy_params": {
       "state": {
-        "default_predictor": {
+        "predict": {
           "train": [
             {
               "messages": "Can I get a refund?",
@@ -223,7 +260,7 @@ Heavy optimizers (like `MIPROv2`) can take a long time. Pass a `webhook` configu
 ```python
 import requests
 
-url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/agents"
+url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/agents"
 headers = {
     "Authorization": "Bearer YOUR_WML_TOKEN",
     "Content-Type": "application/json"
@@ -234,7 +271,7 @@ payload = {
     "litellm_params": {"model": "gpt-4o"},
     "dspy_params": {
         "state": {
-            "default_predictor": {
+            "predict": {
                 "signature": {
                     "instructions": "You are a helpful assistant."
                 }
@@ -279,7 +316,7 @@ Returns the original agent configuration appended with execution success/error s
 
 ### 2. Predict Response
 
-**Endpoint:** `POST /jobs/run/wait/result/p/f/sift/responses`
+**Endpoint:** `POST /jobs/run_wait_result/p/f/sift/responses`
 
 Executes an existing agent against user input and returns a standard API response.
 
@@ -287,7 +324,7 @@ Executes an existing agent against user input and returns a standard API respons
 Standard single-shot prompt.
 
 ```bash
-curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/responses" \
   -H "Authorization: Bearer YOUR_WML_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -301,7 +338,7 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
 Multi-turn chat history utilizing OpenAI-style role definitions.
 
 ```bash
-curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/responses" \
   -H "Authorization: Bearer YOUR_WML_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -318,7 +355,7 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
 Pass an image URL within the message content array for analysis (e.g., receipt extraction or image classification).
 
 ```bash
-curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/responses" \
   -H "Authorization: Bearer YOUR_WML_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -343,7 +380,7 @@ curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/
 Sift supports LiteLLM's parameters, allowing you to enforce strict JSON schemas via `response_format`.
 
 ```bash
-curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses" \
+curl -X POST "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/responses" \
   -H "Authorization: Bearer YOUR_WML_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -373,7 +410,7 @@ Execute a slow inference task in the background using `background: true` and a `
 ```python
 import requests
 
-url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run/wait/result/p/f/sift/responses"
+url = "https://windmill.aurumor.com/api/w/aurumor/jobs/run_wait_result/p/f/sift/responses"
 headers = {"Authorization": "Bearer YOUR_WML_TOKEN"}
 
 payload = {
@@ -484,7 +521,7 @@ agent_payload = {
     "agent_name": "joke_agent",
     "dspy_params": {
         "state": {
-            "default_predictor": {
+            "predict": {
                 "signature": {
                     "instructions": "You are a comedian."
                 }
