@@ -10,7 +10,7 @@ def _hydrate_multimodal_messages(messages: List[Dict[str, Any]]) -> List[Dict[st
     hydrated = []
     for msg in messages:
         if isinstance(msg.get("content"), list):
-            new_content = []
+            new_content: List[Any] = []
             for part in msg["content"]:
                 if isinstance(part, dict) and part.get("type") == "image_url" and isinstance(part.get("image_url"), dict):
                     url = part["image_url"].get("url")
@@ -127,14 +127,14 @@ class AgentModule(dspy.Module):
 
             setattr(self, key, predictor)
 
-    def load_state(self, state_dict: Dict[str, Any]):
+    def load_state(self, state: Dict[str, Any]):
         # Hydrate messages arrays in demos
-        for key, pred_state in state_dict.items():
+        for key, pred_state in state.items():
             if isinstance(pred_state, dict) and "demos" in pred_state:
                 for demo in pred_state["demos"]:
                     if "messages" in demo and isinstance(demo["messages"], list):
                         demo["messages"] = _hydrate_multimodal_messages(demo["messages"])
-        super().load_state(state_dict)
+        super().load_state(state)
 
     def forward(self, **kwargs):
         # We assume the first predictor is the main entry point
