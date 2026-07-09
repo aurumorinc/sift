@@ -1,27 +1,11 @@
-# Changelog v0.11.0
+# Changelog v0.11.1
 
-## Features
+## Documentation
 
-* **Sparse Payload Support**
-  Implemented support for Agent schema and DSPy states while maintaining backward compatibility.
-  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
+*   **Simplified API Documentation Examples**
+    Removed optional and empty fields (`agent_card_params`, `litellm_params`, `fields`) from documentation examples to improve clarity and reduce noise.
+    Commits: [c52fa80](https://github.com/aurumorinc/sift/commit/c52fa80f)
 
-* **Model Fallbacks**
-  Added `gemini/gemini-3.1-flash-lite` as a default model to prevent validation errors during model initialization.
-  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
-
-## Improvements
-
-* **Schema Refactoring**
-  Updated model fields to utilize `default_factory` and simplified the internal agent initialization logic.
-  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
-
-* **Integration Testing**
-  Added comprehensive test coverage for edge cases, specifically targeting empty payloads and null overrides.
-  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
-
-## Fixes
-
-* **Windmill Integration Compatibility**
-  Resolved platform-specific bugs to ensure stability when running within the Windmill environment.
-  Commits: [d34fbd0](https://github.com/aurumorinc/sift/commit/d34fbd01), [3b04c61](https://github.com/aurumorinc/sift/commit/3b04c612), [9bba7fe](https://github.com/aurumorinc/sift/commit/9bba7feb)
+*   **Updated OpenAPI Schema Definitions**
+    Explicitly marked `agent_card_params`, `litellm_params`, and `fields` as optional within the OpenAPI schema to ensure client-side code generators handle these fields correctly.
+    Commits: [92f5e28](https://github.com/aurumorinc/sift/commit/92f5e284)
