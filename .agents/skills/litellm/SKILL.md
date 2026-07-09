@@ -144,27 +144,9 @@ litellm/litellm_core_utils/sensitive_data_masker.py:
 │        excluded_keys: Optional[Set[str]] = None,
 ⋮
 
-litellm/litellm_core_utils/token_counter.py:
-⋮
-│def token_counter(
-│    model="",
-│    custom_tokenizer: Optional[Union[dict, SelectTokenizerResponse]] = None,
-│    text: Optional[Union[str, List[str]]] = None,
-│    messages: Optional[List[Union[AllMessageValues, Message]]] = None,
-│    count_response_tokens: Optional[bool] = False,
-│    tools: Optional[List[ChatCompletionToolParam]] = None,
-│    tool_choice: Optional[ChatCompletionNamedToolChoiceParam] = None,
-│    use_default_image_token_count: Optional[bool] = False,
-│    default_token_count: Optional[int] = None,
-⋮
-
 litellm/litellm_core_utils/url_utils.py:
 ⋮
 │class SSRFError(ValueError):
-⋮
-│def encode_url_path_segment(value: Any, *, field_name: str = "path parameter") -> str:
-⋮
-│def validate_url(url: str) -> Tuple[str, str]:
 ⋮
 
 litellm/llms/base_llm/chat/transformation.py:
@@ -237,6 +219,19 @@ litellm/llms/custom_httpx/httpx_handler.py:
 │class HTTPHandler:
 ⋮
 
+litellm/llms/sap/chat/models.py:
+⋮
+│class FunctionTool(BaseModel):
+│    description: str = ""
+⋮
+│    def model_dump(self, **kwargs) -> dict:
+⋮
+│class ChatCompletionTool(BaseModel):
+│    type_: Literal["function"] = Field(default="function", alias="type")
+⋮
+│    def model_dump(self, **kwargs) -> dict:
+⋮
+
 litellm/models/mcp_server.py:
 ⋮
 │class MCPEnvVarScope(str, enum.Enum):
@@ -288,6 +283,9 @@ litellm/proxy/_experimental/out/_next/static/chunks/07.fwfv-sinb5.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
+litellm/proxy/_experimental/out/_next/static/chunks/081.4arb-o0e0.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
 litellm/proxy/_experimental/out/_next/static/chunks/08o64zaid_juv.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
@@ -312,6 +310,9 @@ litellm/proxy/_experimental/out/_next/static/chunks/0ivj_wax-joap.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
+litellm/proxy/_experimental/out/_next/static/chunks/0lg.6rbfsd-l9.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
 litellm/proxy/_experimental/out/_next/static/chunks/0m6zdocif1gl4.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
@@ -334,13 +335,13 @@ litellm/proxy/_experimental/out/_next/static/chunks/0piozaeodiue..js:
 │Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0q6~n4y84cejn.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0x.73w57rn4ou.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/0ys10755n8os_.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/11ibt3khr2hk3.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
-litellm/proxy/_experimental/out/_next/static/chunks/13ok6va25s6c-.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_types.py:
@@ -372,6 +373,17 @@ litellm/proxy/guardrails/guardrail_hooks/custom_code/primitives.py:
 │def lower(text: str) -> str:
 ⋮
 
+litellm/proxy/proxy_server.py:
+⋮
+│@router.post(
+│    "/utils/token_counter",
+│    tags=["llm utils"],
+│    dependencies=[Depends(user_api_key_auth)],
+│    response_model=TokenCountResponse,
+│)
+│async def token_counter(request: TokenCountRequest, call_endpoint: bool = False):
+⋮
+
 litellm/proxy/swagger/swagger-ui-bundle.js:
 ⋮
 │!function webpackUniversalModuleDefinition(s,o){"object"==typeof exports&&"object"==typeof module?m
@@ -397,8 +409,6 @@ litellm/router_strategy/budget_limiter.py:
 │    attribute-style access used by `litellm.get_llm_provider(...)`.
 ⋮
 │    def dict(self) -> Dict[str, Any]:
-⋮
-│    def model_dump(self) -> Dict[str, Any]:
 ⋮
 
 litellm/router_utils/add_retry_fallback_headers.py:
@@ -466,9 +476,6 @@ litellm/types/interactions/generated.py:
 litellm/types/llms/base.py:
 ⋮
 │class HiddenParams(OpenAIObject):
-│    original_response: Optional[Union[str, Any]] = None
-⋮
-│    def model_dump(self, **kwargs):
 ⋮
 
 litellm/types/llms/openai.py:
@@ -477,6 +484,8 @@ litellm/types/llms/openai.py:
 ⋮
 
 litellm/types/llms/vertex_ai.py:
+⋮
+│class FunctionCall(TypedDict, total=False):
 ⋮
 │class Date(TypedDict):
 ⋮
@@ -522,8 +531,6 @@ litellm/types/router.py:
 ⋮
 
 litellm/types/utils.py:
-⋮
-│class FunctionCall(OpenAIObject):
 ⋮
 │class Function(OpenAIObject):
 ⋮
@@ -580,6 +587,23 @@ terraform/provider/litellm/types.go:
 │	Additional    map[string]interface{} `json:"additional"`
 ⋮
 
+tests/agent_tests/test_a2a_agent.py:
+⋮
+│class MockA2AResponse:
+│    def __init__(self, text: str):
+│        self._payload = {
+│            "id": str(uuid4()),
+│            "jsonrpc": "2.0",
+│            "result": {
+│                "message": {
+│                    "role": "agent",
+│                    "parts": [{"kind": "text", "text": text}],
+│                    "messageId": uuid4().hex,
+│                }
+⋮
+│    def model_dump(self, mode="json", exclude_none=True):
+⋮
+
 tests/e2e/e2e_http.py:
 ⋮
 │class UnauthorizedError(BaseModel):
@@ -615,6 +639,26 @@ tests/llm_translation/reasoning_effort_grid/grid_spec.py:
 │class ModelEntry:
 ⋮
 
+tests/llm_translation/test_openai.py:
+⋮
+│@patch("litellm.main.openai_chat_completions._get_openai_client")
+│def test_openai_image_generation_forwards_organization(mock_get_openai_client):
+│    """Ensure organization flows to OpenAI client for image generation."""
+│
+│    class _DummyImages:
+│        def generate(self, **kwargs):  # type: ignore
+│            class _Resp:
+│                def model_dump(self_inner):  # minimal OpenAI ImagesResponse shape
+│                    return {
+│                        "created": 123,
+│                        "data": [{"url": "http://example.com/image.png"}],
+│                        "usage": {
+│                            "input_tokens": 0,
+│                            "output_tokens": 0,
+│                            "total_tokens": 0,
+│                        },
+⋮
+
 tests/local_testing/test_streaming.py:
 ⋮
 │class Function(BaseModel):
@@ -625,8 +669,6 @@ tests/test_litellm/caching/test_redis_semantic_cache.py:
 │def test_redis_semantic_cache_prompt_extraction_handles_model_objects():
 │    from litellm.caching.redis_semantic_cache import RedisSemanticCache
 │
-│    class ModelDumpInput:
-│        def model_dump(self):
 ⋮
 │    class DictInput:
 │        def dict(self):
@@ -640,6 +682,18 @@ tests/test_litellm/integrations/code_interpreter_interception/test_handler.py:
 │        self.model_call_details = {}
 ⋮
 │    def post_call(self, *args, **kwargs):
+⋮
+
+tests/test_litellm/integrations/test_mlflow.py:
+⋮
+│def test_mlflow_stream_handler_uses_async_complete_response():
+│    modules = _mock_mlflow_modules()
+│    with patch.dict("sys.modules", modules):
+│        from litellm.integrations.mlflow import MlflowLogger
+│
+⋮
+│        class DummyDelta:
+│            def model_dump(self, exclude_none=True):
 ⋮
 
 tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
@@ -657,37 +711,6 @@ tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
 │        def replace(self, *args, **kwargs):
 ⋮
 
-tests/test_litellm/litellm_core_utils/test_url_utils.py:
-⋮
-│class TestRedirectHostnamePreservation:
-│    """Relative-location redirects must keep the original hostname, not the
-⋮
-│    def test_relative_redirect_preserves_hostname_for_next_hop(self, monkeypatch):
-│        def fake(host, port, *a, **kw):
-│            return [
-│                (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", port))
-⋮
-│        class FakeClient:
-│            def __init__(self):
-⋮
-│            def get(self, url, headers=None, follow_redirects=False, **kw):
-⋮
-│class TestValidationMasterSwitch:
-│    def test_disabled_bypasses_fetch_in_safe_get(self, monkeypatch):
-│        """When user_url_validation is False, safe_get delegates to client.get without validation."
-│        monkeypatch.setattr(litellm, "user_url_validation", False)
-│
-│        calls = []
-│
-│        class FakeClient:
-│            def get(self, url, **kwargs):
-│                calls.append((url, kwargs))
-│
-│                class R:
-│                    is_redirect = False
-│
-⋮
-
 tests/test_litellm/llms/bedrock/batches/test_handler.py:
 ⋮
 │def test_extract_region_swallows_unexpected_split_errors():
@@ -697,29 +720,56 @@ tests/test_litellm/llms/bedrock/batches/test_handler.py:
 │        def split(self, _sep):
 ⋮
 
-tests/test_litellm/proxy/agent_endpoints/test_a2a_endpoints.py:
+tests/test_litellm/llms/github_copilot/test_github_copilot_transformation.py:
 ⋮
-│@pytest.mark.asyncio
-│async def test_invoke_agent_a2a_adds_litellm_data():
+│@patch("litellm.llms.openai.openai.OpenAIChatCompletion._get_openai_client")
+⋮
+│def test_openai_handler_repairs_github_copilot_empty_choices(
+│    mock_request, mock_get_client
+│):
 │    """
-│    Test that invoke_agent_a2a calls add_litellm_data_to_request
-│    and the resulting data includes proxy_server_request.
-⋮
-│    try:
-⋮
-│    except ImportError:
-│        # Real types not available - create realistic mocks
-│        pass
+│    The OpenAI SDK handler calls convert_to_model_response_object directly on the
+│    SDK's parsed output, bypassing transform_response. convert raises APIError on
+│    empty choices, so the handler must route github_copilot responses through
+│    transform_parsed_response_dict first. Removing that wiring (or resolving a
+│    config without the override) fails this test with APIError.
 │
-│        def make_mock_pydantic_class(name):
-│            """Create a mock class that behaves like a Pydantic model."""
-│
-│            class MockPydanticClass:
-│                def __init__(self, **kwargs):
-│                    self.__dict__.update(kwargs)
-│                    # Store kwargs for model_dump() if needed
+│    See: https://github.com/BerriAI/litellm/issues/30927
 ⋮
-│                def model_dump(self, mode="json", exclude_none=False):
+│    class _FakeSDKResponse:
+│        def model_dump(self):
+│            return {
+│                "id": "msg_vrtx_01",
+│                "model": "claude-opus-4.8",
+│                "object": "chat.completion",
+│                "choices": [],
+│                "content": [{"type": "text", "text": "Hi there"}],
+│                "stop_reason": "end_turn",
+│                "usage": {"input_tokens": 12, "output_tokens": 3},
+⋮
+
+tests/test_litellm/proxy/guardrails/guardrail_hooks/test_noma_v2.py:
+⋮
+│class TestNomaV2Configuration:
+│    @pytest.mark.asyncio
+│    async def test_provider_specific_params_include_noma_v2_fields(self):
+│        from litellm.proxy.guardrails.guardrail_endpoints import (
+│            get_provider_specific_params,
+│        )
+│
+│        provider_params = await get_provider_specific_params()
+│        assert "noma_v2" in provider_params
+│
+│        noma_v2_params = provider_params["noma_v2"]
+⋮
+│    @pytest.mark.asyncio
+│    async def test_call_noma_scan_sanitizes_response_model_dump_object(
+│        self, noma_v2_guardrail
+│    ):
+│        import json
+│
+│        class _FakeModelResponse:
+│            def model_dump(self):
 ⋮
 
 tests/test_litellm/proxy/guardrails/guardrail_hooks/test_presidio.py:
@@ -733,6 +783,30 @@ tests/test_litellm/proxy/guardrails/guardrail_hooks/test_presidio.py:
 │        def __init__(self):
 ⋮
 │        def add_litellm_callback(self, cb):
+⋮
+
+tests/test_litellm/proxy/hooks/test_parallel_request_limiter_v3.py:
+⋮
+│@pytest.mark.asyncio
+│async def test_per_tag_rate_limit_independent_counters_v3(monkeypatch):
+│    """
+│    A single key with per-tag RPM limits tracks each tag independently: a tag
+│    at its limit returns 429 while a different (unlimited) tag keeps flowing,
+│    governed only by the generous key-level limit.
+⋮
+│    async def call(tag: str) -> None:
+⋮
+│@pytest.mark.asyncio
+│async def test_per_tag_untagged_request_governed_by_key_limit_v3(monkeypatch):
+│    """
+│    Per-tag limits are opt-in sub-limits under the key-level ceiling, not a
+│    standalone enforcement boundary: a request that carries no tag (or a tag
+│    without a configured limit) is not rejected by any tag counter, but it is
+│    still bounded by the key-level rpm_limit. This pins the documented
+│    untagged-fallback behavior so a future "fail closed on missing tag" change
+│    would fail here instead of silently breaking it.
+⋮
+│    async def call(metadata: dict) -> None:
 ⋮
 
 tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
@@ -799,17 +873,6 @@ ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/add_margin_for
 │                const numValue = parseFloat(value);
 ⋮
 
-ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/pricing_calculator/types.ts:
-⋮
-│export interface ModelEntry {
-│  id: string;
-│  model: string;
-│  input_tokens: number;
-│  output_tokens: number;
-│  num_requests_per_day?: number;
-│  num_requests_per_month?: number;
-⋮
-
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/types.ts:
 ⋮
 │export interface DiscountConfig {
@@ -844,6 +907,12 @@ ui/litellm-dashboard/src/app/(dashboard)/playground/components/chat_ui/ChatUI.ts
 │                          }
 │
 │                          customModelTimeout.current = setTimeout(() => {
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/playground/components/compareUI/endpoint_config.ts:
+⋮
+│export type EndpointIdType = (typeof EndpointId)[keyof typeof EndpointId];
+│
 ⋮
 
 ui/litellm-dashboard/src/components/AIHub/AgentHubTableColumns.tsx:
@@ -993,20 +1062,6 @@ ui/litellm-dashboard/src/components/guardrails/guardrail_info.tsx:
 │  dict_value_type?: string;
 ⋮
 
-ui/litellm-dashboard/src/components/guardrails/guardrail_optional_params.tsx:
-⋮
-│interface ProviderParam {
-│  param: string;
-│  description: string;
-│  required: boolean;
-│  default_value?: string;
-│  options?: string[];
-│  type?: string;
-│  fields?: { [key: string]: ProviderParam };
-│  dict_key_options?: string[];
-│  dict_value_type?: string;
-⋮
-
 ui/litellm-dashboard/src/components/guardrails/types.ts:
 ⋮
 │export enum GuardrailDefinitionLocation {
@@ -1019,17 +1074,6 @@ ui/litellm-dashboard/src/components/key_team_helpers/BudgetWindowsEditor.tsx:
 │interface BudgetWindowsEditorProps {
 │  value: BudgetWindowEntry[];
 │  onChange: (v: BudgetWindowEntry[]) => void;
-⋮
-
-ui/litellm-dashboard/src/components/key_team_helpers/key_list.tsx:
-⋮
-│interface UseKeyListReturn {
-│  keys: KeyResponse[];
-│  isLoading: boolean;
-│  error: Error | null;
-│  pagination: PaginationData;
-│  refresh: (params?: Record<string, unknown>) => Promise<void>;
-│  setKeys: Setter<KeyResponse[]>;
 ⋮
 
 ui/litellm-dashboard/src/components/logging_settings_view.tsx:
@@ -1057,6 +1101,17 @@ ui/litellm-dashboard/src/components/mcp_tools/mcp_tools.test.tsx:
 ⋮
 
 ui/litellm-dashboard/src/components/mcp_tools/types.tsx:
+⋮
+│export interface MCPEvent {
+│  type: string;
+│  sequence_number?: number;
+│  output_index?: number;
+│  item_id?: string;
+│  item?: {
+│    id?: string;
+│    type?: string;
+│    server_label?: string;
+│    tools?: Array<{
 ⋮
 │export type MCPEnvVarScope = "global" | "user";
 │
@@ -1123,18 +1178,16 @@ ui/litellm-dashboard/src/components/molecules/notifications_manager.tsx:
 │      duration: cfg.duration ?? 5,
 │    });
 ⋮
-
-ui/litellm-dashboard/src/components/networking.tsx:
-⋮
-│export interface Member {
-│  role: string;
-│  user_id: string | null;
-│  user_email?: string | null;
-│  max_budget_in_team?: number | null;
-│  tpm_limit?: number | null;
-│  rpm_limit?: number | null;
-│  budget_duration?: string | null;
-│  allowed_models?: string[] | null;
+│  fromBackend(input: any, extra?: Omit<NotificationConfig, "message" | "description">) {
+│    const status = extractStatus(input);
+│    const description = extractDescription(input);
+│    const base = { ...(extra ?? {}), description, placement: extra?.placement ?? defaultPlacement()
+│
+│    if (looksErrorPayload(input, status)) {
+│      const title = titleFor(status, description);
+│      const payload = { ...base, message: title };
+│
+│      if (
 ⋮
 
 ui/litellm-dashboard/src/components/organization/organization_view.tsx:
@@ -1177,34 +1230,14 @@ ui/litellm-dashboard/src/components/vector_store_management/types.tsx:
 │  [key: string]: any;
 ⋮
 
-ui/litellm-dashboard/src/components/vector_store_management/vector_store_info.tsx:
-⋮
-│                        {Object.entries(Providers).map(([providerEnum, providerDisplayName]) => {
-│                          // Currently only showing Bedrock since it's the only supported provider
-│                          if (providerEnum === "Bedrock") {
-│                            return (
-│                              <Select2.Option key={providerEnum} value={provider_map[providerEnum]}
-│                                <div className="flex items-center space-x-2">
-│                                  <img
-│                                    src={resolveLogoSrc(providerLogoMap[providerDisplayName])}
-│                                    alt={`${providerEnum} logo`}
-│                                    className="w-5 h-5"
-│                                    onError={(e) => {
-│                                      // Create a div with provider initial as fallback
-│                                      const target = e.target as HTMLImageElement;
-│                                      const parent = target.parentElement;
-│                                      if (parent) {
-│                                        const fallbackDiv = document.createElement("div");
-│                                        fallbackDiv.className =
-│                                          "w-5 h-5 rounded-full bg-gray-200 flex items-center justi
-│                                        fallbackDiv.textContent = providerDisplayName.charAt(0);
-│                                        parent.replaceChild(fallbackDiv, target);
-⋮
-
 ui/litellm-dashboard/src/components/view_logs/columns.tsx:
 ⋮
 │export type LogsSortField = keyof typeof LOGS_SORT_FIELD_MAP;
 │
+│export interface LogsSortProps {
+│  sortBy: LogsSortField;
+│  sortOrder: "asc" | "desc";
+│  onSortChange: (sortBy: LogsSortField, sortOrder: "asc" | "desc") => void;
 ⋮
 │export type LogEntry = {
 │  request_id: string;
@@ -1258,17 +1291,6 @@ ui/litellm-dashboard/src/lib/http/client.ts:
 ```python
 blog/harnesses-are-the-new-llms/diagrams.js:
 ⋮
-│export function ConvergenceHero() {
-│  const W = 1200;
-│  const H = 500;
-│  const N = 40;
-│  const f1 = { x: W * 0.25, y: H * 0.5 };
-│  const f2 = { x: W * 0.75, y: H * 0.5 };
-│  const curves = Array.from({ length: N }, (_, i) => {
-│    const t = (i - N / 2) / (N / 2);
-│    const yIn = H * 0.5 + t * H * 0.45;
-│    const yOut = H * 0.5 - t * H * 0.45;
-⋮
 │const s = {
 │  fig: { margin: '2.5rem 0', fontFamily: 'inherit' },
 │  wrap: {
@@ -1301,17 +1323,6 @@ blog/harnesses-are-the-new-llms/diagrams.js:
 │    borderRadius: 4,
 │    border: open ? `1.5px dashed ${BLUE}` : '1px solid var(--ifm-color-emphasis-300)',
 │    background: open ? 'rgba(59,130,246,0.08)' : 'transparent',
-⋮
-│export function StackComparison() {
-│  return (
-│    <figure style={s.fig}>
-│      <div style={s.wrap}>
-│        <div />
-│        <div>
-│          <div style={s.colHeader}>Model stack — today</div>
-│          <div style={s.colSub}>calling models</div>
-│        </div>
-│        <div />
 ⋮
 
 blog/litellm_rust_launch/benchmark/llm_app.py:
@@ -1364,6 +1375,17 @@ blog/litellm_rust_launch/benchmark/orchestrate_compare.py:
 
 blog/litellm_rust_launch/diagrams.js:
 ⋮
+│export function RustHeader() {
+│  const N = 37, TOP = 22, BOT = 478, NODE_X = 1000, NODE_Y = 250, CREAM = '#faf9f5';
+│  const center = (N - 1) / 2;
+│  const paths = [];
+│  for (let i = 0; i < N; i++) {
+│    const t = i / (N - 1);
+│    const yl = TOP + t * (BOT - TOP);
+│    const cy = NODE_Y + (yl - NODE_Y) * 0.3;
+│    const op = 0.16 + (1 - Math.abs(i - center) / center) * (0.5 - 0.16);
+│    paths.push(
+⋮
 │const s = {
 │  fig: {margin: '2.5rem 0', fontFamily: 'inherit'},
 │  box: {borderRadius: 12, border: '1px solid #e5e7eb', background: '#fff', padding: '2rem 2.5rem'},
@@ -1373,6 +1395,32 @@ blog/litellm_rust_launch/diagrams.js:
 │    border: `1.5px solid ${border}`, borderRadius: 8, padding: '12px 18px',
 │    background: bg, color, textAlign: 'center', width: '100%', boxSizing: 'border-box',
 │  }),
+⋮
+│const SmallArrow = ({color = '#9ca3af', h = 26}) => (
+│  <svg width="2" height={h} style={{display: 'block'}} aria-hidden="true">
+│    <line x1="1" y1="0" x2="1" y2={h - 6} stroke={color} strokeWidth="1.5" />
+│    <polygon points={`1,${h} -2,${h - 7} 4,${h - 7}`} fill={color} />
+│  </svg>
+⋮
+│const RightArrow = ({color = '#6b7280', w = 40, label}) => (
+│  <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'cen
+│    {label && <span style={{fontSize: 10, color, fontWeight: 600, marginBottom: 3}}>{label}</span>}
+│    <svg width={w} height="14" viewBox={`0 0 ${w} 14`} aria-hidden="true">
+│      <path d={`M0 7h${w - 8}`} stroke={color} strokeWidth="1.5" />
+│      <path d={`M${w - 9} 1l8 6-8 6z`} fill={color} />
+│    </svg>
+│  </div>
+⋮
+│export function RustMigrationStages() {
+│  const stages = [
+│    {stage: 'Stage 0 · Today', title: 'Pure Python SDK + FastAPI proxy', foot: '100% Python', color
+│    {stage: 'Stage 1 · Core in Rust', title: 'Python drives Rust transforms via PyO3', foot: 'V0 to
+│    {stage: 'Stage 2 · Thin shell', title: 'FastAPI shell, hot path all Rust', foot: 'V4 to V5a', c
+│    {stage: 'Stage 3 · Pure Rust', title: 'axum server, Python in sidecar', foot: 'V5b', color: '#7
+│  ];
+│  const axis = [
+│    {text: '0%', color: '#2563eb'},
+│    {text: 'transforms + router', color: '#16a34a'},
 ⋮
 │export function RouteCadence() {
 │  const beats = ['1. Prove one provider', '2. Roll out all providers', '3. Fold route into the Rust
@@ -1855,18 +1903,6 @@ src/components/NavigationCards/index.js:
 
 src/components/QuickStart.js:
 ⋮
-│const QuickStartCodeBlock = ({ token }) => {
-│    return (
-│      <pre>
-│        {`
-│        from litellm import completion
-│        import os
-│  
-│        ## set ENV variables
-│        os.environ["OPENAI_API_KEY"] = "${token}"
-│        os.environ["COHERE_API_KEY"] = "${token}"
-│  
-⋮
 │  const QuickStart = () => {
 │    const [token, setToken] = useState(null);
 │  
@@ -1904,15 +1940,6 @@ src/components/SubscribeForm/index.js:
 ⋮
 
 src/components/TokenGen.js:
-⋮
-│const CodeBlock = ({ token }) => {
-│  const codeWithToken = `${token}`;
-│
-│  return (
-│    <pre>
-│      {token ? codeWithToken : ""}
-│    </pre>
-│  );
 ⋮
 │const TokenGen = () => {
 │  const [token, setToken] = useState(null);

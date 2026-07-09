@@ -165,12 +165,6 @@ dspy/adapters/types/citation.py:
 │    def from_dict_list(cls, citations_dicts: list[dict[str, Any]]) -> "Citations":
 ⋮
 
-dspy/adapters/types/document.py:
-⋮
-│@experimental(version="3.0.4")
-│class Document(Type):
-⋮
-
 dspy/adapters/types/reasoning.py:
 ⋮
 │class Reasoning(Type):
@@ -336,7 +330,15 @@ dspy/clients/openai_format.py:
 ⋮
 │def parts_to_openai_content(parts: list[Any]) -> str | list[dict[str, Any]]:
 ⋮
+│def provider_tool_call_to_part(tool_call: Any) -> LMToolCallPart:
+⋮
+│def citation_to_part(citation: Any) -> LMCitationPart:
+⋮
 │def usage_from_response(response: Any) -> LMUsage | None:
+⋮
+│def data_uri(media_type: str, data: str) -> str:
+⋮
+│def split_data_uri(value: str) -> tuple[str, str]:
 ⋮
 │def get_value(value: Any, key: str, default: Any = None) -> Any:
 ⋮
@@ -460,8 +462,6 @@ dspy/core/types.py:
 
 dspy/dsp/utils/dpr.py:
 ⋮
-│def DPR_tokenize(text):  # noqa: N802
-⋮
 │def DPR_normalize(text):  # noqa: N802
 ⋮
 
@@ -533,11 +533,6 @@ dspy/predict/parallel.py:
 
 dspy/predict/parameter.py:
 │class Parameter:
-⋮
-
-dspy/predict/predict.py:
-⋮
-│class Predict(Module, Parameter):
 ⋮
 
 dspy/primitives/base_module.py:
@@ -763,6 +758,12 @@ dspy/propose/propose_base.py:
 │    def propose_instruction_for_predictor(self):
 ⋮
 
+dspy/retrievers/databricks_rm.py:
+⋮
+│@dataclass
+│class Document:
+⋮
+
 dspy/retrievers/embeddings.py:
 ⋮
 │class Embeddings:
@@ -960,8 +961,6 @@ dspy/utils/magicattr.py:
 ⋮
 │def set(obj, attr, val):
 ⋮
-│def delete(obj, attr):
-⋮
 │def lookup(obj, attr):
 ⋮
 │def _lookup_subscript_value(node):
@@ -1046,11 +1045,6 @@ tests/predict/test_best_of_n.py:
 │class DummyModule(dspy.Module):
 ⋮
 
-tests/predict/test_knn.py:
-⋮
-│def mock_example(question: str, answer: str) -> dspy.Example:
-⋮
-
 tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_text_mock_lm_loop_records_inputs_once():
@@ -1122,15 +1116,12 @@ tests/teleprompt/test_gepa.py:
 
 tests/teleprompt/test_knn_fewshot.py:
 ⋮
+│def mock_example(question: str, answer: str) -> dspy.Example:
+⋮
 │class SimpleModule(dspy.Module):
 │    def __init__(self, signature):
 │        super().__init__()
 ⋮
 │    def reset_copy(self):
-⋮
-
-tests/teleprompt/test_utils.py:
-⋮
-│class DummyModule(dspy.Module):
 ⋮
 ```

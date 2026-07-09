@@ -154,12 +154,6 @@ packages/shared/src/features/entitlements/plans.ts:
 │
 ⋮
 
-packages/shared/src/features/evals/observationForEval.ts:
-⋮
-│export type ObservationForEval = z.infer<typeof observationForEvalSchema>;
-│
-⋮
-
 packages/shared/src/features/evals/types.ts:
 ⋮
 │export type EvalTargetObject =
@@ -282,6 +276,10 @@ packages/shared/src/server/clickhouse/client.ts:
 ⋮
 │type ServiceClickhouseSettings = ClickHouseSettings & {
 │  enable_full_text_index?: 1;
+⋮
+│type RequestTimeoutClickHouseSettings = ClickHouseSettings & {
+│  max_execution_time?: number;
+│  timeout_before_checking_execution_speed?: number;
 ⋮
 │export class ClickHouseClientManager {
 │  private static instance: ClickHouseClientManager;
@@ -955,11 +953,6 @@ web/src/features/events/server/eventsService.ts:
 │
 ⋮
 
-web/src/features/experiments/store/experimentsTableStore.ts:
-⋮
-│type RowSelectionUpdater = Updater<RowSelectionState>;
-⋮
-
 web/src/features/experiments/types/charts.ts:
 ⋮
 │export type ScoreLevel = "obs" | "experiment";
@@ -1442,10 +1435,18 @@ app/[section]/layout.tsx:
 │  params: Promise<{ section: string }>;
 ⋮
 
-app/changelog/[...slug]/page.tsx:
+app/blog/page.tsx:
 ⋮
-│type PageProps = {
-│  params: Promise<{ slug: string[] }>;
+│export default function BlogIndexPage() {
+│  const pages = getBlogIndexPages();
+│
+│  return (
+│    <BlogPageClient pages={pages}>
+│      <ContentColumns
+│        leftSidebar={<BlogSidebar />}
+│        rightSidebar={<BlogAside />}
+│        className="min-h-screen"
+│        footerClassName="md:max-w-none xl:max-w-none px-6 sm:px-6 md:px-6"
 ⋮
 
 app/cloud/layout.tsx:
@@ -1730,19 +1731,6 @@ components/academy/LoopDiagram.tsx:
 │  return 0.56;
 ⋮
 
-components/academy/ManualGuideCallout.tsx:
-⋮
-│export interface ManualGuideCalloutProps {
-│  /** Where the card links to (cookbook URL or similar). */
-│  href: string;
-│  /** Topic shown in the ribbon after the static "Guide:" prefix, e.g. "error analysis". */
-│  topic: string;
-│  /** Lede paragraph beneath the ribbon. */
-│  lede?: React.ReactNode;
-│  /** CTA button text, default "Open the guide". */
-│  cta?: string;
-⋮
-
 components/academy/TraceViewDiagram.tsx:
 │export interface TraceViewRow {
 ⋮
@@ -1764,6 +1752,19 @@ components/academy/japan/LoopDiagram.tsx:
 │    return Math.max(0.25, (vw - 32) / INNER_W);
 │  }
 │  return 0.56;
+⋮
+
+components/academy/japan/ManualGuideCallout.tsx:
+⋮
+│export interface ManualGuideCalloutProps {
+│  /** Where the card links to (cookbook URL or similar). */
+│  href: string;
+│  /** Topic shown in the ribbon after the static "Guide:" prefix, e.g. "error analysis". */
+│  topic: string;
+│  /** Lede paragraph beneath the ribbon. */
+│  lede?: React.ReactNode;
+│  /** CTA button text, default "Open the guide". */
+│  cta?: string;
 ⋮
 
 components/ai-elements/code-block.tsx:
@@ -3011,41 +3012,6 @@ langfuse/_client/client.py:
 │        metadata: Optional[Any] = None,
 │        version: Optional[str] = None,
 ⋮
-│    @overload
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: float,
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-⋮
-│    @overload
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: str,
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-⋮
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: Union[float, str],
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-⋮
 │    def run_experiment(
 │        self,
 │        *,
@@ -3304,8 +3270,6 @@ langfuse/_utils/parse_error.py:
 ⋮
 │def generate_error_message_fern(error: Error) -> str:
 ⋮
-│def generate_error_message(exception: Union[APIError, APIErrors, Exception]) -> str:
-⋮
 
 langfuse/_utils/prompt_cache.py:
 ⋮
@@ -3481,23 +3445,6 @@ langfuse/api/core/enum.py:
 │    class StrEnum(str, enum.Enum):
 ⋮
 
-langfuse/api/core/file.py:
-⋮
-│FileContent = Union[IO[bytes], bytes, str]
-│File = Union[
-│    # file (or bytes)
-│    FileContent,
-│    # (filename, file (or bytes))
-│    Tuple[Optional[str], FileContent],
-│    # (filename, file (or bytes), content_type)
-│    Tuple[Optional[str], FileContent, Optional[str]],
-│    # (filename, file (or bytes), content_type, headers)
-│    Tuple[
-│        Optional[str],
-⋮
-│def with_content_type(*, file: File, default_content_type: str) -> File:
-⋮
-
 langfuse/api/core/force_multipart.py:
 ⋮
 │class ForceMultipartDict(Dict[str, Any]):
@@ -3513,15 +3460,6 @@ langfuse/api/core/http_response.py:
 langfuse/api/core/http_sse/_exceptions.py:
 ⋮
 │class SSEError(httpx.TransportError):
-⋮
-
-langfuse/api/core/http_sse/_models.py:
-⋮
-│@dataclass(frozen=True)
-│class ServerSentEvent:
-│    event: str = "message"
-⋮
-│    def json(self) -> Any:
 ⋮
 
 langfuse/api/core/jsonable_encoder.py:
@@ -3554,6 +3492,8 @@ langfuse/api/core/pydantic_utilities.py:
 │    def model_construct(
 │        cls: Type["Model"], _fields_set: Optional[Set[str]] = None, **values: Any
 ⋮
+│    def json(self, **kwargs: Any) -> str:
+⋮
 │    def dict(self, **kwargs: Any) -> Dict[str, Any]:
 ⋮
 │def deep_union_pydantic_dicts(
@@ -3566,8 +3506,6 @@ langfuse/api/core/query_encoder.py:
 ⋮
 │def traverse_query_dict(
 │    dict_flat: Dict[str, Any], key_prefix: Optional[str] = None
-⋮
-│def single_query_encoder(query_key: str, query_value: Any) -> List[Tuple[str, Any]]:
 ⋮
 
 langfuse/api/core/request_options.py:
@@ -3608,6 +3546,21 @@ langfuse/api/core/serialization.py:
 │    type_: typing.Any,
 │    direction: typing.Literal["read", "write"],
 │    aliases_to_field_names: typing.Dict[str, str],
+⋮
+
+langfuse/api/dataset_items/raw_client.py:
+⋮
+│class RawDatasetItemsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncRawDatasetItemsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
 ⋮
 
 langfuse/api/dataset_items/types/delete_dataset_item_response.py:
@@ -3750,27 +3703,6 @@ langfuse/api/legacy/metrics_v1/types/metrics_response.py:
 │class MetricsResponse(UniversalBaseModel):
 ⋮
 
-langfuse/api/legacy/observations_v1/client.py:
-⋮
-│class ObservationsV1Client:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        observation_id: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncObservationsV1Client:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        observation_id: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
 langfuse/api/legacy/observations_v1/types/observations.py:
 ⋮
 │class Observations(UniversalBaseModel):
@@ -3794,36 +3726,6 @@ langfuse/api/llm_connections/types/delete_llm_connection_response.py:
 langfuse/api/llm_connections/types/paginated_llm_connections.py:
 ⋮
 │class PaginatedLlmConnections(UniversalBaseModel):
-⋮
-
-langfuse/api/media/client.py:
-⋮
-│class MediaClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncMediaClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-
-langfuse/api/media/raw_client.py:
-⋮
-│class RawMediaClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncRawMediaClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
 ⋮
 
 langfuse/api/metrics/types/metrics_v2response.py:
@@ -3881,15 +3783,6 @@ langfuse/api/organizations/types/organization_projects_response.py:
 │class OrganizationProjectsResponse(UniversalBaseModel):
 ⋮
 
-langfuse/api/projects/client.py:
-⋮
-│class AsyncProjectsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-
 langfuse/api/projects/types/api_key_deletion_response.py:
 ⋮
 │class ApiKeyDeletionResponse(UniversalBaseModel):
@@ -3908,33 +3801,6 @@ langfuse/api/projects/types/project_deletion_response.py:
 langfuse/api/projects/types/projects.py:
 ⋮
 │class Projects(UniversalBaseModel):
-⋮
-
-langfuse/api/prompts/raw_client.py:
-⋮
-│class RawPromptsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        prompt_name: str,
-│        *,
-│        version: typing.Optional[int] = None,
-│        label: typing.Optional[str] = None,
-│        resolve: typing.Optional[bool] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncRawPromptsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        prompt_name: str,
-│        *,
-│        version: typing.Optional[int] = None,
-│        label: typing.Optional[str] = None,
-│        resolve: typing.Optional[bool] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/prompts/types/chat_prompt.py:
@@ -3977,9 +3843,9 @@ langfuse/api/scim/types/scim_name.py:
 │class ScimName(UniversalBaseModel):
 ⋮
 
-langfuse/api/score_configs/client.py:
+langfuse/api/score_configs/raw_client.py:
 ⋮
-│class ScoreConfigsClient:
+│class RawScoreConfigsClient:
 │    def __init__(self, *, client_wrapper: SyncClientWrapper):
 ⋮
 │    def get(
@@ -3989,7 +3855,7 @@ langfuse/api/score_configs/client.py:
 │        limit: typing.Optional[int] = None,
 │        request_options: typing.Optional[RequestOptions] = None,
 ⋮
-│class AsyncScoreConfigsClient:
+│class AsyncRawScoreConfigsClient:
 │    def __init__(self, *, client_wrapper: AsyncClientWrapper):
 ⋮
 │    async def get(
@@ -4088,52 +3954,6 @@ langfuse/api/scores_v3/types/text_score_v3.py:
 langfuse/api/sessions/types/paginated_sessions.py:
 ⋮
 │class PaginatedSessions(UniversalBaseModel):
-⋮
-
-langfuse/api/trace/client.py:
-⋮
-│class TraceClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        trace_id: str,
-│        *,
-│        fields: typing.Optional[str] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncTraceClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        trace_id: str,
-│        *,
-│        fields: typing.Optional[str] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
-langfuse/api/trace/raw_client.py:
-⋮
-│class RawTraceClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        trace_id: str,
-│        *,
-│        fields: typing.Optional[str] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncRawTraceClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        trace_id: str,
-│        *,
-│        fields: typing.Optional[str] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/trace/types/delete_trace_response.py:
@@ -4261,27 +4081,6 @@ langfuse/api/unstable/errors/types/public_api_validation_issue.py:
 │class PublicApiValidationIssue(UniversalBaseModel):
 ⋮
 
-langfuse/api/unstable/evaluation_rules/client.py:
-⋮
-│class EvaluationRulesClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        evaluation_rule_id: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncEvaluationRulesClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        evaluation_rule_id: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
 langfuse/api/unstable/evaluation_rules/types/code_evaluation_rule_evaluator_reference.py:
 ⋮
 │class CodeEvaluationRuleEvaluatorReference(UniversalBaseModel):
@@ -4359,16 +4158,6 @@ langfuse/langchain/CallbackHandler.py:
 ⋮
 │    def keys(self) -> List[str]:
 ⋮
-│class LangchainCallbackHandler(LangchainBaseCallbackHandler):
-│    def __init__(
-│        self,
-│        *,
-│        public_key: Optional[str] = None,
-│        trace_context: Optional[TraceContext] = None,
-⋮
-│    def get_langchain_run_name(
-│        self, serialized: Optional[Dict[str, Any]], **kwargs: Any
-⋮
 
 langfuse/media.py:
 ⋮
@@ -4404,34 +4193,6 @@ langfuse/openai.py:
 │    def get_langfuse_args(self) -> Any:
 ⋮
 │    def get_openai_args(self) -> Any:
-⋮
-│def _instrument_openai_stream(
-│    *,
-│    resource: OpenAiDefinition,
-│    response: Any,
-│    generation: LangfuseGeneration,
-│) -> Any:
-│    if not hasattr(response, "_iterator"):
-│        return LangfuseResponseGeneratorSync(
-│            resource=resource,
-│            response=response,
-│            generation=generation,
-⋮
-│    def finalize_once() -> None:
-⋮
-│def _instrument_openai_async_stream(
-│    *,
-│    resource: OpenAiDefinition,
-│    response: Any,
-│    generation: LangfuseGeneration,
-│) -> Any:
-│    if not hasattr(response, "_iterator"):
-│        return LangfuseResponseGeneratorAsync(
-│            resource=resource,
-│            response=response,
-│            generation=generation,
-⋮
-│    async def finalize_once() -> None:
 ⋮
 
 langfuse/types.py:
