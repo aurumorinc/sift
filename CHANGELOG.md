@@ -1,33 +1,18 @@
-# Changelog v0.12.0
+# Changelog v0.13.0
 
 ## Breaking Changes
 
-*   **API Endpoint Renaming**
-    The endpoint `/jobs/run/wait/result/` has been renamed to `/jobs/run_wait_result/`. Please update all client-side integrations to point to the new route. ([88a33c1](https://github.com/aurumorinc/sift/commit/88a33c11))
+*   **Flattened API Response Structure**
+    The intermediate `response` key has been removed from all API responses, promoting nested fields to the top level of the JSON payload.
+    *   **Migration:** Update your API client integrations to access fields directly at the root level of the response object instead of nesting them under `response`.
+    *   **Commits:** [1a9a5c1](https://github.com/aurumorinc/sift/commit/1a9a5c1a), [4005e42](https://github.com/aurumorinc/sift/commit/4005e423), [adfd078](https://github.com/aurumorinc/sift/commit/adfd0785)
 
-*   **LLM Request Schema Updates**
-    The LLM provider request payload now requires the following parameters: `instructions`, `max_output_tokens`, `metadata`, and `parallel_tool_calls`. Ensure your request bodies are updated to include these fields to avoid validation errors. ([88a33c1](https://github.com/aurumorinc/sift/commit/88a33c11))
+## Features
 
-## New Features
+*   **Agent Configuration Support**
+    Added support for granular agent configuration, including rate limiting (TPM/RPM), custom header configuration, and DSPy parameters.
+    *   **Commits:** [1a9a5c1](https://github.com/aurumorinc/sift/commit/1a9a5c1a), [4005e42](https://github.com/aurumorinc/sift/commit/4005e423), [adfd078](https://github.com/aurumorinc/sift/commit/adfd0785)
 
-*   **Expanded LLM Request Parameters**
-    Added support for `instructions`, `max_output_tokens`, `metadata`, and `parallel_tool_calls` in LLM requests to provide greater control over model behavior. ([88a33c1](https://github.com/aurumorinc/sift/commit/88a33c11))
-
-*   **Langfuse Configuration Support**
-    Added `langfuse_base_url` to the configuration options to support custom Langfuse instances. ([1de142a](https://github.com/aurumorinc/sift/commit/1de142ae), [3d02acc](https://github.com/aurumorinc/sift/commit/3d02acc9))
-
-*   **Parameterized Windmill Integration**
-    Added support for parameterized Windmill base URL and workspace configuration. ([1de142a](https://github.com/aurumorinc/sift/commit/1de142ae), [3d02acc](https://github.com/aurumorinc/sift/commit/3d02acc9))
-
-## Documentation
-
-*   **API Reference Updates**
-    Updated documentation to reflect the endpoint migration from `/jobs/run/wait/result/` to `/jobs/run_wait_result/`. ([1de142a](https://github.com/aurumorinc/sift/commit/1de142ae), [3d02acc](https://github.com/aurumorinc/sift/commit/3d02acc9))
-
-## Other
-
-*   **Dependency Updates**
-    Updated the OpenAI library from version 2.44.0 to 2.45.0. ([1de142a](https://github.com/aurumorinc/sift/commit/1de142ae), [3d02acc](https://github.com/aurumorinc/sift/commit/3d02acc9))
-
-*   **Internal Dependency Updates**
-    Updated internal sift dependencies to ensure compatibility with the latest changes. ([1de142a](https://github.com/aurumorinc/sift/commit/1de142ae), [3d02acc](https://github.com/aurumorinc/sift/commit/3d02acc9))
+*   **Enhanced Webhook Schema**
+    Added an optional `data` field to the webhook schema to support `AgentResponse` and `ResponseResponse` objects, including improved type hinting for better integration support.
+    *   **Commits:** [4e57266](https://github.com/aurumorinc/sift/commit/4e57266e)
