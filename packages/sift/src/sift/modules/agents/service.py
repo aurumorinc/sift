@@ -1,5 +1,5 @@
 import dspy
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from worldline import structlog
 
 logger = structlog.get_logger(__name__)
@@ -10,7 +10,7 @@ def _hydrate_multimodal_messages(messages: List[Dict[str, Any]]) -> List[Dict[st
     hydrated = []
     for msg in messages:
         if isinstance(msg.get("content"), list):
-            new_content = []
+            new_content: List[Any] = []
             for part in msg["content"]:
                 if isinstance(part, dict) and part.get("type") == "image_url" and isinstance(part.get("image_url"), dict):
                     url = part["image_url"].get("url")
@@ -27,6 +27,46 @@ def _hydrate_multimodal_messages(messages: List[Dict[str, Any]]) -> List[Dict[st
         else:
             hydrated.append(msg)
     return hydrated
+
+
+class LlmAsAJudge(dspy.Signature):
+    """Evaluate if the newly generated creative work improves upon or maintains the quality described in the reference feedback."""
+    
+    example_inputs: str = dspy.InputField(desc="The inputs and context provided for the task")
+    example_output: str = dspy.InputField(desc="The original output or reference from the dataset")
+    example_score: str = dspy.InputField(desc="The score given to the reference output (0.0 to 1.0)")
+    example_feedback: str = dspy.InputField(desc="The feedback provided on the reference output to explain its score")
+    pred_values: str = dspy.InputField(desc="The newly generated creative work to be evaluated")
+    
+    evaluation_feedback: str = dspy.OutputField(desc="A critique of the newly generated output, checking if it improves upon or maintains the quality described in the reference feedback")
+    evaluation_score: str = dspy.OutputField(desc="A float between 0.0 and 1.0 representing the quality of the newly generated output")
+
+
+def dynamic_api_metric(example: dspy.Example, pred: dspy.Prediction, trace: Optional[Any] = None) -> dspy.Prediction:
+    example_inputs = str(example.inputs())
+    pred_values = str(pred.values())
+    
+    output_keys = [k for k in example.labels().keys() if k not in ("score", "feedback")]
+    
+    example_output = str({k: getattr(example, k, "") for k in output_keys}) if output_keys else str(example.labels())
+    example_score = str(getattr(example, "score", ""))
+    example_feedback = getattr(example, "feedback", "")
+    
+    judge = dspy.Predict(LlmAsAJudge)
+    evaluation = judge(
+        example_inputs=example_inputs,
+        example_output=example_output,
+        example_score=example_score,
+        example_feedback=example_feedback,
+        pred_values=pred_values
+    )
+    
+    try:
+        parsed_score = float(evaluation.evaluation_score)
+    except ValueError:
+        parsed_score = 0.0
+        
+    return dspy.Prediction(score=parsed_score, feedback=evaluation.evaluation_feedback)
 
 
 class AgentModule(dspy.Module):
@@ -87,14 +127,14 @@ class AgentModule(dspy.Module):
 
             setattr(self, key, predictor)
 
-    def load_state(self, state_dict: Dict[str, Any]):
+    def load_state(self, state: Dict[str, Any], allow_unsafe_lm_state: bool = False, **kwargs: Any):
         # Hydrate messages arrays in demos
-        for key, pred_state in state_dict.items():
+        for key, pred_state in state.items():
             if isinstance(pred_state, dict) and "demos" in pred_state:
                 for demo in pred_state["demos"]:
                     if "messages" in demo and isinstance(demo["messages"], list):
                         demo["messages"] = _hydrate_multimodal_messages(demo["messages"])
-        super().load_state(state_dict)
+        super().load_state(state, allow_unsafe_lm_state=allow_unsafe_lm_state, **kwargs)
 
     def forward(self, **kwargs):
         # We assume the first predictor is the main entry point
@@ -112,7 +152,6 @@ class AgentModule(dspy.Module):
 def compile_and_save_agent(payload: Dict[str, Any]) -> None:
     from sift.modules.agents.schema import Agent, DSPyPredictorState, DSPySignatureState
     import dspy.teleprompt
-    from sift.modules.agents.metric import dynamic_api_metric
     from sift.modules.agents.repository.langfuse import save_agent
 
     # 1. Instantiate Agent from updated schema
@@ -229,9 +268,36 @@ def compile_and_save_agent(payload: Dict[str, Any]) -> None:
     if trainset:
         logger.info("compiling_agent_started", trainset_size=len(trainset))
 
-        optimizer_name = agent.dspy_params.optimizer or "BootstrapFewShot"
-        optimizer_params = agent.dspy_params.optimizer_params or {}
-        optimizer_params_dict = dict(optimizer_params)
+        trainset_size = len(trainset)
+        user_optimizer = agent.dspy_params.optimizer
+        user_params = agent.dspy_params.optimizer_params or {}
+        
+        if user_optimizer is None:
+            if trainset_size <= 5:
+                optimizer_name = "BootstrapFewShot"
+                default_params = {
+                    "max_bootstrapped_demos": min(trainset_size, 3),
+                    "max_labeled_demos": min(trainset_size, 3)
+                }
+            elif trainset_size <= 20:
+                optimizer_name = "BootstrapFewShotWithRandomSearch"
+                default_params = {
+                    "max_bootstrapped_demos": 3,
+                    "num_candidates": 10,
+                    "num_threads": 4
+                }
+            else:
+                optimizer_name = "MIPROv2"
+                default_params = {
+                    "num_candidates": 5,
+                    "num_trials": 20,
+                    "minibatch_size": min(trainset_size, 50)
+                }
+        else:
+            optimizer_name = user_optimizer
+            default_params = {}
+            
+        optimizer_params_dict = {**default_params, **user_params}
         
         optimizer_class = getattr(dspy.teleprompt, optimizer_name, None)
         if not optimizer_class:

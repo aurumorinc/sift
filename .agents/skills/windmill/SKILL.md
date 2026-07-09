@@ -25,6 +25,17 @@ ai_evals/core/types.ts:
 ⋮
 │export type EvalMode = (typeof EVAL_MODES)[number];
 │
+│export interface EvalCaseRuntimeBackendPreview {
+│  args?: Record<string, unknown>;
+│  timeoutSeconds?: number;
+⋮
+│export interface EvalCaseRuntimeAppContextSpec {
+│  additional?: EvalCaseRuntimeAppAdditionalContext[];
+⋮
+│export interface EvalCaseRuntimeSpec {
+│  maxTurns?: number;
+│  backendPreview?: EvalCaseRuntimeBackendPreview;
+│  appContext?: EvalCaseRuntimeAppContextSpec;
 ⋮
 │export interface CliValidationSpec {
 │  requiredSkills?: string[];
@@ -47,6 +58,10 @@ ai_evals/core/types.ts:
 │   */
 │  requiredToolsAnyOf?: string[][];
 │  forbiddenToolsUsed?: string[];
+⋮
+│export type EvalValidationSpec =
+│  | FlowValidationSpec
+│  | AppValidationSpec
 ⋮
 │export interface EvalCase {
 │  id: string;
@@ -132,6 +147,16 @@ backend/parsers/windmill-parser-wasm/lib/windmill_parser_wasm.generated.d.ts:
 │  decompress?: (bytes: Uint8Array) => Uint8Array;
 ⋮
 
+backend/parsers/windmill-parser/src/asset_parser.rs:
+⋮
+│pub enum AssetKind {
+│    S3Object,
+│    Resource,
+│    Ducklake,
+│    DataTable,
+│    Volume,
+⋮
+
 backend/src/monitor.rs:
 ⋮
 │pub async fn reload_option_setting_with_tracing<T: FromStr + DeserializeOwned>(
@@ -148,6 +173,11 @@ backend/src/monitor.rs:
 │    conn: &Connection,
 │    setting_name: &str,
 │    load_from_http: bool,
+⋮
+│impl MonitorIteration {
+│    pub fn should_run(&self, period: u8) -> bool {
+│        (self.iter + self.rd_shift as u64) % (period as u64) == 0
+│    }
 ⋮
 │async fn handle_zombie_jobs(db: &Pool<Postgres>, base_internal_url: &str, node_name: &str) {
 │    let mut zombie_jobs_uuid_restart_limit_reached = vec![];
@@ -197,42 +227,6 @@ backend/windmill-ai/src/types.rs:
 │            && self.cache_read_input_tokens.is_none()
 │            && self.cache_write_input_tokens.is_none()
 ⋮
-│impl OpenAPISchema {
-│    pub fn from_str(typ: &str) -> Self {
-│        OpenAPISchema { r#type: Some(SchemaType::Single(typ.to_string())), ..Default::default() }
-│    }
-│
-│    pub fn from_str_with_enum(typ: &str, enu: &Option<Vec<String>>) -> Self {
-│        OpenAPISchema {
-│            r#type: Some(SchemaType::Single(typ.to_string())),
-│            r#enum: enu.clone(),
-│            ..Default::default()
-⋮
-│    /// - Ensuring all properties are in the required array
-│    pub fn make_strict(&mut self) {
-│        // First, flatten any allOf schemas since OpenAI strict mode doesn't support them
-│        self.flatten_all_of();
-│
-│        // Handle this schema if it's an object type
-│        if let Some(SchemaType::Single(ref type_str)) = self.r#type {
-│            if type_str == "object" {
-│                // Only set additionalProperties to false if not already set
-│                // If user provided a value (bool or schema), preserve it and let OpenAI handle it
-│                if self.additional_properties.is_none() {
-⋮
-│    /// See https://github.com/windmill-labs/windmill/issues/7759
-│    pub fn sanitize_for_google(&mut self) {
-│        let mut schema_value = match serde_json::to_value(&*self) {
-│            Ok(value) => value,
-│            Err(err) => {
-│                tracing::error!("Failed to serialize OpenAPISchema for Google AI: {err}");
-│                return;
-│            }
-│        };
-│
-│        sanitize_schema_for_google(&mut schema_value);
-│
-⋮
 │mod tests {
 │    use super::*;
 │    use std::collections::HashMap;
@@ -264,6 +258,12 @@ backend/windmill-api-auth/src/ee_oss.rs:
 ⋮
 
 backend/windmill-api-client/src/lib.rs:
+⋮
+│pub enum Error {
+│    /// Request error
+│    Request(reqwest::Error),
+│    /// Unexpected response status
+│    UnexpectedResponse(u16, String),
 ⋮
 │pub mod types {
 │    use super::*;
@@ -390,6 +390,15 @@ backend/windmill-common/src/auth.rs:
 │        fn get_credentials(&self) -> Result<&Credentials>;
 ⋮
 
+backend/windmill-common/src/cache.rs:
+⋮
+│pub struct RawScript {
+│    pub content: String,
+│    pub lock: Option<String>,
+│    pub meta: Option<ScriptMetadata>,
+│    pub modules: Option<std::collections::HashMap<String, ScriptModule>>,
+⋮
+
 backend/windmill-common/src/email_oss.rs:
 ⋮
 │pub async fn send_email(
@@ -398,20 +407,6 @@ backend/windmill-common/src/email_oss.rs:
 │    _to: Vec<String>,
 │    _smtp: Smtp,
 │    _client_timeout: Option<tokio::time::Duration>,
-⋮
-
-backend/windmill-common/src/error.rs:
-⋮
-│pub enum Error {
-│    #[error("Bad gateway: {0}")]
-│    BadGateway(String),
-│    #[error("Bad config: {0}")]
-│    BadConfig(String),
-│    #[error("Connecting to database: {0}")]
-│    ConnectingToDatabase(String),
-│    #[error("Not found: {0}")]
-│    NotFound(String),
-│    #[error("Not authorized: {0}")]
 ⋮
 
 backend/windmill-common/src/instance_config.rs:
@@ -426,6 +421,30 @@ backend/windmill-common/src/instance_config.rs:
 │    Bun,
 │    Bunnative,
 │    Mysql,
+⋮
+
+backend/windmill-common/src/min_version.rs:
+⋮
+│impl VersionConstraint {
+│    pub fn version(&self) -> &Version {
+│        &self.available_since
+│    }
+│
+│    pub async fn met(&self) -> bool {
+│        let min = MIN_VERSION.load();
+│        // If MIN_VERSION is 0.0.0, it hasn't been set yet - assume met
+│        if **min == Version::new(0, 0, 0) {
+│            tracing::warn!(
+⋮
+│    pub async fn assert(&self) -> error::Result<()> {
+│        if self.met().await {
+│            Ok(())
+│        } else {
+│            Err(Error::WorkersAreBehind {
+│                feature: self.name.to_string(),
+│                min_version: self.available_since.to_string(),
+│            })
+│        }
 ⋮
 
 backend/windmill-common/src/otel_oss.rs:
@@ -484,18 +503,28 @@ backend/windmill-common/src/utils.rs:
 │    fn build_from_caller(
 │        self,
 ⋮
-
-backend/windmill-common/src/worker.rs:
-⋮
-│pub fn to_raw_value<T: Serialize>(result: &T) -> Box<RawValue> {
-│    serde_json::value::to_raw_value(result)
-│        .unwrap_or_else(|_| RawValue::from_string("{}".to_string()).unwrap())
+│pub fn merge_nested_raw_values_to_array<
+│    'a,
+│    It1: Iterator<Item = It2>,
+│    It2: Iterator<Item = &'a Box<serde_json::value::RawValue>>,
 ⋮
 
 backend/windmill-common/src/workspace_dependencies.rs:
 ⋮
 │fn map_err(e: String) -> error::Error {
 │    error::Error::FeatureUnavailable(e)
+⋮
+
+backend/windmill-types/src/assets.rs:
+⋮
+│pub enum AssetKind {
+│    S3Object,
+│    Resource,
+│    // Avoid unnexpected crashes when deserializing old assets
+│    Variable, // Deprecated
+│    Ducklake,
+│    DataTable,
+│    Volume,
 ⋮
 
 backend/windmill-types/src/flows.rs:
@@ -510,6 +539,25 @@ backend/windmill-types/src/flows.rs:
 │    pub stop_after_all_iters_if: Option<StopAfterIf>,
 │    #[serde(skip_serializing_if = "Option::is_none")]
 │    pub summary: Option<String>,
+⋮
+│impl TryFrom<UntaggedInputTransform> for InputTransform {
+│    type Error = anyhow::Error;
+│    fn try_from(value: UntaggedInputTransform) -> Result<Self, Self::Error> {
+│        let input_transform = match value.type_.as_str() {
+│            "static" => InputTransform::new_static_value(value.value.unwrap_or_else(default_null)),
+│            "javascript" => InputTransform::new_javascript_expr(&value.expr.unwrap_or_default()),
+│            "ai" => InputTransform::Ai,
+│            other => {
+│                return Err(anyhow::anyhow!(
+│                    "got value: {other} for field `type`, expected value: `static` or `javascript`"
+⋮
+
+backend/windmill-types/src/lib.rs:
+⋮
+│/// windmill-types cannot depend on windmill-common (it would be circular).
+│pub fn to_raw_value<T: serde::Serialize>(result: &T) -> Box<serde_json::value::RawValue> {
+│    serde_json::value::to_raw_value(result)
+│        .unwrap_or_else(|_| serde_json::value::RawValue::from_string("{}".to_string()).unwrap())
 ⋮
 
 backend/windmill-types/src/scripts.rs:
@@ -551,6 +599,9 @@ backend/windmill-worker/src/worker.rs:
 ⋮
 
 cli/bootstrap/common.ts:
+⋮
+│export type EnumType = string[] | undefined;
+│
 ⋮
 │export interface SchemaProperty {
 │  type: string | undefined;
@@ -683,18 +734,6 @@ cli/src/utils/script_common.ts:
 │export type ScriptLanguage =
 ⋮
 
-cli/src/utils/upgrade.ts:
-⋮
-│export type NpmProviderOptions = { main?: string; logger?: any } & (
-│  | {
-│      package: string;
-│    }
-│  | {
-│      scope: string;
-│      name?: string;
-│    }
-⋮
-
 cli/test/test_backend.ts:
 ⋮
 │export interface TestBackend {
@@ -709,62 +748,27 @@ cli/test/test_backend.ts:
 │
 ⋮
 
+cli/windmill-utils-internal/src/parse/parse-schema.ts:
+⋮
+│export type EnumType =
+│  | string[]
+│  | { label: string; value: string }[]
+⋮
+│export interface SchemaProperty {
+│  type: string | undefined;
+│  description?: string;
+│  pattern?: string;
+│  default?: any;
+│  enum?: EnumType;
+│  contentEncoding?: "base64" | "binary";
+│  format?: string;
+│  items?: {
+│    type?: "string" | "number" | "bytes" | "object" | "resource";
+⋮
+
 debugger/test_dap_server.py:
 ⋮
 │class DAPTestClient:
-⋮
-
-debugger/test_dap_server_bun.ts:
-⋮
-│class DAPTestClient {
-│	private url: string
-│	private ws: WebSocket | null = null
-│	private seq = 1
-│	private pendingRequests = new Map<
-│		number,
-│		{ resolve: (value: DAPMessage) => void; reject: (error: Error) => void }
-│	>()
-│	private events: DAPMessage[] = []
-│	private output: string[] = []
-⋮
-│async function runComprehensiveTest(): Promise<void> {
-│	const client = new DAPTestClient()
-│	const results: TestResult[] = []
-│	let passed = 0
-│	let failed = 0
-│
-│	function assert(condition: boolean, testName: string, details?: string): void {
-│		if (condition) {
-│			console.log(`[PASS] ${testName}`)
-│			passed++
-│			results.push({ test: testName, passed: true, details })
-│		} else {
-│			console.log(`[FAIL] ${testName}${details ? ': ' + details : ''}`)
-│			failed++
-│			results.push({ test: testName, passed: false, error: details })
-│		}
-⋮
-│async function testDynamicImports(): Promise<void> {
-│	console.log('='.repeat(60))
-│	console.log('DYNAMIC IMPORT TEST')
-│	console.log('='.repeat(60))
-│	console.log('\nThis test verifies that external npm packages are automatically installed.')
-│	console.log('Make sure the server is started with: --windmill /path/to/windmill\n')
-│
-│	const client = new DAPTestClient('ws://localhost:5680')
-│	let passed = 0
-│	let failed = 0
-⋮
-│	function assert(condition: boolean, message: string, error?: string) {
-│		if (condition) {
-│			passed++
-│			console.log(`✓ ${message}`)
-│			results.push({ test: message, passed: true })
-│		} else {
-│			failed++
-│			console.log(`✗ ${message}` + (error ? `: ${error}` : ''))
-│			results.push({ test: message, passed: false, error })
-│		}
 ⋮
 
 ephemeral-backends/worktree-pool.ts:
@@ -774,11 +778,6 @@ ephemeral-backends/worktree-pool.ts:
 │  path: string;
 │  inUse: boolean;
 │  currentCommit?: string;
-⋮
-
-examples/deploy/aws-ecs-terraform/rds.tf:
-⋮
-│resource "aws_db_instance" "windmill_cluster_rds" {
 ⋮
 
 examples/deploy/aws-ecs-terraform/vpc.tf:
@@ -793,16 +792,6 @@ examples/deploy/aws-ecs-terraform/vpc.tf:
 │resource "aws_subnet" "windmill_cluster_subnet_private2" {
 ⋮
 │resource "aws_route_table" "windmill_cluster_rtb_public" {
-⋮
-
-frontend/src/lib/actions/triggerableByAI.svelte.ts:
-⋮
-│export interface TriggerableByAIOptions {
-│	id?: string
-│	description?: string
-│	callback?: (value?: string) => void
-│	disabled?: boolean
-│	showAnimation?: boolean
 ⋮
 
 frontend/src/lib/ata/apis.ts:
@@ -831,6 +820,8 @@ frontend/src/lib/cancelable-promise-utils.ts:
 
 frontend/src/lib/common.ts:
 ⋮
+│export type EnumType = string[] | { value: string; label: string }[] | undefined
+│
 │export interface SchemaProperty {
 │	type: string | undefined
 │	description?: string
@@ -843,6 +834,20 @@ frontend/src/lib/common.ts:
 │		type?: 'string' | 'number' | 'bytes' | 'object' | 'resource'
 ⋮
 
+frontend/src/lib/components/apps/components/helpers/eval.ts:
+⋮
+│type WmFunctor = (
+│	context,
+│	state,
+│	createProxy,
+│	goto,
+│	setTab,
+│	recompute,
+│	globalRecompute,
+│	getAgGrid,
+│	setValue,
+⋮
+
 frontend/src/lib/components/apps/svelte-grid/utils/other.ts:
 │export function throttle(func, timeFrame) {
 ⋮
@@ -851,6 +856,23 @@ frontend/src/lib/components/apps/types.ts:
 ⋮
 │export interface CancelablePromise<T> extends Promise<T> {
 │	cancel: () => void
+⋮
+
+frontend/src/lib/components/assets/AssetGraph/boundedCascade.test.ts:
+⋮
+│type T = [producer: string, tested: string, asset: string] // `// data_test` ordering edge
+│
+⋮
+
+frontend/src/lib/components/assets/AssetGraph/types.ts:
+⋮
+│export interface AssetGraphResponse {
+│	assets: AssetGraphAssetNode[]
+│	runnables: AssetGraphRunnableNode[]
+│	edges: AssetGraphEdge[]
+│	triggers: AssetGraphTrigger[]
+│	macro_edges?: AssetGraphMacroEdge[]
+│	test_edges?: AssetGraphTestEdge[]
 ⋮
 
 frontend/src/lib/components/common/fileInput/model.ts:
@@ -872,12 +894,6 @@ frontend/src/lib/components/copilot/chat/files/attachedFilesDB.ts:
 │	folder?: string
 ⋮
 
-frontend/src/lib/components/copilot/chat/global/workspaceItems.ts:
-⋮
-│export type TriggerKind = (typeof TRIGGER_KINDS)[number]
-│
-⋮
-
 frontend/src/lib/components/copilot/chat/monaco-adapter.ts:
 ⋮
 │export interface ReviewChangesOpts {
@@ -896,20 +912,6 @@ frontend/src/lib/components/copilot/chat/pasteTokens.ts:
 
 frontend/src/lib/components/copilot/chat/tokenUsage.ts:
 │export interface ChatTokenUsage {
-⋮
-
-frontend/src/lib/components/copilot/shared.ts:
-⋮
-│export type VisualChange =
-│	| {
-│			type: 'added_inline'
-│			position: {
-│				line: number
-│				column: number
-│			}
-│			value: string
-│			options?: {
-│				greenHighlight?: boolean
 ⋮
 
 frontend/src/lib/components/graph/groupedModulesProxy.svelte.ts:
@@ -966,17 +968,6 @@ frontend/src/lib/monaco_workers/graphql.worker.bundle.js:
 │${E}`),E}e.codeFrameColumns=i}),L_={};ih(L_,{__debug:()=>d4,check:()=>h4,doc:()=>gh,format:()=>Th,f
 ⋮
 
-frontend/src/lib/navigation.ts:
-⋮
-│export function goto(path: string, options = {}) {
-│	if (svelteBase == '' || path.startsWith('?')) {
-│		return svelteGoto(path, options)
-│	} else {
-│		const fullPath = path.startsWith(svelteBase) ? path : `${svelteBase}${path}`
-│		return svelteGoto(fullPath, options)
-│	}
-⋮
-
 frontend/src/lib/newDraftFlag.test.ts:
 ⋮
 │function stubWindow(href: string): { current: () => string } {
@@ -1025,21 +1016,9 @@ frontend/src/lib/utils.ts:
 ⋮
 
 frontend/static/tailwind.js:
-│(()=>{var Pw=Object.create;var ii=Object.defineProperty;var Dw=Object.getOwnPropertyDescriptor;var 
+⋮
 │In order to be iterable, non-array objects must have a [Symbol.iterator]() method.`)}return t=r[Sym
-│`),k=w.length-1,k>0?(x=a+k,S=b-w[k].length):(x=a,S=s),D=O.comment,a=x,h=x,p=b-S):c===O.slash?(b=o,D
-│ `+d+o("^")}return" "+u(h)+c}).join(`
-│`)}toString(){let e=this.showSourceCode();return e&&(e=`
-│
-│`+e+`
-│`),this.name+": "+this.message+e}};Hf.exports=Ct;Ct.default=Ct});var Pi=v((JE,ea)=>{l();"use strict
 ⋮
-│`,emptyBody:"",commentLeft:" ",commentRight:" ",semicolon:!1};function a1(r){return r[0].toUpperCas
-⋮
-│`)&&(t=t.replace(/[^\n]+$/,"")),!1}),t&&(t=t.replace(/\S/g,"")),t}rawBeforeOpen(e){let t;return e.w
-│`)){let a=this.raw(e,null,"indent");if(a.length)for(let o=0;o<s;o++)i+=a}return i}rawValue(e,t){let
-│`?(i=1,n+=1):i+=1;return{line:n,column:i}}positionBy(e){let t=this.source.start;if(e.index)t=this.p
-│`.charCodeAt(0),Nr=" ".charCodeAt(0),ji="\f".charCodeAt(0),Vi="	".charCodeAt(0),Ui="\r".charCodeAt(
 │`,"	"];return Br.split(r,e)},comma(r){return Br.split(r,[","],!0)}};Ec.exports=Br;Br.default=Br});v
 │`);i=new Array(s.length);let a=0;for(let o=0,u=s.length;o<u;o++)i[o]=a,a+=s[o].length+1;this[ma]=i}
 │https://evilmartians.com/chronicles/postcss-8-plugin-migration`),m.env.LANG&&m.env.LANG.startsWith(
@@ -1048,13 +1027,6 @@ frontend/static/tailwind.js:
 │`)).join(`
 │
 │`);x.push(`  Use \`${r.replace("[",`[${D}:`)}\` for \`${M.trim()}\``);break}N.warn([`The class \`${
-│`))if(n=n.trim(),!i.has(n))if(i.add(n),Xr.get(e).has(n))for(let s of Xr.get(e).get(n))t.add(s);else
-⋮
-│`),t}].filter(Boolean)}};So.exports.postcss=!0});var Co=v((T3,Ih)=>{l();Ih.exports=()=>["and_chr 92
-│`)),e._autoprefixerCascade}maxPrefixed(e,t){if(t._autoprefixerMax)return t._autoprefixerMax;let i=0
-│`),i=t[t.length-1];this.all.group(e).up(n=>{let s=n.raw("before").split(`
-│`),a=s[s.length-1];a.length<i.length&&(i=a)}),t[t.length-1]=i,e.raws.before=t.join(`
-│`)}insert(e,t,i){let n=this.set(this.clone(e),t);if(!(!n||e.parent.some(a=>a.prop===n.prop&&a.value
 ⋮
 
 frontend/static/web-components.min.js:
@@ -1089,15 +1061,20 @@ python-client/wmill/wmill/client.py:
 │    def fetch_one(self):
 ⋮
 
-python-client/wmill/wmill/s3_types.py:
-⋮
-│class S3Object(dict):
-⋮
-
 typescript-client/docs/assets/main.js:
 ⋮
 │"use strict";(()=>{var Ce=Object.create;var ie=Object.defineProperty;var Oe=Object.getOwnPropertyDe
-│`,e)},t.Pipeline.load=function(e){var n=new t.Pipeline;return e.forEach(function(r){var i=t.Pipelin
+⋮
+
+typescript-client/s3Types.ts:
+⋮
+│export type S3ObjectRecord = {
+│  /** File key/path in S3 bucket */
+│  s3: string;
+│  /** Storage backend identifier */
+│  storage?: string;
+│  /** Presigned URL query string for public access */
+│  presigned?: string;
 ⋮
 
 typescript-client/sqlUtils.d.ts:
@@ -1163,6 +1140,13 @@ typescript-client/tests/sqlUtils.test.ts:
 │  preamble(): string;
 │  language: "postgresql" | "duckdb";
 │  extraArgs: Record<string, any>;
+⋮
+
+windmill-yaml-validator/src/validation/yaml-validator.ts:
+⋮
+│export type ValidationTarget =
+│  | { type: "flow" }
+│  | { type: "schedule" }
 ⋮
 
 wm-ts-nav/src/main.rs:

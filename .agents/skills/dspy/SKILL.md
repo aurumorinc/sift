@@ -421,9 +421,6 @@ dspy/core/types.py:
 │    @classmethod
 │    def from_kwargs(cls, **kwargs: Any) -> LMConfig:
 ⋮
-│@dataclass
-│class LMRequestPatch:
-⋮
 │class LMRequest(BaseModel):
 │    """A normalized request passed to a `LanguageModel`."""
 │
@@ -467,6 +464,8 @@ dspy/core/types.py:
 ⋮
 
 dspy/dsp/utils/dpr.py:
+⋮
+│def DPR_tokenize(text):  # noqa: N802
 ⋮
 │def DPR_normalize(text):  # noqa: N802
 ⋮
@@ -539,6 +538,11 @@ dspy/predict/parallel.py:
 
 dspy/predict/parameter.py:
 │class Parameter:
+⋮
+
+dspy/predict/predict.py:
+⋮
+│class Predict(Module, Parameter):
 ⋮
 
 dspy/primitives/base_module.py:
@@ -796,9 +800,6 @@ dspy/signatures/signature.py:
 │    @classmethod
 │    def append(cls, name, field, type_=None) -> type["Signature"]:
 ⋮
-│    @classmethod
-│    def delete(cls, name) -> type["Signature"]:
-⋮
 │def ensure_signature(signature: str | type[Signature], instructions=None) -> None | type[Signature]
 ⋮
 │def make_signature(
@@ -964,8 +965,6 @@ dspy/utils/magicattr.py:
 ⋮
 │def set(obj, attr, val):
 ⋮
-│def delete(obj, attr):
-⋮
 │def lookup(obj, attr):
 ⋮
 │def _lookup_subscript_value(node):
@@ -1066,6 +1065,11 @@ tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_native_parallel_tool_calls_are_requested_and_replayed():
 │    def lookup(query: str) -> str:
+⋮
+
+tests/predict/test_refine.py:
+⋮
+│class DummyModule(dspy.Module):
 ⋮
 
 tests/predict/test_rlm.py:

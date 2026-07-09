@@ -124,12 +124,34 @@ components:
         instructions:
           type: string
         fields:
-          type: object
-          additionalProperties: true
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items:
+                type: object
+                additionalProperties: true
           
     DSPyTrainingExample:
       type: object
       properties:
+        messages:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: object
+                additionalProperties: true
+        response:
+          oneOf:
+            - type: string
+            - type: object
+              additionalProperties: true
+        output:
+          oneOf:
+            - type: string
+            - type: object
+              additionalProperties: true
         trace_id:
           type: string
         score:
@@ -159,6 +181,21 @@ components:
           default: false
         webhook:
           $ref: '#/components/schemas/Webhook'
+        response_format:
+          type: object
+          additionalProperties: true
+        text:
+          type: object
+          additionalProperties: true
+        temperature:
+          type: number
+          format: float
+        max_tokens:
+          type: integer
+        top_p:
+          type: number
+          format: float
+      additionalProperties: true
           
     ResponseResponse:
       type: object
@@ -241,6 +278,117 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AgentRequest'
+            examples:
+              Full_Configuration:
+                summary: Full Configuration
+                value:
+                  agent_name: "support_agent"
+                  agent_card_params: {}
+                  litellm_params:
+                    model: "gpt-4o"
+                    temperature: 0.7
+                  dspy_params:
+                    optimizer: "BootstrapFewShot"
+                    optimizer_params:
+                      max_bootstrapped_demos: 4
+                      max_labeled_demos: 16
+                    state:
+                      default_predictor:
+                        traces: []
+                        train:
+                          - messages: "How do I reset my password?"
+                            response: "Please click the 'Forgot Password' link on the login page."
+                            score: 1.0
+                            feedback: "Clear and concise."
+                        demos: []
+                        signature:
+                          instructions: "You are a helpful customer support agent."
+                          fields:
+                            - name: "messages"
+                              json_schema_extra:
+                                desc: "User input"
+                                __dspy_field_type: "input"
+                            - name: "response"
+                              json_schema_extra:
+                                desc: "Agent output"
+                                __dspy_field_type: "output"
+                        lm: null
+                  labels:
+                    - "support"
+                    - "production"
+              Auto_Inference_Train_Data:
+                summary: Zero-Config Auto Inference
+                value:
+                  agent_name: "train_data_agent"
+                  agent_card_params: {}
+                  litellm_params: {}
+                  dspy_params:
+                    state:
+                      default_predictor:
+                        train:
+                          - messages: "What is the capital of France?"
+                            response: "Paris."
+                            score: 1.0
+                          - messages: "Extract: Alice is a 30yo doctor."
+                            response:
+                              name: "Alice"
+                              age: 30
+                              profession: "doctor"
+                            score: 1.0
+              Multimodal_Train_Data:
+                summary: Multimodal Vision Training Data
+                value:
+                  agent_name: "vision_agent"
+                  agent_card_params: {}
+                  litellm_params:
+                    model: "gpt-4o"
+                  dspy_params:
+                    state:
+                      default_predictor:
+                        train:
+                          - messages:
+                              - role: "user"
+                                content:
+                                  - type: "text"
+                                    text: "What is the primary color in this image?"
+                                  - type: "image_url"
+                                    image_url:
+                                      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Synthese%2B.svg/200px-Synthese%2B.svg.png"
+                            response: "Red"
+                            score: 1.0
+              Update_Deep_Merge:
+                summary: Update Agent (Deep Merge)
+                value:
+                  agent_name: "existing_support_agent"
+                  agent_card_params: {}
+                  litellm_params: {}
+                  dspy_params:
+                    state:
+                      default_predictor:
+                        train:
+                          - messages: "Can I get a refund?"
+                            response: "Refunds are processed within 5-7 business days."
+                            score: 1.0
+              Async_Webhook:
+                summary: Async Compilation with Webhook
+                value:
+                  agent_name: "async_support_agent"
+                  agent_card_params: {}
+                  litellm_params:
+                    model: "gpt-4o"
+                  dspy_params:
+                    state:
+                      default_predictor:
+                        signature:
+                          instructions: "You are a helpful assistant."
+                          fields: {}
+                  webhook:
+                    url: "https://your-server.com/webhook"
+                    events: ["started", "completed", "failed"]
+                    headers:
+                      Authorization: "Bearer internal-secret-token"
+                    metadata:
+                      user_id: "123"
       responses:
         '200':
           description: Agent compiled and saved successfully.
@@ -248,6 +396,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AgentResponse'
+              examples:
+                Success:
+                  summary: Success
+                  value:
+                    success: true
+                    error: null
+                    agent_name: "support_agent"
+                    agent_card_params: {}
+                    litellm_params:
+                      model: "gpt-4o"
+                      temperature: 0.7
+                    dspy_params:
+                      optimizer: "BootstrapFewShot"
+                      state: {}
+                    labels:
+                      - "support"
+                      - "production"
+                    webhook: null
                 
   /jobs/run/wait/result/p/f/sift/responses:
     post:
@@ -263,6 +429,63 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ResponseRequest'
+            examples:
+              Simple_Text:
+                summary: Simple Text Input
+                value:
+                  model: "a2a_agent/support_agent"
+                  input: "How do I reset my password?"
+                  background: false
+              Message_Array:
+                summary: Conversational Messages Input
+                value:
+                  model: "support_agent"
+                  input:
+                    - role: "system"
+                      content: "You are a support bot."
+                    - role: "user"
+                      content: "Where are my billing settings?"
+                  background: false
+              Multimodal_Vision:
+                summary: Multimodal Vision Input
+                value:
+                  model: "vision_agent"
+                  input:
+                    - role: "user"
+                      content:
+                        - type: "text"
+                          text: "What is the primary color in this image?"
+                        - type: "image_url"
+                          image_url:
+                            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Synthese%2B.svg/200px-Synthese%2B.svg.png"
+                  background: false
+              Structured_JSON:
+                summary: Structured JSON Schema Output
+                value:
+                  model: "extraction_agent"
+                  input: "Extract details: John Doe is 28 years old."
+                  temperature: 0.2
+                  response_format:
+                    type: "json_schema"
+                    json_schema:
+                      name: "UserDetails"
+                      schema:
+                        type: "object"
+                        properties:
+                          name:
+                            type: "string"
+                          age:
+                            type: "integer"
+                        required: ["name", "age"]
+              Async_Webhook:
+                summary: Async Background Request
+                value:
+                  model: "a2a_agent/support_agent"
+                  input: "Can you generate a massive report?"
+                  background: true
+                  webhook:
+                    url: "https://your-server.com/webhook"
+                    events: ["completed", "failed"]
       responses:
         '200':
           description: Response prediction completed.
@@ -270,3 +493,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseResponse'
+              examples:
+                Success:
+                  summary: Success Response
+                  value:
+                    success: true
+                    error: null
+                    webhook: null
+                    response:
+                      id: "resp_abc123"
+                      object: "response"
+                      created_at: 1718000000
+                      model: "support_agent"
+                      status: "completed"
+                      output:
+                        - content:
+                            - type: "output_text"
+                              text: "To reset your password, click the 'Forgot Password' link on the login page."
+                      usage:
+                        input_tokens: 12
+                        output_tokens: 18
+                        total_tokens: 30

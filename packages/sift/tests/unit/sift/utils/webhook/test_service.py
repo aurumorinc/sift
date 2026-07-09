@@ -154,3 +154,13 @@ def test_webhook_dispatch_no_webhook():
 
         assert response.success is True
         mock_dispatch.assert_not_called()
+
+def test_webhook_dispatch_webhook_object(webhook):
+    with patch("sift.utils.webhook.service.dispatch_webhook") as mock_dispatch:
+        response = dummy_success_func(data="req_data", webhook=webhook)
+
+        assert response.success is True
+        assert mock_dispatch.call_count == 2
+        
+        started_call = mock_dispatch.call_args_list[0]
+        assert started_call.kwargs["webhook"].url == webhook.url

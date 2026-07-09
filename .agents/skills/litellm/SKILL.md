@@ -144,20 +144,6 @@ litellm/litellm_core_utils/sensitive_data_masker.py:
 │        excluded_keys: Optional[Set[str]] = None,
 ⋮
 
-litellm/litellm_core_utils/token_counter.py:
-⋮
-│def token_counter(
-│    model="",
-│    custom_tokenizer: Optional[Union[dict, SelectTokenizerResponse]] = None,
-│    text: Optional[Union[str, List[str]]] = None,
-│    messages: Optional[List[Union[AllMessageValues, Message]]] = None,
-│    count_response_tokens: Optional[bool] = False,
-│    tools: Optional[List[ChatCompletionToolParam]] = None,
-│    tool_choice: Optional[ChatCompletionNamedToolChoiceParam] = None,
-│    use_default_image_token_count: Optional[bool] = False,
-│    default_token_count: Optional[int] = None,
-⋮
-
 litellm/litellm_core_utils/url_utils.py:
 ⋮
 │class SSRFError(ValueError):
@@ -266,34 +252,11 @@ litellm/proxy/_experimental/mcp_server/outbound_credentials/result.py:
 │    def is_error(self) -> Literal[True]:
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0.4.bbjx7y007.js:
-⋮
-│  `.trim()}(e,i);(0,n.default)()&&(0,o.updateCSS)(l,`${a}-dynamic-theme`)}])},937328,e=>{"use stric
-│      0 6px 16px 0 rgba(0, 0, 0, 0.08),
-│      0 3px 6px -4px rgba(0, 0, 0, 0.12),
-│      0 9px 28px 8px rgba(0, 0, 0, 0.05)
-⋮
-│    `,boxShadowDrawerDown:`
-│      0 -6px 16px 0 rgba(0, 0, 0, 0.08),
-│      0 -3px 6px -4px rgba(0, 0, 0, 0.12),
-│      0 -9px 28px 8px rgba(0, 0, 0, 0.05)
-│    `,boxShadowTabsOverflowLeft:"inset 10px 0 8px -8px rgba(0, 0, 0, 0.08)",boxShadowTabsOverflowRi
-│      ${t}-loading > ${r}`]:{color:s}};return[{[t]:Object.assign(Object.assign({},(0,p.resetCompone
-⋮
-│      `]:{animationName:C,animationDuration:f,animationPlayState:"paused",animationTimingFunction:u
-│        ${t}-move-up-appear${t}-move-up-appear-active,
-│        ${t}-move-up-enter${t}-move-up-enter-active
-│      `]:{animationPlayState:"running"},[`${t}-move-up-leave`]:{animationName:x,animationDuration:f
-⋮
-│        `]:{animationName:i.slideDownOut},"&-hidden":{display:"none"},[o]:Object.assign(Object.assi
-│Must be valid JSON format`:r.enum?`Select from available options
-│Allowed values: ${r.enum.join(", ")}`:E)}),children:u},e)})}):null};class g extends Error{status;bo
-
 litellm/proxy/_experimental/out/_next/static/chunks/00q4mtjboprhm.js:
 ⋮
 │            color: hsl(${Math.max(0,Math.min(120-120*n,120))}deg 100% 31%);`,null==l?void 0:l.key)}
 
-litellm/proxy/_experimental/out/_next/static/chunks/036wlkuzplhfz.js:
+litellm/proxy/_experimental/out/_next/static/chunks/02ax9y70kcggv.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/03~yq9q893hmn.js:
@@ -307,14 +270,31 @@ litellm/proxy/_experimental/out/_next/static/chunks/07.fwfv-sinb5.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
+litellm/proxy/_experimental/out/_next/static/chunks/08o64zaid_juv.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/08yy42xvwaak6.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/0e9hs7onyj28m.js:
+⋮
+│    `,boxShadowTabsOverflowLeft:"inset 10px 0 8px -8px rgba(0, 0, 0, 0.08)",boxShadowTabsOverflowRi
+│      ${t}-loading > ${r}`]:{color:s}};return[{[t]:Object.assign(Object.assign({},(0,p.resetCompone
+⋮
+│      `]:{animationName:C,animationDuration:f,animationPlayState:"paused",animationTimingFunction:u
+│        ${t}-move-up-appear${t}-move-up-appear-active,
+│        ${t}-move-up-enter${t}-move-up-enter-active
+│      `]:{animationPlayState:"running"},[`${t}-move-up-leave`]:{animationName:x,animationDuration:f
+⋮
+│        `]:{animationName:i.slideDownOut},"&-hidden":{display:"none"},[o]:Object.assign(Object.assi
+│Must be valid JSON format`:r.enum?`Select from available options
+│Allowed values: ${r.enum.join(", ")}`:E)}),children:u},e)})}):null};e.s(["ALL_PROXY_MCP_SERVERS_SEN
+
 litellm/proxy/_experimental/out/_next/static/chunks/0ivj_wax-joap.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
 litellm/proxy/_experimental/out/_next/static/chunks/0m6zdocif1gl4.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
-litellm/proxy/_experimental/out/_next/static/chunks/0mzw3maijoev6.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/0nnx~7-7e5t~1.js:
@@ -328,19 +308,22 @@ litellm/proxy/_experimental/out/_next/static/chunks/0p.6bs58-_3lw.js:
 litellm/proxy/_experimental/out/_next/static/chunks/0pidya1qvuvx8.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
-litellm/proxy/_experimental/out/_next/static/chunks/0q6~n4y84cejn.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
-litellm/proxy/_experimental/out/_next/static/chunks/101az3fsw7lje.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
-litellm/proxy/_experimental/out/_next/static/chunks/16.oisvgwzo8s.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0piozaeodiue..js:
 ⋮
 │Read more: https://nextjs.org/docs/messages/next-image-unconfigured-localpatterns`),"__NEXT_ERROR_C
 ⋮
 │Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
 │Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
 ⋮
+
+litellm/proxy/_experimental/out/_next/static/chunks/0q6~n4y84cejn.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/0ys10755n8os_.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/11ibt3khr2hk3.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_types.py:
 ⋮
@@ -359,6 +342,11 @@ litellm/proxy/auth/resolvers/models.py:
 litellm/proxy/client/exceptions.py:
 ⋮
 │class UnauthorizedError(Exception):
+⋮
+
+litellm/proxy/common_utils/swagger_utils.py:
+⋮
+│def get_status_code(exception):
 ⋮
 
 litellm/proxy/guardrails/guardrail_hooks/custom_code/primitives.py:
@@ -395,7 +383,10 @@ litellm/router_strategy/budget_limiter.py:
 
 litellm/router_utils/add_retry_fallback_headers.py:
 ⋮
-│def get_hidden_params_dict(response: object) -> dict[str, object]:
+│def get_hidden_params_dict(
+│    response: object,
+│    *,
+│    create: bool = False,
 ⋮
 │def get_fallback_errors_from_headers(
 │    additional_headers: dict[str, object],
@@ -470,18 +461,9 @@ litellm/types/llms/vertex_ai.py:
 │class Date(TypedDict):
 ⋮
 
-litellm/types/passthrough_endpoints/pass_through_endpoints.py:
-⋮
-│class EndpointType(str, Enum):
-⋮
-
 litellm/types/proxy/litellm_pre_call_utils.py:
 ⋮
 │class RedactedDict(dict):
-│    """Dict subclass with redacted str/repr to prevent leaking in logs."""
-│
-⋮
-│    def copy(self) -> "RedactedDict":
 ⋮
 
 litellm/types/proxy/management_endpoints/common_daily_activity.py:
@@ -567,6 +549,32 @@ terraform/litellm/gcp/variables.tf:
 │variable "otel_exporter" {
 ⋮
 │variable "otel_capture_message_content" {
+⋮
+
+terraform/provider/litellm/types.go:
+⋮
+│type ModelResponse struct {
+│	ModelName     string                 `json:"model_name"`
+│	LiteLLMParams LiteLLMParams          `json:"litellm_params"`
+│	ModelInfo     ModelInfo              `json:"model_info"`
+│	Additional    map[string]interface{} `json:"additional"`
+⋮
+
+tests/agent_tests/test_a2a_agent.py:
+⋮
+│class MockA2AResponse:
+│    def __init__(self, text: str):
+│        self._payload = {
+│            "id": str(uuid4()),
+│            "jsonrpc": "2.0",
+│            "result": {
+│                "message": {
+│                    "role": "agent",
+│                    "parts": [{"kind": "text", "text": text}],
+│                    "messageId": uuid4().hex,
+│                }
+⋮
+│    def model_dump(self, mode="json", exclude_none=True):
 ⋮
 
 tests/e2e/e2e_http.py:
@@ -659,32 +667,24 @@ tests/test_litellm/llms/bedrock/batches/test_handler.py:
 │        def split(self, _sep):
 ⋮
 
-tests/test_litellm/llms/github_copilot/test_github_copilot_transformation.py:
+tests/test_litellm/proxy/_experimental/mcp_server/test_mcp_server.py:
 ⋮
-│@patch("litellm.llms.openai.openai.OpenAIChatCompletion._get_openai_client")
-⋮
-│def test_openai_handler_repairs_github_copilot_empty_choices(
-│    mock_request, mock_get_client
-│):
+│@pytest.mark.asyncio
+│async def test_stateful_mcp_get_stream_does_not_block_post():
 │    """
-│    The OpenAI SDK handler calls convert_to_model_response_object directly on the
-│    SDK's parsed output, bypassing transform_response. convert raises APIError on
-│    empty choices, so the handler must route github_copilot responses through
-│    transform_parsed_response_dict first. Removing that wiring (or resolving a
-│    config without the override) fails this test with APIError.
-│
-│    See: https://github.com/BerriAI/litellm/issues/30927
+│    A long-lived GET (server-to-client SSE stream) on a stateful session
+│    must NOT hold the per-session lock — otherwise subsequent POSTs on the
+│    same mcp-session-id hang for the lifetime of the stream.
 ⋮
-│    class _FakeSDKResponse:
-│        def model_dump(self):
-│            return {
-│                "id": "msg_vrtx_01",
-│                "model": "claude-opus-4.8",
-│                "object": "chat.completion",
-│                "choices": [],
-│                "content": [{"type": "text", "text": "Hi there"}],
-│                "stop_reason": "end_turn",
-│                "usage": {"input_tokens": 12, "output_tokens": 3},
+│    async def call(method: str, body: bytes = b""):
+⋮
+│@pytest.mark.asyncio
+│async def test_truncated_jsonrpc_response_with_nested_method_skips_lock():
+│    """Regression: a large JSON-RPC *response* POST whose ``result`` payload
+│    nests a ``method`` key must skip the per-session lock so it does not
+│    deadlock behind the in-flight request POST that is holding the lock while
+⋮
+│    async def call(body: bytes):
 ⋮
 
 tests/test_litellm/proxy/guardrails/guardrail_hooks/test_noma_v2.py:
@@ -798,25 +798,22 @@ ui/litellm-dashboard/src/app/(dashboard)/access-groups/components/AccessGroupsMo
 │  isNameDisabled?: boolean;
 ⋮
 
-ui/litellm-dashboard/src/app/(dashboard)/access-groups/components/AccessGroupsPage.tsx:
-⋮
-│      render: (_: unknown, record: AccessGroup) => {
-│        const row = rowLookup.get(record.id);
-│        if (!row) return null;
-│        const cell = row.getVisibleCells().find((c) => c.column.id === header.id);
-│        if (!cell) return null;
-│        return flexRender(cell.column.columnDef.cell, cell.getContext());
-⋮
-
-ui/litellm-dashboard/src/app/(dashboard)/access-groups/components/types.ts:
-│export interface AccessGroup {
-⋮
-
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/add_margin_form.tsx:
 ⋮
 │                const numValue = parseFloat(value);
 ⋮
 │                const numValue = parseFloat(value);
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/pricing_calculator/types.ts:
+⋮
+│export interface ModelEntry {
+│  id: string;
+│  model: string;
+│  input_tokens: number;
+│  output_tokens: number;
+│  num_requests_per_day?: number;
+│  num_requests_per_month?: number;
 ⋮
 
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/types.ts:
@@ -853,6 +850,12 @@ ui/litellm-dashboard/src/app/(dashboard)/playground/components/chat_ui/ChatUI.ts
 │                          }
 │
 │                          customModelTimeout.current = setTimeout(() => {
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/playground/components/compareUI/endpoint_config.ts:
+⋮
+│export type EndpointIdType = (typeof EndpointId)[keyof typeof EndpointId];
+│
 ⋮
 
 ui/litellm-dashboard/src/components/AIHub/AgentHubTableColumns.tsx:
@@ -897,6 +900,35 @@ ui/litellm-dashboard/src/components/Settings/LoggingAndAlerts/LoggingCallbacks/t
 │  OPENMETER_API_KEY: string | null;
 ⋮
 
+ui/litellm-dashboard/src/components/chat/ChatShell.tsx:
+⋮
+│interface NavItemProps {
+│  icon: React.ReactNode;
+│  label: string;
+│  onClick: () => void;
+│  active?: boolean;
+⋮
+
+ui/litellm-dashboard/src/components/chat/ConversationList.tsx:
+⋮
+│type DateGroup = "Recents" | "Yesterday" | "Last 7 Days" | "Older";
+│
+⋮
+│  const [query, setQuery] = useState("");
+⋮
+
+ui/litellm-dashboard/src/components/chat/types.ts:
+⋮
+│export interface Conversation {
+│  id: string;
+│  title: string;
+│  model: string;
+│  messages: ChatMessage[];
+│  mcpServerNames: string[];
+│  createdAt: number;
+│  updatedAt: number;
+⋮
+
 ui/litellm-dashboard/src/components/chat_ui/ResponseMetrics.tsx:
 ⋮
 │export interface TokenUsage {
@@ -905,6 +937,20 @@ ui/litellm-dashboard/src/components/chat_ui/ResponseMetrics.tsx:
 │  totalTokens?: number;
 │  reasoningTokens?: number;
 │  cost?: number;
+⋮
+
+ui/litellm-dashboard/src/components/chat_ui/mode_endpoint_mapping.tsx:
+⋮
+│export enum EndpointType {
+│  IMAGE = "image",
+│  VIDEO = "video",
+│  CHAT = "chat",
+│  RESPONSES = "responses",
+│  IMAGE_EDITS = "image_edits",
+│  ANTHROPIC_MESSAGES = "anthropic_messages",
+│  EMBEDDINGS = "embeddings",
+│  SPEECH = "speech",
+│  TRANSCRIPTION = "transcription",
 ⋮
 
 ui/litellm-dashboard/src/components/chat_ui/types.ts:
@@ -944,6 +990,20 @@ ui/litellm-dashboard/src/components/common_components/TableHeaderSortDropdown/Ta
 │
 ⋮
 
+ui/litellm-dashboard/src/components/guardrails/add_guardrail_form.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
+⋮
+
 ui/litellm-dashboard/src/components/guardrails/content_filter/CompetitorIntentConfiguration.tsx:
 ⋮
 │export interface CompetitorIntentConfig {
@@ -968,6 +1028,20 @@ ui/litellm-dashboard/src/components/guardrails/content_filter/ContentCategoryCon
 │  severity_threshold: "high" | "medium" | "low";
 ⋮
 
+ui/litellm-dashboard/src/components/guardrails/guardrail_info.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
+⋮
+
 ui/litellm-dashboard/src/components/guardrails/guardrail_optional_params.tsx:
 ⋮
 │interface ProviderParam {
@@ -975,6 +1049,20 @@ ui/litellm-dashboard/src/components/guardrails/guardrail_optional_params.tsx:
 │  description: string;
 │  required: boolean;
 │  default_value?: string;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
+⋮
+
+ui/litellm-dashboard/src/components/guardrails/guardrail_provider_fields.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string | number;
 │  options?: string[];
 │  type?: string;
 │  fields?: { [key: string]: ProviderParam };
@@ -997,30 +1085,6 @@ ui/litellm-dashboard/src/components/key_team_helpers/BudgetWindowsEditor.tsx:
 ⋮
 
 ui/litellm-dashboard/src/components/key_team_helpers/key_list.tsx:
-⋮
-│export interface KeyResponse {
-│  token: string;
-│  token_id: string;
-│  key_name: string;
-│  key_alias: string;
-│  spend: number;
-│  max_budget: number;
-│  expires: string;
-│  models: string[];
-│  aliases: Record<string, unknown>;
-⋮
-│interface UseKeyListProps {
-│  selectedTeam?: Team;
-│  currentOrg: Organization | null;
-│  selectedKeyAlias: string | null;
-│  accessToken: string;
-│  createClicked: boolean;
-│  expand?: string[];
-⋮
-│interface PaginationData {
-│  currentPage: number;
-│  totalPages: number;
-│  totalCount: number;
 ⋮
 │interface UseKeyListReturn {
 │  keys: KeyResponse[];
@@ -1056,17 +1120,6 @@ ui/litellm-dashboard/src/components/mcp_tools/mcp_tools.test.tsx:
 ⋮
 
 ui/litellm-dashboard/src/components/mcp_tools/types.tsx:
-⋮
-│export interface MCPServer {
-│  server_id: string;
-│  server_name?: string | null;
-│  alias?: string | null;
-│  description?: string | null;
-│  /**
-│   * Only required for HTTP/SSE transports.
-│   * For `stdio`, the backend can return null/undefined.
-│   */
-│  url?: string | null;
 ⋮
 │export type MCPEnvVarScope = "global" | "user";
 │
@@ -1133,18 +1186,16 @@ ui/litellm-dashboard/src/components/molecules/notifications_manager.tsx:
 │      duration: cfg.duration ?? 5,
 │    });
 ⋮
-
-ui/litellm-dashboard/src/components/networking.tsx:
-⋮
-│export interface Member {
-│  role: string;
-│  user_id: string | null;
-│  user_email?: string | null;
-│  max_budget_in_team?: number | null;
-│  tpm_limit?: number | null;
-│  rpm_limit?: number | null;
-│  budget_duration?: string | null;
-│  allowed_models?: string[] | null;
+│  fromBackend(input: any, extra?: Omit<NotificationConfig, "message" | "description">) {
+│    const status = extractStatus(input);
+│    const description = extractDescription(input);
+│    const base = { ...(extra ?? {}), description, placement: extra?.placement ?? defaultPlacement()
+│
+│    if (looksErrorPayload(input, status)) {
+│      const title = titleFor(status, description);
+│      const payload = { ...base, message: title };
+│
+│      if (
 ⋮
 
 ui/litellm-dashboard/src/components/organization/organization_view.tsx:
@@ -1180,14 +1231,6 @@ ui/litellm-dashboard/src/components/provider_info_helpers.tsx:
 │  AUTO_ROUTER = "Auto Router",
 ⋮
 
-ui/litellm-dashboard/src/components/team/TeamMemberTab.tsx:
-⋮
-│              <Tooltip title={models.slice(2).join(", ")}>
-│                <Typography.Text type="secondary">+{remaining} more</Typography.Text>
-│              </Tooltip>
-│            )}
-⋮
-
 ui/litellm-dashboard/src/components/vector_store_management/types.tsx:
 ⋮
 │export interface VectorStoreMetadata {
@@ -1199,6 +1242,10 @@ ui/litellm-dashboard/src/components/view_logs/columns.tsx:
 ⋮
 │export type LogsSortField = keyof typeof LOGS_SORT_FIELD_MAP;
 │
+│export interface LogsSortProps {
+│  sortBy: LogsSortField;
+│  sortOrder: "asc" | "desc";
+│  onSortChange: (sortBy: LogsSortField, sortOrder: "asc" | "desc") => void;
 ⋮
 │export type LogEntry = {
 │  request_id: string;
@@ -1250,20 +1297,7 @@ ui/litellm-dashboard/src/lib/http/client.ts:
 ### AST Map: `modules/litellm-docs`
 
 ```python
-blog/april_townhall_updates/index.md
-
 blog/harnesses-are-the-new-llms/diagrams.js:
-⋮
-│export function ConvergenceHero() {
-│  const W = 1200;
-│  const H = 500;
-│  const N = 40;
-│  const f1 = { x: W * 0.25, y: H * 0.5 };
-│  const f2 = { x: W * 0.75, y: H * 0.5 };
-│  const curves = Array.from({ length: N }, (_, i) => {
-│    const t = (i - N / 2) / (N / 2);
-│    const yIn = H * 0.5 + t * H * 0.45;
-│    const yOut = H * 0.5 - t * H * 0.45;
 ⋮
 │const s = {
 │  fig: { margin: '2.5rem 0', fontFamily: 'inherit' },
@@ -1298,17 +1332,6 @@ blog/harnesses-are-the-new-llms/diagrams.js:
 │    border: open ? `1.5px dashed ${BLUE}` : '1px solid var(--ifm-color-emphasis-300)',
 │    background: open ? 'rgba(59,130,246,0.08)' : 'transparent',
 ⋮
-│export function StackComparison() {
-│  return (
-│    <figure style={s.fig}>
-│      <div style={s.wrap}>
-│        <div />
-│        <div>
-│          <div style={s.colHeader}>Model stack — today</div>
-│          <div style={s.colSub}>calling models</div>
-│        </div>
-│        <div />
-⋮
 
 blog/litellm_rust_launch/benchmark/llm_app.py:
 ⋮
@@ -1317,32 +1340,6 @@ blog/litellm_rust_launch/benchmark/llm_app.py:
 ⋮
 
 blog/litellm_rust_launch/benchmark/main.rs:
-⋮
-│async fn mock_responses(Json(_body): Json<Value>) -> Json<Value> {
-│    Json(json!({
-│        "id": "resp_mock",
-│        "object": "response",
-│        "output": [{"type":"message","role":"assistant","content":[{"type":"output_text","text":"ok
-│        "usage": {"input_tokens": 12, "output_tokens": 6, "total_tokens": 18}
-│    }))
-⋮
-│async fn mock_chat(Json(_body): Json<Value>) -> Json<Value> {
-│    Json(json!({
-│        "id": "chatcmpl-mock",
-│        "object": "chat.completion",
-│        "created": 1,
-│        "model": "mock",
-│        "choices": [{"index":0,"message":{"role":"assistant","content":"ok"},"finish_reason":"stop"
-│        "usage": {"prompt_tokens": 12, "completion_tokens": 6, "total_tokens": 18}
-│    }))
-⋮
-│async fn gw_chat(
-│    State(client): State<Arc<reqwest::Client>>,
-│    Json(mut body): Json<Value>,
-⋮
-│async fn gw_handler(
-│    State(client): State<Arc<reqwest::Client>>,
-│    Json(mut body): Json<Value>,
 ⋮
 │async fn run_mock() {
 │    let app = Router::new()
@@ -1374,17 +1371,6 @@ blog/litellm_rust_launch/benchmark/main.rs:
 │    } else {
 │        json!({"model": "openai/gpt-4o-mini", "input": text})
 ⋮
-│async fn main() {
-│    let args: Vec<String> = env::args().collect();
-│    match args.get(1).map(|s| s.as_str()).unwrap_or("") {
-│        "mock" => run_mock().await,
-│        "gateway" => run_gateway().await,
-│        "bench" => {
-│            let url = args[2].clone();
-│            let total: usize = args[3].parse().unwrap();
-│            let conc: usize = args[4].parse().unwrap();
-│            run_bench(url, total, conc).await;
-⋮
 
 blog/litellm_rust_launch/benchmark/orchestrate_compare.py:
 ⋮
@@ -1393,8 +1379,6 @@ blog/litellm_rust_launch/benchmark/orchestrate_compare.py:
 │def post_ok(url):
 ⋮
 │def run_bench(url, total, conc):
-⋮
-│def sample_rss(pid, stop, vals):
 ⋮
 
 blog/litellm_rust_launch/diagrams.js:
@@ -1482,8 +1466,6 @@ blog/litellm_rust_launch/diagrams.js:
 │    <figure style={s.fig}>
 ⋮
 
-blog/prisma_reconnect_blocking_incident/index.md
-
 blog/redis_circuit_breaker/diagrams.js:
 ⋮
 │const s = {
@@ -1556,68 +1538,6 @@ blog/redis_circuit_breaker/diagrams.js:
 │      <div style={s.box}>
 ⋮
 
-docs/adding_provider/adding_guardrail_support.md
-
-docs/anthropic_unified/index.md
-
-docs/bedrock_invoke.md
-
-docs/claude_code_compatibility.md
-
-docs/completion/web_fetch.md
-
-docs/contributing.md
-
-docs/debugging/hosted_debugging.md
-
-docs/observability/literalai_integration.md
-
-docs/observability/newrelic.md
-
-docs/observability/sumologic_integration.md
-
-docs/providers/azure_ai/img/azure_model_router_04.jpeg
-
-docs/providers/azure_ai/img/azure_model_router_05.jpeg
-
-docs/providers/azure_ai_img.md
-
-docs/providers/chutes.md
-
-docs/providers/oci.md
-
-docs/providers/vertex_realtime.md
-
-docs/proxy/budget_reset_and_tz.md
-
-docs/proxy/clientside_auth.md
-
-docs/proxy/cost_tracking.md
-
-docs/proxy/db_read_replica.md
-
-docs/proxy/guardrails/policy_tags.md
-
-docs/proxy/guardrails/prompt_injection.md
-
-docs/proxy/pass_through_guardrails.md
-
-docs/proxy/pyroscope_profiling.md
-
-docs/proxy/rate_limit_tiers.md
-
-docs/proxy/team_model_add.md
-
-docs/proxy/user_onboarding.md
-
-docs/proxy/users.md
-
-docs/tutorials/claude_code_plugin_marketplace.md
-
-docs/tutorials/claude_mcp.md
-
-docs/tutorials/vertex_ai_pay_go.md
-
 docusaurus.config.js:
 ⋮
 │const config = {
@@ -1634,14 +1554,14 @@ docusaurus.config.js:
 ⋮
 │  plugins: [
 │    require('./plugins/optimize-images'),
-│    ...(hasInkeepSearch
-│      ? [
-│          [
-│            '@inkeep/cxkit-docusaurus',
-│            {
-│              SearchBar: {
-│                ...inkeepConfig,
-│              },
+│    [
+│      '@docusaurus/plugin-client-redirects',
+│      {
+│        redirects: [
+│          {
+│            from: '/docs/proxy/control_plane_and_data_plane',
+│            to: '/docs/proxy/multi_region',
+│          },
 ⋮
 │    [
 │      '@docusaurus/plugin-content-docs',
@@ -1662,13 +1582,6 @@ docusaurus.config.js:
 │            const match = (str || '').match(/v?(\d+)\.(\d+)\.(\d+)/);
 │            if (!match) return [0, 0, 0];
 │            return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
-│          }
-│          function compareVersionsDesc(a, b) {
-│            const [aMaj, aMin, aPatch] = parseVersion(a.label || a.id || '');
-│            const [bMaj, bMin, bPatch] = parseVersion(b.label || b.id || '');
-│            if (bMaj !== aMaj) return bMaj - aMaj;
-│            if (bMin !== aMin) return bMin - aMin;
-│            return bPatch - aPatch;
 ⋮
 │          function flattenDocs(list) {
 │            const result = [];
@@ -1692,100 +1605,6 @@ docusaurus.config.js:
 │            const keys = Object.keys(byMinor);
 │            for (const key of keys) byMinor[key].items.sort(compareVersionsDesc);
 ⋮
-│    () => ({
-│      name: 'cripchat',
-│      injectHtmlTags() {
-│        return {
-│          headTags: [
-│            {
-│              tagName: 'script',
-│              innerHTML: `window.$crisp=[];window.CRISP_WEBSITE_ID="be07a4d6-dba0-4df7-961d-9302c86
-│            },
-│          ],
-│        };
-⋮
-│    () => ({
-│      name: 'gtag-shim',
-│      injectHtmlTags() {
-│        return {
-│          headTags: [
-│            {
-│              tagName: 'script',
-│              innerHTML: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(argu
-│            },
-│          ],
-│        };
-⋮
-
-img/add_agent_1.png
-
-img/admin_ui_viewer.png
-
-img/agent_3.png
-
-img/april_townhall_banner.png
-
-img/athina_dashboard.png
-
-img/claude_code_marketplace/step4_add_plugin.jpeg
-
-img/claude_code_max/step16.jpeg
-
-img/claude_code_max/step19.jpeg
-
-img/claude_code_max/step21.jpeg
-
-img/claude_code_max/step3.jpeg
-
-img/cloud_run0.png
-
-img/cloud_run3.png
-
-img/control_model_access_jwt.png
-
-img/create_key_in_team.gif
-
-img/cyberark2.png
-
-img/edit_prompt3.png
-
-img/email_2_0.png
-
-img/gcp_acc_2.png
-
-img/hcorp_create_virtual_key.png
-
-img/kb_vertex1.png
-
-img/key_logging.png
-
-img/key_r.png
-
-img/langfuse.png
-
-img/managed_files_arch.png
-
-img/mcp_openapi_tools_loaded.png
-
-img/mcp_tool_testing_playground.png
-
-img/okta_authorization_server.png
-
-img/plugins_dropdown.png
-
-img/release_notes/faster_caching_calls.png
-
-img/release_notes/perf_77_7.png
-
-img/release_notes/sso_sync.png
-
-img/retool_resource_setup.gif
-
-img/sagemaker_deploy.png
-
-img/slack.png
-
-img/success_bulk_edit.png
 
 plugins/optimize-images.js:
 ⋮
@@ -1822,20 +1641,6 @@ plugins/optimize-images.js:
 │      console.log(`\n[optimize-images] Compressed ${files.length} images, saved ${mb} MB`);
 │    },
 ⋮
-
-release_notes/v1.61.20-stable/index.md
-
-release_notes/v1.67.0-stable/index.md
-
-release_notes/v1.80.5-stable/index.md
-
-release_notes/v1.84.3/index.md
-
-release_notes/v1.84.8/index.md
-
-release_notes/v1.86.5/index.md
-
-release_notes/v1.89.3/index.md
 
 src/components/ClaudeCodeCompatibilityTable/index.tsx:
 ⋮
@@ -1893,6 +1698,59 @@ src/components/ClaudeCodeCompatibilityTable/index.tsx:
 │                  >
 │                    {STATUS_GLYPH[cell.status]}
 │                  </td>
+⋮
+
+src/components/CloudArchitecture/CloudArchitecture.tsx:
+⋮
+│function Icon({ file, className }: { file: string; className?: string }) {
+│  return (
+│    <img
+│      src={useBaseUrl(`/img/cloud_icons/${file}`)}
+⋮
+│function Node({
+│  icon,
+│  title,
+│  subtitle,
+│  accent,
+│  small,
+⋮
+│function ComputeNode({
+│  icon,
+│  title,
+│  subtitle,
+│  replicas,
+⋮
+│function ConnectorDown({ label }: { label?: string }) {
+│  if (!label) return <div className={styles.connectorDown} />;
+│  return (
+│    <div className={styles.connectorLabeled}>
+│      <span className={styles.connectorLabel}>{label}</span>
+│      <div className={styles.connectorDown} />
+│    </div>
+│  );
+⋮
+│        {CSP_TABS.map((t) => (
+│          <button
+│            key={t.key}
+│            role="tab"
+│            aria-selected={t.key === csp.key}
+│            className={`${styles.tab} ${t.key === csp.key ? styles.tabActive : ''}`}
+│            onClick={() => setCspKey(t.key)}
+│          >
+│            <Icon file={t.icon} className={styles.tabIcon} />
+│            {t.label}
+⋮
+│            <button
+│              key={v.key}
+│              className={`${styles.variantPill} ${v.key === variant ? styles.variantPillActive : ''
+│              onClick={() => setVariantByCsp({ ...variantByCsp, [csp.key]: v.key })}
+⋮
+│          <button
+│            key={k}
+│            role="tab"
+│            aria-selected={k === csp}
+│            className={`${styles.tab} ${k === csp ? styles.tabActive : ''}`}
+│            onClick={() => setCsp(k)}
 ⋮
 
 src/components/ControlPlaneArchitecture/ControlPlaneArchitecture.tsx:
@@ -1968,43 +1826,6 @@ src/components/DashboardWebRTCTester.jsx:
 │    src.connect(analyserRef.current);
 │    drawBars();
 ⋮
-│  async function startSession() {
-│    const url = proxyUrl.trim().replace(/\/$/, '');
-│    const key = apiKey.trim();
-│    const mdl = model.trim();
-│
-│    setConnected(true);
-│    setStatus('connecting');
-│    setFlowStep(1);
-│
-│    // Step 1: ephemeral token
-⋮
-│    pc.oniceconnectionstatechange = () => {
-│      setIceState(pc.iceConnectionState);
-│      log('info', 'ICE', pc.iceConnectionState);
-│      if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
-│        setStatus('connected'); setFlowStep(3);
-│      }
-│      if (pc.iceConnectionState === 'failed' || pc.iceConnectionState === 'disconnected') {
-│        setStatus('error');
-│      }
-⋮
-│    pc.onconnectionstatechange = () => {
-│      setConnState(pc.connectionState);
-│      log('info', 'CONN', pc.connectionState);
-⋮
-│    pc.ontrack = (e) => {
-│      log('success', 'AUDIO', 'Remote audio track received from OpenAI');
-│      if (remoteAudioRef.current) remoteAudioRef.current.srcObject = e.streams[0];
-│      setupAnalyser(e.streams[0]);
-│      setAudioStatus('Receiving audio from OpenAI ✓');
-⋮
-│    dc.onopen = () => { setDcState('open'); log('success', 'DC', 'Data channel open — ready!'); set
-│    dc.onclose = () => { setDcState('closed'); log('warn', 'DC', 'Closed'); };
-│    dc.onmessage = (e) => {
-│      try { log('info', 'EVENT', JSON.parse(e.data).type ?? 'unknown'); }
-│      catch { log('info', 'EVENT', e.data.slice(0, 100)); }
-⋮
 │  function stopSession() {
 │    if (pcRef.current) { pcRef.current.close(); pcRef.current = null; }
 │    if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.curren
@@ -2015,14 +1836,6 @@ src/components/DashboardWebRTCTester.jsx:
 │    setStatus('idle');
 │    setFlowStep(0);
 │    setTokenPreview('—');
-⋮
-│  function toggleMic() {
-│    if (!streamRef.current) { log('warn', 'MIC', 'No active session'); return; }
-│    const next = !micRef.current;
-│    micRef.current = next;
-│    streamRef.current.getAudioTracks().forEach(t => { t.enabled = next; });
-│    setMicActive(next);
-│    log('info', 'MIC', next ? 'Unmuted' : 'Muted');
 ⋮
 │  const f = (n) => flowStep >= n;
 │
@@ -2098,18 +1911,6 @@ src/components/NavigationCards/index.js:
 
 src/components/QuickStart.js:
 ⋮
-│const QuickStartCodeBlock = ({ token }) => {
-│    return (
-│      <pre>
-│        {`
-│        from litellm import completion
-│        import os
-│  
-│        ## set ENV variables
-│        os.environ["OPENAI_API_KEY"] = "${token}"
-│        os.environ["COHERE_API_KEY"] = "${token}"
-│  
-⋮
 │  const QuickStart = () => {
 │    const [token, setToken] = useState(null);
 │  
@@ -2147,15 +1948,6 @@ src/components/SubscribeForm/index.js:
 ⋮
 
 src/components/TokenGen.js:
-⋮
-│const CodeBlock = ({ token }) => {
-│  const codeWithToken = `${token}`;
-│
-│  return (
-│    <pre>
-│      {token ? codeWithToken : ""}
-│    </pre>
-│  );
 ⋮
 │const TokenGen = () => {
 │  const [token, setToken] = useState(null);
@@ -2277,8 +2069,6 @@ src/pages-fake/index.js:
 │      </main>
 ⋮
 
-src/pages/stream.md
-
 src/remark/raw-markdown.js:
 │function remarkRawMarkdown() {
 ⋮
@@ -2300,64 +2090,10 @@ src/theme/BlogListPage/index.js:
 │    !hasTag(i, IDEAS_TAGS)
 │  );
 ⋮
-│function ProviderMarquee() {
-│  return (
-│    <div className={styles.marqueeWrap}>
-│      <p className={styles.marqueeLabel}>Routing to 100+ providers</p>
-│      <div className={styles.marqueeOuter}>
-│        <div className={styles.fadeLeft} />
-│        <div className={styles.fadeRight} />
-│        <div className={styles.marqueeTrack}>
-│          {DOUBLED.map((p, i) => (
-│            <span key={i} className={styles.marqueeItem}>
-⋮
 │function formatDate(dateStr) {
 │  return new Date(dateStr).toLocaleDateString('en-US', {
 │    month: 'long', day: 'numeric', year: 'numeric',
 │  });
-⋮
-│function AuthorList({authors}) {
-│  if (!authors || authors.length === 0) return null;
-│  return (
-│    <>
-│      {authors.map((a, i) => (
-│        <React.Fragment key={a.name}>
-│          {i > 0 && <span className={styles.authorSep}> </span>}
-│          {a.url ? (
-│            <a href={a.url} target="_blank" rel="noopener" className={styles.authorLink}>{a.name}</
-│          ) : (
-⋮
-│function PostRow({post}) {
-│  const {title, permalink, date, description, authors} = post;
-│  return (
-│    <article className={styles.post}>
-│      <Link to={permalink} className={styles.titleLink}>
-│        <h2 className={styles.title}>{title}</h2>
-│      </Link>
-│      {description && <p className={styles.desc}>{description}</p>}
-│      <div className={styles.meta}>
-│        <AuthorList authors={authors} />
-⋮
-│function Pagination({metadata}) {
-│  const {previousPage, nextPage} = metadata;
-│  if (!previousPage && !nextPage) return null;
-│  return (
-│    <nav className={styles.pagination} aria-label="Blog list pagination">
-│      {previousPage ? <Link to={previousPage} className={styles.pageLink}>&larr; Newer posts</Link>
-│      {nextPage ? <Link to={nextPage} className={styles.pageLink}>Older posts &rarr;</Link> : <span
-│    </nav>
-│  );
-⋮
-│export default function BlogListPage(props) {
-│  const items = props.items || [];
-│  const metadata = props.metadata || {};
-│  const [activeTab, setActiveTab] = useState('all');
-│  const filtered = filterItems(items, activeTab);
-│
-│  return (
-│    <Layout
-│      title="Engineering Blog"
-│      description="How we build the world's most widely used open-source AI Gateway. Routing, relia
 ⋮
 
 src/theme/BlogPostPage/index.js:
@@ -2483,10 +2219,4 @@ src/theme/TOC/index.js:
 │          linkActiveClassName={LINK_ACTIVE_CLASS_NAME}
 │        />
 ⋮
-
-static/img/cost-discrepancy-debug/date-range-picker.png
-
-static/img/routing-groups/access-rg-settings.png
-
-static/img/routing-groups/update-rg.png
 ```

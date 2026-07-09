@@ -1361,53 +1361,13 @@ ALTER TABLE users ADD COLUMN last_name VARCHAR(255) NOT NULL;
 
 ```python
 
-.agents/rules/architecture-application.md
-
 .agents/rules/architecture-business.md
-
-.agents/rules/architecture-integration.md
-
-.agents/rules/architecture-technology.md
-
-.agents/rules/language-python/anti-patterns.md
-
-.agents/rules/language-python/architecture-and-structure.md
-
-.agents/rules/language-python/code-style-and-formatting.md
-
-.agents/rules/language-python/configuration-and-environment.md
-
-.agents/rules/language-python/dependency-management.md
-
-.agents/rules/language-python/documentation-and-comments.md
-
-.agents/rules/language-python/error-handling.md
 
 .agents/rules/language-python/logging-and-observability.md
 
-.agents/rules/language-python/naming-conventions.md
-
-.agents/rules/language-python/performance-and-optimization.md
-
-.agents/rules/language-python/security-and-validation.md
-
 .agents/rules/language-python/testing-standards.md
 
-.agents/rules/language-python/type-safety.md
-
-.agents/skills/dspy/SKILL.md
-
 .agents/skills/langfuse/SKILL.md
-
-.agents/skills/windmill/SKILL.md
-
-.agents/skills/worldline-python/SKILL.md
-
-.github/workflows/sync.yaml
-
-.rune/index
-
-.runemodules
 
 AGENTS.md
 
@@ -1415,45 +1375,17 @@ CHANGELOG.md
 
 LICENSE
 
-apps/sift-api/.claude/skills/cli-commands/SKILL.md
-
-apps/sift-api/.claude/skills/raw-app/SKILL.md
-
-apps/sift-api/.claude/skills/resources/SKILL.md
-
-apps/sift-api/.claude/skills/schedules/SKILL.md
-
-apps/sift-api/.claude/skills/triggers/SKILL.md
-
-apps/sift-api/.claude/skills/write-flow/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-bash/SKILL.md
-
 apps/sift-api/.claude/skills/write-script-bigquery/SKILL.md
 
-apps/sift-api/.claude/skills/write-script-csharp/SKILL.md
+apps/sift-api/.claude/skills/write-script-bun/SKILL.md
 
 apps/sift-api/.claude/skills/write-script-deno/SKILL.md
 
-apps/sift-api/.claude/skills/write-script-duckdb/SKILL.md
+apps/sift-api/.claude/skills/write-script-java/SKILL.md
 
-apps/sift-api/.claude/skills/write-script-go/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-mssql/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-mysql/SKILL.md
+apps/sift-api/.claude/skills/write-script-nativets/SKILL.md
 
 apps/sift-api/.claude/skills/write-script-php/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-postgresql/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-powershell/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-python3/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-rust/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-snowflake/SKILL.md
 
 apps/sift-api/AGENTS.md
 
@@ -1461,21 +1393,28 @@ apps/sift-api/CLAUDE.md
 
 apps/sift-api/f/sift/agents.py:
 ⋮
-│@webhook_dispatch
-│def main(request: AgentRequest) -> AgentResponse:
+│def main(
+│    agent_name: Optional[str] = None,
+│    agent_card_params: Optional[Dict] = None,
+│    litellm_params: Optional[Dict] = None,
+│    dspy_params: Optional[Dict] = None,
+│    object_permission: Optional[Dict] = None,
+│    labels: Optional[List] = None,
+│    webhook: Optional[Dict] = None,
 ⋮
 
-apps/sift-api/f/sift/folder.meta.yaml
+apps/sift-api/f/sift/agents.script.lock
 
 apps/sift-api/f/sift/responses.py:
 ⋮
-│@webhook_dispatch
-│def main(request: ResponseRequest) -> ResponseResponse:
+│def main(
+│    model: str,
+│    input: Union[str, List[Dict]],
+│    background: bool = False,
+│    webhook: Optional[Dict] = None,
 ⋮
 
 apps/sift-api/f/sift/responses.script.lock
-
-apps/sift-api/f/sift/responses.script.yaml
 
 apps/sift-api/rt.d.ts:
 ⋮
@@ -2486,45 +2425,9 @@ apps/sift-api/rt.d.ts:
 │    apiKey: string
 ⋮
 
-apps/sift-api/tests/unit/f/sift/test_agents.py:
-⋮
-│@pytest.fixture
-│def mock_client(mocker):
-⋮
-│@pytest.fixture
-│def mock_dispatch(mocker):
-⋮
-│@pytest.fixture
-│def valid_agent_request():
-⋮
-│def test_main_create_success(mock_client, mock_dispatch, valid_agent_request):
-⋮
-│def test_main_create_error(mock_client, mock_dispatch, valid_agent_request):
-⋮
-
-apps/sift-api/tests/unit/f/sift/test_responses.py:
-⋮
-│@pytest.fixture
-│def mock_client(mocker):
-⋮
-│@pytest.fixture
-│def mock_dispatch(mocker):
-⋮
-│@pytest.fixture
-│def valid_response_request():
-⋮
-│def test_responses_main_success(mock_client, mock_dispatch, valid_response_request):
-⋮
-│def test_responses_main_no_prefix(mock_client):
-⋮
-│def test_responses_main_error(mock_client, mock_dispatch, valid_response_request):
-⋮
-
-apps/sift-api/wmill-lock.yaml
-
 apps/sift-api/wmill.yaml
 
-packages/sift/src/sift/__init__.py
+packages/sift/pdm.lock
 
 packages/sift/src/sift/client.py:
 ⋮
@@ -2544,6 +2447,7 @@ packages/sift/src/sift/client.py:
 │        agent_id: str,
 │        input: Union[str, List[Dict[str, Any]]],
 │        background: bool = False,
+│        **kwargs: Any
 ⋮
 
 packages/sift/src/sift/config.py:
@@ -2551,25 +2455,16 @@ packages/sift/src/sift/config.py:
 │class Settings(LoggingSettings, BaseSettings):
 ⋮
 
-packages/sift/src/sift/integrations/__init__.py
-
-packages/sift/src/sift/integrations/langfuse/__init__.py
-
 packages/sift/src/sift/integrations/langfuse/service.py:
 ⋮
 │def get_langfuse_client() -> Langfuse:
 ⋮
 
-packages/sift/src/sift/modules/agents/__init__.py
-
-packages/sift/src/sift/modules/agents/metric.py:
-⋮
-│def dynamic_api_metric(example: dspy.Example, pred: dspy.Prediction, trace: Optional[Any] = None) -
-⋮
-
 packages/sift/src/sift/modules/agents/repository/langfuse.py:
 ⋮
 │def get_agent(agent_name: str, version: Optional[int] = None) -> Agent:
+⋮
+│def get_agent_safe(agent_name: str, version: Optional[int] = None) -> Optional[Agent]:
 ⋮
 │def save_agent(agent: Agent) -> None:
 ⋮
@@ -2595,6 +2490,12 @@ packages/sift/src/sift/modules/agents/schema.py:
 
 packages/sift/src/sift/modules/agents/service.py:
 ⋮
+│def _hydrate_multimodal_messages(messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+⋮
+│class LlmAsAJudge(dspy.Signature):
+⋮
+│def dynamic_api_metric(example: dspy.Example, pred: dspy.Prediction, trace: Optional[Any] = None) -
+⋮
 │class AgentModule(dspy.Module):
 │    def __init__(self, state_dict: Dict[str, Any]):
 │        super().__init__()
@@ -2607,12 +2508,12 @@ packages/sift/src/sift/modules/agents/service.py:
 │            fields = sig_state.get("fields", [])
 │
 ⋮
+│    def load_state(self, state: Dict[str, Any], allow_unsafe_lm_state: bool = False, **kwargs: Any)
+⋮
 │    def forward(self, **kwargs):
 ⋮
 │def compile_and_save_agent(payload: Dict[str, Any]) -> None:
 ⋮
-
-packages/sift/src/sift/modules/responses/__init__.py
 
 packages/sift/src/sift/modules/responses/schema.py:
 ⋮
@@ -2623,15 +2524,34 @@ packages/sift/src/sift/modules/responses/schema.py:
 
 packages/sift/src/sift/modules/responses/service.py:
 ⋮
-│def predict_response(
-│    agent_id: str, input: Union[str, List[Dict[str, Any]]], background: bool = False
+│def predict_response(request: ResponseRequest) -> ResponsesAPIResponse:
 ⋮
 
-packages/sift/src/sift/use_cases/agents/schema.py
+packages/sift/src/sift/use_cases/agents/service.py:
+⋮
+│def _deep_merge(base: Dict, update: Dict) -> Dict:
+⋮
+│@webhook_dispatch
+│def main(
+│    agent_name: Optional[str] = None,
+│    agent_card_params: Optional[Dict] = None,
+│    litellm_params: Optional[Dict] = None,
+│    dspy_params: Optional[Dict] = None,
+│    object_permission: Optional[Dict] = None,
+│    labels: Optional[List] = None,
+│    webhook: Optional[Dict] = None,
+⋮
 
-packages/sift/src/sift/utils/__init__.py
-
-packages/sift/src/sift/utils/webhook/__init__.py
+packages/sift/src/sift/use_cases/responses/service.py:
+⋮
+│@webhook_dispatch
+│def main(
+│    model: str,
+│    input: Union[str, List[Dict]],
+│    background: bool = False,
+│    webhook: Optional[Dict] = None,
+│    **kwargs: Any
+⋮
 
 packages/sift/src/sift/utils/webhook/schema.py:
 ⋮
@@ -2649,40 +2569,73 @@ packages/sift/src/sift/utils/webhook/service.py:
 │    """Decorator to handle webhook lifecycle events (STARTED, COMPLETED, FAILED)."""
 │
 │    @functools.wraps(func)
-│    def wrapper(request: Any, *args: Any, **kwargs: Any) -> Any:
+│    def wrapper(*args: Any, **kwargs: Any) -> Any:
 ⋮
-
-packages/sift/tests/__init__.py
 
 packages/sift/tests/conftest.py:
 ⋮
 │def filter_response(response):
 ⋮
+│def _get_vcr_config():
+⋮
 │@pytest.fixture(scope="module")
 │def vcr_config():
+⋮
+│def _setup_environment():
 ⋮
 │@pytest.fixture(scope="session", autouse=True)
 │def setup_environment():
 ⋮
 
-packages/sift/tests/e2e/cassettes/test_workflow.yaml
-
 packages/sift/tests/e2e/test_client.py:
 ⋮
-│@pytest.mark.vcr
-│def test_workflow():
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
 ⋮
-
-packages/sift/tests/integration/__init__.py
-
-packages/sift/tests/integration/internal/__init__.py
+│def test_workflow(mock_lm, mock_resp_get_agent, mock_get_agent, mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+⋮
+│def test_workflow_multimodal(mock_lm, mock_resp_get_agent, mock_get_agent, mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+⋮
+│def test_workflow_structured_responses(mock_lm, mock_resp_get_agent, mock_get_agent, mock_save_agen
+⋮
 
 packages/sift/tests/integration/internal/test_hydration.py:
 ⋮
 │def test_end_to_end_hydration(mocker):
 ⋮
+│def test_end_to_end_hydration_multimodal(mocker):
+⋮
 
-packages/sift/tests/unit/sift/modules/__init__.py
+packages/sift/tests/integration/use_cases/test_agents_integration.py:
+⋮
+│@patch("dspy.teleprompt.BootstrapFewShot")
+│@patch("sift.modules.agents.repository.langfuse.get_langfuse_client")
+│def test_full_optimization_flow_existing_agent(mock_get_langfuse_client, mock_bootstrap):
+⋮
+│@patch("dspy.LM")
+⋮
+│def test_full_compilation_loop_with_llm_judge(mock_get_langfuse_client, mock_bootstrap, mock_lm):
+⋮
+│@patch("dspy.teleprompt.BootstrapFewShot")
+│@patch("sift.modules.agents.repository.langfuse.get_langfuse_client")
+│def test_implicit_vs_explicit_param_merging_integration(mock_get_langfuse_client, mock_bootstrap):
+⋮
+
+packages/sift/tests/integration/use_cases/test_responses_integration.py:
+⋮
+│@patch("sift.modules.responses.service.get_agent")
+│def test_responses_main_structured_format_integration(mock_get_agent):
+⋮
+
+packages/sift/tests/unit/sift/integrations/__init__.py
+
+packages/sift/tests/unit/sift/integrations/langfuse/test_service.py:
+⋮
+│def test_get_langfuse_client_singleton():
+⋮
 
 packages/sift/tests/unit/sift/modules/agents/repository/test_langfuse.py:
 ⋮
@@ -2697,16 +2650,9 @@ packages/sift/tests/unit/sift/modules/agents/repository/test_langfuse.py:
 ⋮
 │def test_get_agent_defaults_agent_name(mock_langfuse_client):
 ⋮
-
-packages/sift/tests/unit/sift/modules/agents/test_metric.py:
+│def test_get_agent_safe_returns_agent(mock_langfuse_client):
 ⋮
-│def test_feedback_metric():
-⋮
-│def test_pre_scored_metric():
-⋮
-│def test_fallback_metric():
-⋮
-│def test_fallback_metric_no_output_keys():
+│def test_get_agent_safe_returns_none_on_exception(mock_langfuse_client):
 ⋮
 
 packages/sift/tests/unit/sift/modules/agents/test_schema.py:
@@ -2715,13 +2661,52 @@ packages/sift/tests/unit/sift/modules/agents/test_schema.py:
 ⋮
 │def test_dspy_training_example_missing_extras():
 ⋮
+│def test_dspy_training_example_messages():
+⋮
+│def test_dspy_training_example_string_messages_and_structured_response():
+⋮
+│def test_agent_name_auto_generation():
+⋮
 
 packages/sift/tests/unit/sift/modules/agents/test_service.py:
+⋮
+│@patch("dspy.Predict.__call__")
+│def test_dynamic_api_metric_evaluates_with_reference_data(mock_predict_call):
+⋮
+│@patch("dspy.Predict.__call__")
+│def test_dynamic_api_metric_parsing_failure(mock_predict_call):
+⋮
+│@patch("dspy.Predict.__call__")
+│def test_dynamic_api_metric_missing_reference_data(mock_predict_call):
+⋮
+│def _create_payload(trainset_size: int, optimizer: str | None = None) -> dict:
+⋮
+│def _mock_compiled_module():
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@patch("dspy.teleprompt.BootstrapFewShot")
+│def test_implicit_mode_tiny_dataset(mock_optimizer_class, mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@patch("dspy.teleprompt.BootstrapFewShotWithRandomSearch")
+│def test_implicit_mode_medium_dataset(mock_optimizer_class, mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@patch("dspy.teleprompt.MIPROv2")
+│def test_implicit_mode_large_dataset(mock_optimizer_class, mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@patch("dspy.teleprompt.COPRO")
+│def test_explicit_optimizer_mode_override(mock_optimizer_class, mock_save_agent):
 ⋮
 │@patch("dspy.teleprompt.BootstrapFewShot")
 │@patch("sift.modules.agents.repository.langfuse.save_agent")
 │def test_compile_and_save_agent_preserves_signature_fields(
 │    mock_save_agent, mock_bootstrap
+⋮
+│@patch("dspy.teleprompt.BootstrapFewShot")
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│def test_compile_and_save_agent_hydrates_multimodal_train_data(mock_save_agent, mock_bootstrap):
 ⋮
 │@patch("dspy.teleprompt.BootstrapFewShot")
 │@patch("sift.modules.agents.repository.langfuse.save_agent")
@@ -2734,6 +2719,65 @@ packages/sift/tests/unit/sift/modules/agents/test_service.py:
 │@patch("sift.modules.agents.repository.langfuse.save_agent")
 │def test_compile_and_save_agent_invalid_optimizer(mock_save_agent):
 ⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│def test_compile_and_save_agent_infers_fields(mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│def test_compile_and_save_agent_handles_dict_fields_and_empty_names(mock_save_agent):
+⋮
+│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│def test_compile_and_save_agent_hits_line_263(mock_save_agent):
+⋮
+│def test_hydrate_multimodal_messages_missing_url():
+⋮
+│def test_agent_module_ignores_non_dict_state():
+⋮
+│def test_agent_module_handles_dict_fields():
+⋮
+│def test_agent_module_infers_io_from_name():
+⋮
+│def test_agent_module_empty_field_name_continue():
+⋮
+│def test_agent_module_load_state_hydrates_demos():
+⋮
+│def test_agent_module_forward_no_predictors():
+⋮
+
+packages/sift/tests/unit/sift/modules/responses/test_schema.py:
+⋮
+│def test_response_request_allows_litellm_fields():
+⋮
+│def test_response_request_extra_fields():
+⋮
+
+packages/sift/tests/unit/sift/modules/responses/test_service.py:
+⋮
+│@patch("sift.modules.responses.service.get_agent")
+│@patch("dspy.LM")
+│def test_predict_response_multimodal_passthrough(mock_lm, mock_get_agent):
+⋮
+│@patch("sift.modules.responses.service.get_agent")
+│@patch("dspy.LM")
+│def test_predict_response_structured_responses_and_kwargs(mock_lm, mock_get_agent):
+⋮
+│@patch("sift.modules.responses.service.get_agent")
+│@patch("dspy.LM")
+│def test_predict_response_no_predictors(mock_lm, mock_get_agent):
+⋮
+│@patch("sift.modules.responses.service.get_agent")
+│@patch("dspy.LM")
+│def test_predict_response_no_input_fields_and_dict_fields(mock_lm, mock_get_agent):
+│    from sift.modules.responses.schema import ResponseRequest
+│    
+⋮
+│    class DummyModuleWithState:
+│        captured_kwargs = {}
+│        def __init__(self, raw_state):
+⋮
+│        def load_state(self, state):
+│            pass
+│        def __call__(self, **kwargs):
+⋮
 
 packages/sift/tests/unit/sift/test_client.py:
 ⋮
@@ -2741,10 +2785,60 @@ packages/sift/tests/unit/sift/test_client.py:
 ⋮
 │def test_sift_client_routing_properties(mocker) -> None:
 ⋮
+│def test_sift_client_save_agent(mocker) -> None:
+⋮
+
+packages/sift/tests/unit/sift/test_conftest.py:
+⋮
+│def test_filter_response():
+⋮
+│def test_vcr_config():
+⋮
+│@patch("dotenv.load_dotenv", autospec=True)
+│@patch.dict(os.environ, clear=True)
+│def test_setup_environment_sets_dummies(mock_load_dotenv):
+⋮
+│@patch("dotenv.load_dotenv", autospec=True)
+⋮
+│def test_setup_environment_preserves_existing(mock_load_dotenv):
+⋮
 
 packages/sift/tests/unit/sift/test_init.py:
 ⋮
 │def test_public_api_exports():
+⋮
+
+packages/sift/tests/unit/sift/use_cases/__init__.py
+
+packages/sift/tests/unit/sift/use_cases/test_agents.py:
+⋮
+│def test_deep_merge():
+⋮
+│@patch("sift.use_cases.agents.service.client")
+│@patch("sift.use_cases.agents.service.get_agent_safe")
+│def test_agents_new_agent(mock_get_agent_safe, mock_client):
+⋮
+│@patch("sift.use_cases.agents.service.client")
+│@patch("sift.use_cases.agents.service.get_agent_safe")
+│def test_agents_existing_agent_merge(mock_get_agent_safe, mock_client):
+⋮
+│@patch("sift.use_cases.agents.service.client")
+⋮
+│def test_agents_main_optional_args_populated(mock_dispatch_webhook, mock_get_agent_safe, mock_clien
+⋮
+│@patch("sift.use_cases.agents.service.client")
+⋮
+│def test_agents_main_catches_exception(mock_dispatch_webhook, mock_get_agent_safe, mock_client):
+⋮
+
+packages/sift/tests/unit/sift/use_cases/test_responses.py:
+⋮
+│@patch("sift.use_cases.responses.service.client")
+│def test_responses_main_extracts_agent_name(mock_client):
+⋮
+│@patch("sift.use_cases.responses.service.client")
+│@patch("sift.utils.webhook.service.dispatch_webhook")
+│def test_responses_main_catches_exception(mock_dispatch_webhook, mock_client):
 ⋮
 
 packages/sift/tests/unit/sift/utils/webhook/test_service.py:
@@ -2760,12 +2854,6 @@ packages/sift/tests/unit/sift/utils/webhook/test_service.py:
 ⋮
 │def test_dispatch_webhook_http_error(webhook, caplog):
 ⋮
-│class MockRequest:
-│    def __init__(self, webhook=None, data="req_data"):
-│        self.webhook = webhook
-⋮
-│    def model_dump(self):
-⋮
 │class MockResponse:
 │    def __init__(self, success=True, data="resp_data"):
 │        self.success = success
@@ -2773,13 +2861,13 @@ packages/sift/tests/unit/sift/utils/webhook/test_service.py:
 │    def model_dump(self):
 ⋮
 │@webhook_dispatch
-│def dummy_success_func(request):
+│def dummy_success_func(data: str, webhook: Optional[dict] = None):
 ⋮
 │@webhook_dispatch
-│def dummy_failure_func(request):
+│def dummy_failure_func(data: str, webhook: Optional[dict] = None):
 ⋮
 │@webhook_dispatch
-│def dummy_exception_func(request):
+│def dummy_exception_func(data: str, webhook: Optional[dict] = None):
 ⋮
 │def test_webhook_dispatch_success(webhook):
 ⋮
@@ -2789,7 +2877,7 @@ packages/sift/tests/unit/sift/utils/webhook/test_service.py:
 ⋮
 │def test_webhook_dispatch_no_webhook():
 ⋮
-
-pyproject.toml
+│def test_webhook_dispatch_webhook_object(webhook):
+⋮
 
 ```

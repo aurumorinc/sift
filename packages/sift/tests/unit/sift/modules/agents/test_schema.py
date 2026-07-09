@@ -30,10 +30,16 @@ def test_dspy_training_example_messages():
     ]
     example = DSPyTrainingExample(messages=messages, score=1.0)
     assert example.score == 1.0
+    assert isinstance(example.messages, list)
     assert len(example.messages) == 1
-    assert example.messages[0]["role"] == "user"
-    assert len(example.messages[0]["content"]) == 2
-    assert example.messages[0]["content"][1]["type"] == "image_url"
+    msg = example.messages[0]
+    assert isinstance(msg, dict)
+    assert msg["role"] == "user"
+    content = msg.get("content", [])
+    assert isinstance(content, list)
+    assert len(content) == 2
+    assert isinstance(content[1], dict)
+    assert content[1]["type"] == "image_url"
 
 def test_dspy_training_example_string_messages_and_structured_response():
     example = DSPyTrainingExample(

@@ -19,3 +19,17 @@ def test_sift_client_routing_properties(mocker) -> None:
     result = client.get_agent("test", 1)
     mock_get_agent.assert_called_once_with("test", 1)
     assert result == "dummy_agent"
+
+def test_sift_client_save_agent(mocker) -> None:
+    client = SiftClient()
+    mock_save_agent = mocker.patch("sift.modules.agents.repository.langfuse.save_agent")
+    
+    from sift.modules.agents.schema import Agent, DSPyParams
+    dummy_agent = Agent(
+        agent_name="save_test_agent",
+        agent_card_params={},
+        litellm_params={},
+        dspy_params=DSPyParams(state={})
+    )
+    client.save_agent(dummy_agent)
+    mock_save_agent.assert_called_once_with(dummy_agent)
