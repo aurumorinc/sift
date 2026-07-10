@@ -1098,8 +1098,8 @@ cursor.execute(f"SELECT * FROM users WHERE username = '{username}'")
 - ALWAYS isolate tests from each other with `setUp`, `tearDown`, `setUpModule`, and `tearDownModule`.
 - ALWAYS encapsulate dependencies to facilitate mocking and testing.
 - ALWAYS consider interactive debugging with `pdb`.
-- ALWAYS structure the `tests/` directory to separate unit, integration, e2e, and performance tests, mirroring the `src/` directory for unit tests.
-- ALWAYS mirror the structure of the rest of the source tree within the `tests` directory (e.g., code in `src/app/services/auth.py` MUST be tested in `tests/unit/app/services/test_auth.py`).
+- ALWAYS structure the `tests/` directory to separate unit, integration, e2e, and performance tests.
+- ALWAYS mirror the structure of the `src/` tree within the `tests/unit`, `tests/integration/internal`, `tests/integration/external`, and `tests/e2e` directories (e.g., code in `src/app/services/auth.py` MUST be tested in `tests/unit/app/services/test_auth.py`, `tests/integration/internal/app/services/test_auth.py`, `tests/integration/external/app/services/test_auth.py`, and `tests/e2e/app/services/test_auth.py`).
 - ALWAYS ensure tests are stored inside a `tests` subpackage of your application/library so they can be shipped and reused, and to prevent them from being accidentally installed as a top-level `tests` module.
 
 #### 📁 Test Directory Structure
@@ -1121,18 +1121,28 @@ my-python-project/
 │   │       └── utils/
 │   │           └── test_logger.py
 │   ├── integration/
-│   │   ├── internal/           # Testing logic + DB (Postgres/Redis)
-│   │   │   ├── conftest.py     # DB-specific fixtures (Transaction rollback)
-│   │   │   └── test_user_db.py
-│   │   └── external/           # External API (Sandbox/Live)
-│   │       ├── cassettes/      # VCR.py YAML recordings
-│   │       │   └── test_stripe_pay.yaml
-│   │       ├── conftest.py     # External auth / VCR config
-│   │       └── test_stripe.py
-│   ├── e2e/                    # Playwright (Python version)
-│   │   ├── test_ui_flow.py
-│   │   └── pom/                # Page Object Models
-│   │       └── dashboard_page.py
+│   │   ├── internal/           # 1-to-1 Mirror of src/ (uses mock or local DB)
+│   │   │   └── app/
+│   │   │       ├── services/
+│   │   │       │   ├── conftest.py     # DB-specific fixtures (Transaction rollback)
+│   │   │       │   └── test_auth.py
+│   │   │       └── utils/
+│   │   │           └── test_logger.py
+│   │   └── external/           # 1-to-1 Mirror of src/ (uses vcrpy or sandbox API)
+│   │       └── app/
+│   │           ├── services/
+│   │           │   ├── cassettes/      # VCR.py YAML recordings
+│   │           │   │   └── test_auth.yaml
+│   │           │   ├── conftest.py     # External auth / VCR config
+│   │           │   └── test_auth.py
+│   │           └── utils/
+│   │               └── test_logger.py
+│   ├── e2e/                    # 1-to-1 Mirror of src/
+│   │   └── app/
+│   │       └── services/
+│   │           ├── test_auth.py
+│   │           └── pom/            # Page Object Models
+│   │               └── dashboard_page.py
 │   ├── performance/            # Locust testing
 │   │   └── locustfile.py
 │   └── data/                   # GLOBAL STATIC FIXTURES (The Python way)
@@ -1142,7 +1152,25 @@ my-python-project/
 └── pyproject.toml
 ```
 
-####  Examples
+#### 📊 Test Types and Usage
+
+- **Unit Tests (`tests/unit/`)**: Fast, isolated tests focusing on individual functions, methods, or classes.
+  - **When to use**: To verify the core logic, edge cases, and error handling of individual components.
+  - **Characteristics**: Fast execution, heavy use of mocks/fakes, zero external dependencies (no real DB or network calls).
+
+- **Internal Integration Tests (`tests/integration/internal/`)**: Tests that verify how application code interacts with infrastructure we control (e.g., databases, Redis, message queues).
+  - **When to use**: To verify database queries, ORM mapping, cache behavior, or complex service interactions.
+  - **Characteristics**: Slower than unit tests, uses real local infrastructure (e.g., PostgreSQL/Redis), employs transaction rollbacks between tests for isolation. Mocks are only used for 3rd-party APIs.
+
+- **External Integration Tests (`tests/integration/external/`)**: Tests that verify how the application communicates with third-party services (e.g., Stripe, AWS, Twilio).
+  - **When to use**: To verify API client configurations, serialization, and correct handling of external API responses/errors.
+  - **Characteristics**: Uses `vcrpy` to record actual HTTP interactions into `cassettes/` (YAML files). Tests run fast against recordings during development/CI, but can run against actual sandbox APIs periodically to detect upstream API changes.
+
+- **End-to-End (E2E) Tests (`tests/e2e/`)**: Full-system tests verifying user flows from the outside in (e.g., Playwright for UI, or REST API calls).
+  - **When to use**: To ensure critical user journeys (signup, checkout) work perfectly across the fully integrated stack.
+  - **Characteristics**: Slowest execution, requires a fully running environment, highest maintenance cost. Keep these limited to essential "happy path" and critical smoke tests.
+
+#### 📝 Examples
 
 ##### ✅ DO
 ```python
@@ -1361,36 +1389,6 @@ ALTER TABLE users ADD COLUMN last_name VARCHAR(255) NOT NULL;
 
 ```python
 
-.agents/rules/architecture-business.md
-
-.agents/rules/language-python/logging-and-observability.md
-
-.agents/rules/language-python/testing-standards.md
-
-.agents/skills/langfuse/SKILL.md
-
-AGENTS.md
-
-CHANGELOG.md
-
-LICENSE
-
-apps/sift-api/.claude/skills/write-script-bigquery/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-bun/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-deno/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-java/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-nativets/SKILL.md
-
-apps/sift-api/.claude/skills/write-script-php/SKILL.md
-
-apps/sift-api/AGENTS.md
-
-apps/sift-api/CLAUDE.md
-
 apps/sift-api/f/sift/agents.py:
 ⋮
 │def main(
@@ -1403,8 +1401,6 @@ apps/sift-api/f/sift/agents.py:
 │    webhook: Optional[Dict] = None,
 ⋮
 
-apps/sift-api/f/sift/agents.script.lock
-
 apps/sift-api/f/sift/responses.py:
 ⋮
 │def main(
@@ -1413,8 +1409,6 @@ apps/sift-api/f/sift/responses.py:
 │    background: bool = False,
 │    webhook: Optional[Dict] = None,
 ⋮
-
-apps/sift-api/f/sift/responses.script.lock
 
 apps/sift-api/rt.d.ts:
 ⋮
@@ -2425,9 +2419,40 @@ apps/sift-api/rt.d.ts:
 │    apiKey: string
 ⋮
 
-apps/sift-api/wmill.yaml
+apps/sift-api/tests/manual/test_agents.py:
+⋮
+│@pytest.fixture(autouse=True)
+│def check_env():
+⋮
+│def test_windmill_full_configuration():
+⋮
+│def test_windmill_zero_config():
+⋮
+│def test_windmill_multimodal():
+⋮
+│def test_windmill_deep_merge():
+⋮
+│def test_windmill_async_webhook():
+⋮
 
-packages/sift/pdm.lock
+apps/sift-api/tests/manual/test_responses.py:
+⋮
+│@pytest.fixture(autouse=True)
+│def check_env():
+⋮
+│@pytest.fixture(scope="module")
+│def setup_test_agent():
+⋮
+│def test_windmill_simple_text(setup_test_agent):
+⋮
+│def test_windmill_conversational(setup_test_agent):
+⋮
+│def test_windmill_multimodal(setup_test_agent):
+⋮
+│def test_windmill_structured_json(setup_test_agent):
+⋮
+│def test_windmill_async_background(setup_test_agent):
+⋮
 
 packages/sift/src/sift/client.py:
 ⋮
@@ -2483,7 +2508,7 @@ packages/sift/src/sift/modules/agents/schema.py:
 ⋮
 │class AgentRequest(Agent):
 ⋮
-│class AgentResponse(Agent):
+│class AgentResponse(LiteLLMAgentResponse):
 ⋮
 │class AgentpredictRequest(BaseModel):
 ⋮
@@ -2519,7 +2544,7 @@ packages/sift/src/sift/modules/responses/schema.py:
 ⋮
 │class ResponseRequest(BaseModel):
 ⋮
-│class ResponseResponse(BaseModel):
+│class ResponseResponse(ResponsesAPIResponse):
 ⋮
 
 packages/sift/src/sift/modules/responses/service.py:
@@ -2531,7 +2556,7 @@ packages/sift/src/sift/use_cases/agents/service.py:
 ⋮
 │def _deep_merge(base: Dict, update: Dict) -> Dict:
 ⋮
-│@webhook_dispatch
+│@webhook_dispatch(event_prefix="agent")
 │def main(
 │    agent_name: Optional[str] = None,
 │    agent_card_params: Optional[Dict] = None,
@@ -2544,7 +2569,7 @@ packages/sift/src/sift/use_cases/agents/service.py:
 
 packages/sift/src/sift/use_cases/responses/service.py:
 ⋮
-│@webhook_dispatch
+│@webhook_dispatch(event_prefix="response")
 │def main(
 │    model: str,
 │    input: Union[str, List[Dict]],
@@ -2557,19 +2582,30 @@ packages/sift/src/sift/utils/webhook/schema.py:
 ⋮
 │class WebhookEvent(str, Enum):
 ⋮
-│class Webhook(BaseModel):
+│class WebhookRequest(BaseModel):
+⋮
+│class WebhookResponse(BaseModel):
 ⋮
 
 packages/sift/src/sift/utils/webhook/service.py:
 ⋮
 │def dispatch_webhook(
-│    webhook: Optional[Webhook], event: WebhookEvent, payload: Dict[str, Any]
+│    webhook: Optional[WebhookRequest], payload: WebhookResponse
 ⋮
-│def webhook_dispatch(func: Callable[..., Any]) -> Callable[..., Any]:
+│def webhook_dispatch(event_prefix: str = "") -> Callable[[Callable[..., Any]], Callable[..., Any]]:
 │    """Decorator to handle webhook lifecycle events (STARTED, COMPLETED, FAILED)."""
 │
-│    @functools.wraps(func)
-│    def wrapper(*args: Any, **kwargs: Any) -> Any:
+│    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+│        @functools.wraps(func)
+│        def wrapper(*args: Any, **kwargs: Any) -> Any:
+│            sig = inspect.signature(func)
+│            bound_args = sig.bind(*args, **kwargs)
+│            bound_args.apply_defaults()
+│            
+│            webhook_data = bound_args.arguments.get("webhook")
+│            webhook = None
+│            if isinstance(webhook_data, dict):
+│                webhook = WebhookRequest(**webhook_data)
 ⋮
 
 packages/sift/tests/conftest.py:
@@ -2587,19 +2623,59 @@ packages/sift/tests/conftest.py:
 │def setup_environment():
 ⋮
 
-packages/sift/tests/e2e/test_client.py:
+packages/sift/tests/integration/external/test_agents.py:
 ⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_full_configuration():
 ⋮
-│def test_workflow(mock_lm, mock_resp_get_agent, mock_get_agent, mock_save_agent):
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_zero_config_auto_inference():
 ⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_multimodal_vision_training():
 ⋮
-│def test_workflow_multimodal(mock_lm, mock_resp_get_agent, mock_get_agent, mock_save_agent):
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_update_agent_deep_merge():
 ⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_async_compilation_with_webhook():
 ⋮
-│def test_workflow_structured_responses(mock_lm, mock_resp_get_agent, mock_get_agent, mock_save_agen
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_windmill_sparse_payload_compilation():
+⋮
+│def test_completely_empty_payload():
+⋮
+│def test_explicit_null_overrides():
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_multiple_custom_predictor_states():
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_partial_nested_missing_fields():
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_non_destructive_partial_updates():
+⋮
+
+packages/sift/tests/integration/external/test_responses.py:
+⋮
+│@pytest.fixture(scope="module")
+│def setup_test_agent():
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_simple_text_input(setup_test_agent):
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_conversational_messages_array_input(setup_test_agent):
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_multimodal_vision_input(setup_test_agent):
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_structured_json_schema_output(setup_test_agent):
+⋮
+│@pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
+│def test_async_background_request(setup_test_agent):
 ⋮
 
 packages/sift/tests/integration/internal/test_hydration.py:
@@ -2630,8 +2706,6 @@ packages/sift/tests/integration/use_cases/test_responses_integration.py:
 │def test_responses_main_structured_format_integration(mock_get_agent):
 ⋮
 
-packages/sift/tests/unit/sift/integrations/__init__.py
-
 packages/sift/tests/unit/sift/integrations/langfuse/test_service.py:
 ⋮
 │def test_get_langfuse_client_singleton():
@@ -2650,6 +2724,8 @@ packages/sift/tests/unit/sift/modules/agents/repository/test_langfuse.py:
 ⋮
 │def test_get_agent_defaults_agent_name(mock_langfuse_client):
 ⋮
+│def test_legacy_config_parsing(mock_langfuse_client):
+⋮
 │def test_get_agent_safe_returns_agent(mock_langfuse_client):
 ⋮
 │def test_get_agent_safe_returns_none_on_exception(mock_langfuse_client):
@@ -2667,17 +2743,12 @@ packages/sift/tests/unit/sift/modules/agents/test_schema.py:
 ⋮
 │def test_agent_name_auto_generation():
 ⋮
+│def test_agent_sparse_parsing():
+⋮
+│def test_dspy_predictor_state_sparse_parsing():
+⋮
 
 packages/sift/tests/unit/sift/modules/agents/test_service.py:
-⋮
-│@patch("dspy.Predict.__call__")
-│def test_dynamic_api_metric_evaluates_with_reference_data(mock_predict_call):
-⋮
-│@patch("dspy.Predict.__call__")
-│def test_dynamic_api_metric_parsing_failure(mock_predict_call):
-⋮
-│@patch("dspy.Predict.__call__")
-│def test_dynamic_api_metric_missing_reference_data(mock_predict_call):
 ⋮
 │def _create_payload(trainset_size: int, optimizer: str | None = None) -> dict:
 ⋮
@@ -2699,48 +2770,7 @@ packages/sift/tests/unit/sift/modules/agents/test_service.py:
 │@patch("dspy.teleprompt.COPRO")
 │def test_explicit_optimizer_mode_override(mock_optimizer_class, mock_save_agent):
 ⋮
-│@patch("dspy.teleprompt.BootstrapFewShot")
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│def test_compile_and_save_agent_preserves_signature_fields(
-│    mock_save_agent, mock_bootstrap
-⋮
-│@patch("dspy.teleprompt.BootstrapFewShot")
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│def test_compile_and_save_agent_hydrates_multimodal_train_data(mock_save_agent, mock_bootstrap):
-⋮
-│@patch("dspy.teleprompt.BootstrapFewShot")
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│def test_compile_and_save_agent_no_trainset(mock_save_agent, mock_bootstrap):
-⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│@patch("dspy.teleprompt.MIPROv2")
-│def test_compile_and_save_agent_dynamic_optimizer(mock_miprov2, mock_save_agent):
-⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│def test_compile_and_save_agent_invalid_optimizer(mock_save_agent):
-⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│def test_compile_and_save_agent_infers_fields(mock_save_agent):
-⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│def test_compile_and_save_agent_handles_dict_fields_and_empty_names(mock_save_agent):
-⋮
-│@patch("sift.modules.agents.repository.langfuse.save_agent")
-│def test_compile_and_save_agent_hits_line_263(mock_save_agent):
-⋮
 │def test_hydrate_multimodal_messages_missing_url():
-⋮
-│def test_agent_module_ignores_non_dict_state():
-⋮
-│def test_agent_module_handles_dict_fields():
-⋮
-│def test_agent_module_infers_io_from_name():
-⋮
-│def test_agent_module_empty_field_name_continue():
-⋮
-│def test_agent_module_load_state_hydrates_demos():
-⋮
-│def test_agent_module_forward_no_predictors():
 ⋮
 
 packages/sift/tests/unit/sift/modules/responses/test_schema.py:
@@ -2788,6 +2818,15 @@ packages/sift/tests/unit/sift/test_client.py:
 │def test_sift_client_save_agent(mocker) -> None:
 ⋮
 
+packages/sift/tests/unit/sift/test_config.py:
+⋮
+│def test_settings_default_dspy_cachedir():
+⋮
+│def test_settings_propagates_dspy_cachedir():
+⋮
+│def test_settings_propagates_default_to_environ():
+⋮
+
 packages/sift/tests/unit/sift/test_conftest.py:
 ⋮
 │def test_filter_response():
@@ -2807,8 +2846,6 @@ packages/sift/tests/unit/sift/test_init.py:
 ⋮
 │def test_public_api_exports():
 ⋮
-
-packages/sift/tests/unit/sift/use_cases/__init__.py
 
 packages/sift/tests/unit/sift/use_cases/test_agents.py:
 ⋮
@@ -2850,8 +2887,6 @@ packages/sift/tests/unit/sift/utils/webhook/test_service.py:
 ⋮
 │def test_dispatch_webhook_no_webhook():
 ⋮
-│def test_dispatch_webhook_event_not_in_list(webhook):
-⋮
 │def test_dispatch_webhook_http_error(webhook, caplog):
 ⋮
 │class MockResponse:
@@ -2860,24 +2895,39 @@ packages/sift/tests/unit/sift/utils/webhook/test_service.py:
 ⋮
 │    def model_dump(self):
 ⋮
-│@webhook_dispatch
+│@webhook_dispatch(event_prefix="test")
 │def dummy_success_func(data: str, webhook: Optional[dict] = None):
 ⋮
-│@webhook_dispatch
+│@webhook_dispatch(event_prefix="test")
 │def dummy_failure_func(data: str, webhook: Optional[dict] = None):
 ⋮
-│@webhook_dispatch
+│@webhook_dispatch(event_prefix="test")
 │def dummy_exception_func(data: str, webhook: Optional[dict] = None):
 ⋮
-│def test_webhook_dispatch_success(webhook):
+│@patch("uuid.uuid4")
+│@patch("os.getenv")
+│def test_webhook_dispatch_success(mock_getenv, mock_uuid4, webhook):
 ⋮
-│def test_webhook_dispatch_handled_failure(webhook):
+│@patch("uuid.uuid4")
+│@patch("os.getenv")
+│def test_webhook_dispatch_handled_failure(mock_getenv, mock_uuid4, webhook):
 ⋮
-│def test_webhook_dispatch_unhandled_exception(webhook):
+│@patch("uuid.uuid4")
+│@patch("os.getenv")
+│def test_webhook_dispatch_unhandled_exception(mock_getenv, mock_uuid4, webhook):
 ⋮
 │def test_webhook_dispatch_no_webhook():
 ⋮
 │def test_webhook_dispatch_webhook_object(webhook):
+⋮
+│class MockResponseWithOutput:
+│    def __init__(self, success=True, output=[{"result": "ok"}]):
+│        self.success = success
+⋮
+│@webhook_dispatch(event_prefix="test")
+│def dummy_output_func(data: str, webhook: Optional[dict] = None):
+⋮
+│def test_webhook_dispatch_with_output(webhook):
 ⋮
 
 ```

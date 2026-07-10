@@ -10,9 +10,6 @@
 [runemodule ".agents/skills/langfuse/modules/langfuse-docs"]
 	url = https://github.com/langfuse/langfuse-docs/tree/main
 	path = .agents/skills/langfuse/modules/langfuse-docs
-[runemodule ".agents/skills/lume-python/modules/lume-python"]
-	url = https://github.com/aurumorinc/lume-python/tree/main
-	path = .agents/skills/lume-python/modules/lume-python
 [runemodule ".agents/skills/litellm/modules/litellm"]
 	url = https://github.com/BerriAI/litellm/tree/litellm_internal_staging
 	path = .agents/skills/litellm/modules/litellm
