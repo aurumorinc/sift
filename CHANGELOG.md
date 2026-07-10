@@ -1,20 +1,11 @@
-# Changelog v0.14.0
+# Changelog v0.14.1
 
-## Breaking Changes
+## Documentation
 
-*   **Webhook Dispatch Refactor**
-    The webhook dispatching mechanism has transitioned from an event-based model to a payload-based approach using `WebhookRequest` and `WebhookResponse` objects. Additionally, the `webhook` field has been removed from `AgentResponse` and `ResponseResponse` objects.
-    *   **Migration Path:** Update all webhook consumers to accept the new `WebhookRequest` payload structure. Remove any references to the `webhook` field in `AgentResponse` and `ResponseResponse` objects. If you are using the `webhook_dispatch` decorator, update your implementations to utilize the new `event_prefix` parameter for routing.
-    *   **Commits:** [8ecdd2b](https://github.com/aurumorinc/sift/commit/8ecdd2b4), [7844674](https://github.com/aurumorinc/sift/commit/78446742), [4497cbc](https://github.com/aurumorinc/sift/commit/4497cbcf)
+*   **Webhook Schema Renaming**
+    The `Webhook` schema has been renamed to `WebhookRequest` within the OpenAPI specification and developer documentation to better reflect its usage.
+    Commits: [871c223](https://github.com/aurumorinc/sift/commit/871c2233), [53f807f](https://github.com/aurumorinc/sift/commit/53f807f5)
 
-## Infrastructure
-
-*   **Codebase Restructuring**
-    Reorganized test directories and relocated type definitions and utilities to resolve circular dependency issues.
-    *   **Commits:** [4f8eefe](https://github.com/aurumorinc/sift/commit/4f8eefe7)
-
-## Docs
-
-*   **API Documentation Updates**
-    Created `docs/api-reference.md` and updated `openapi.yaml` to accurately reflect the schema changes introduced in this release.
-    *   **Commits:** [19db9c0](https://github.com/aurumorinc/sift/commit/19db9c0f)
+*   **Webhook Example Cleanup**
+    The unused `data` field has been removed from the `WebhookRequest` example in the documentation to prevent integration confusion.
+    Commits: [871c223](https://github.com/aurumorinc/sift/commit/871c2233), [53f807f](https://github.com/aurumorinc/sift/commit/53f807f5)
