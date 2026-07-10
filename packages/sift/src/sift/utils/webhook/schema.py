@@ -1,12 +1,7 @@
-from __future__ import annotations
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, HttpUrl
-
-if TYPE_CHECKING:
-    from sift.modules.agents.schema import AgentResponse
-    from sift.modules.responses.schema import ResponseResponse
 
 
 class WebhookEvent(str, Enum):
@@ -15,7 +10,7 @@ class WebhookEvent(str, Enum):
     FAILED = "failed"
 
 
-class Webhook(BaseModel):
+class WebhookRequest(BaseModel):
     """A webhook configuration for receiving asynchronous task updates."""
 
     url: HttpUrl = Field(
@@ -37,4 +32,13 @@ class Webhook(BaseModel):
         ],
         description="A filter list of specific event types to receive. If omitted, all supported events are sent.",
     )
-    data: Optional[Union['AgentResponse', 'ResponseResponse']] = Field(default=None)
+
+
+class WebhookResponse(BaseModel):
+    success: bool
+    type: str          # e.g., "agent.started", "response.completed"
+    id: str            # Windmill Job ID (WM_JOB_ID) or generated UUID
+    webhookId: str     # Unique UUID for the delivery
+    data: Any          # Empty array [] for started, or the raw output array for completed
+    error: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
