@@ -37,7 +37,7 @@ def test_simple_text_input(setup_test_agent):
         input="What is 2+2?"
     )
     assert response.success is True
-    assert response.response is not None
+    assert response.output is not None
 
 
 @pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])
@@ -51,7 +51,7 @@ def test_conversational_messages_array_input(setup_test_agent):
         ]
     )
     assert response.success is True
-    assert response.response is not None
+    assert response.output is not None
 
 
 @pytest.mark.vcr(match_on=['method', 'scheme', 'host', 'port', 'path', 'query'])

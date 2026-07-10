@@ -24,7 +24,7 @@ def _deep_merge(base: Dict, update: Dict) -> Dict:
     return base
 
 
-@webhook_dispatch
+@webhook_dispatch(event_prefix="agent")
 def main(
     agent_name: Optional[str] = None,
     agent_card_params: Optional[Dict] = None,
@@ -68,7 +68,6 @@ def main(
         response = AgentResponse(
             **request.model_dump(exclude={"webhook"}),
             agent_id=request.agent_name,
-            webhook=request.webhook,
             success=True,
             error=None,
         )
@@ -80,7 +79,6 @@ def main(
         response = AgentResponse(
             **request.model_dump(exclude={"webhook"}),
             agent_id=request.agent_name,
-            webhook=request.webhook,
             success=False,
             error=error_msg,
         )

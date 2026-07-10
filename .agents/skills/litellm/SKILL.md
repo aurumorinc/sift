@@ -27,19 +27,6 @@ litellm-proxy-extras/litellm_proxy_extras/utils.py:
 │def str_to_bool(value: Optional[str]) -> bool:
 ⋮
 
-litellm-rust/crates/ai-gateway/src/auth/mod.rs:
-⋮
-│/// `LiteLLM_SpendLogs.api_key`, so realtime spend joins with the rest of LiteLLM.
-│pub fn hash_token(token: &str) -> String {
-│    let digest = Sha256::digest(token.as_bytes());
-│    let mut hex = String::with_capacity(digest.len() * 2);
-│    for byte in digest {
-│        use std::fmt::Write;
-│        let _ = write!(hex, "{byte:02x}");
-│    }
-│    hex
-⋮
-
 litellm-rust/crates/core/src/router/deployment.rs:
 ⋮
 │mod tests {
@@ -83,11 +70,6 @@ litellm/integrations/otel/model/semconv.py:
 │class Error:
 ⋮
 
-litellm/litellm_core_utils/core_helpers.py:
-⋮
-│def map_finish_reason(finish_reason: str) -> OpenAIChatCompletionFinishReason:
-⋮
-
 litellm/litellm_core_utils/get_llm_provider_logic.py:
 ⋮
 │def get_llm_provider(
@@ -96,14 +78,6 @@ litellm/litellm_core_utils/get_llm_provider_logic.py:
 │    api_base: Optional[str] = None,
 │    api_key: Optional[str] = None,
 │    litellm_params: Optional[GenericLiteLLMParams] = None,
-⋮
-
-litellm/litellm_core_utils/litellm_logging.py:
-⋮
-│class Logging(LiteLLMLoggingBaseClass):
-│    global \
-⋮
-│    def post_call(self, original_response, input=None, api_key=None, additional_args={}):
 ⋮
 
 litellm/litellm_core_utils/logging_callback_manager.py:
@@ -144,19 +118,9 @@ litellm/litellm_core_utils/sensitive_data_masker.py:
 │        excluded_keys: Optional[Set[str]] = None,
 ⋮
 
-litellm/litellm_core_utils/url_utils.py:
-⋮
-│class SSRFError(ValueError):
-⋮
-
 litellm/llms/base_llm/chat/transformation.py:
 ⋮
 │class BaseLLMException(Exception):
-⋮
-
-litellm/llms/black_forest_labs/common_utils.py:
-⋮
-│class BlackForestLabsError(BaseLLMException):
 ⋮
 
 litellm/llms/custom_httpx/http_handler.py:
@@ -224,11 +188,6 @@ litellm/models/mcp_server.py:
 │class MCPEnvVarScope(str, enum.Enum):
 ⋮
 
-litellm/models/team.py:
-⋮
-│class Member(MemberBase):
-⋮
-
 litellm/proxy/_experimental/mcp_server/outbound_credentials/oauth_token_store.py:
 ⋮
 │@dataclass(frozen=True, slots=True, repr=False)
@@ -270,7 +229,7 @@ litellm/proxy/_experimental/out/_next/static/chunks/07.fwfv-sinb5.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/08o64zaid_juv.js:
+litellm/proxy/_experimental/out/_next/static/chunks/081.4arb-o0e0.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/08yy42xvwaak6.js:
@@ -286,20 +245,16 @@ litellm/proxy/_experimental/out/_next/static/chunks/0e9hs7onyj28m.js:
 │        ${t}-move-up-enter${t}-move-up-enter-active
 │      `]:{animationPlayState:"running"},[`${t}-move-up-leave`]:{animationName:x,animationDuration:f
 ⋮
-│        `]:{animationName:i.slideDownOut},"&-hidden":{display:"none"},[o]:Object.assign(Object.assi
-│Must be valid JSON format`:r.enum?`Select from available options
-│Allowed values: ${r.enum.join(", ")}`:E)}),children:u},e)})}):null};e.s(["ALL_PROXY_MCP_SERVERS_SEN
 
 litellm/proxy/_experimental/out/_next/static/chunks/0ivj_wax-joap.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0m6zdocif1gl4.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0j_yol8f7u_zk.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
-litellm/proxy/_experimental/out/_next/static/chunks/0nnx~7-7e5t~1.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0m6zdocif1gl4.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-⋮
 
 litellm/proxy/_experimental/out/_next/static/chunks/0p.6bs58-_3lw.js:
 ⋮
@@ -316,10 +271,7 @@ litellm/proxy/_experimental/out/_next/static/chunks/0piozaeodiue..js:
 │Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0q6~n4y84cejn.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
-litellm/proxy/_experimental/out/_next/static/chunks/0ys10755n8os_.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0x.73w57rn4ou.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/11ibt3khr2hk3.js:
@@ -357,16 +309,6 @@ litellm/proxy/guardrails/guardrail_hooks/custom_code/primitives.py:
 litellm/proxy/swagger/swagger-ui-bundle.js:
 ⋮
 │!function webpackUniversalModuleDefinition(s,o){"object"==typeof exports&&"object"==typeof module?m
-⋮
-
-litellm/proxy/utils.py:
-⋮
-│class PrismaClient:
-│    spend_log_transactions: List = []
-⋮
-│    def hash_token(self, token: str):
-⋮
-│def hash_token(token: str):
 ⋮
 
 litellm/router_strategy/budget_limiter.py:
@@ -410,13 +352,6 @@ litellm/secret_managers/main.py:
 │    default_value: Optional[Union[str, bool]] = None,
 ⋮
 
-litellm/types/caching.py:
-⋮
-│class RedisPipelineSetOperation(TypedDict):
-⋮
-│class CachedEmbedding(TypedDict):
-⋮
-
 litellm/types/completion.py:
 ⋮
 │class ChatCompletionContentPartTextParam(TypedDict, total=False):
@@ -446,9 +381,6 @@ litellm/types/interactions/generated.py:
 litellm/types/llms/base.py:
 ⋮
 │class HiddenParams(OpenAIObject):
-│    original_response: Optional[Union[str, Any]] = None
-⋮
-│    def model_dump(self, **kwargs):
 ⋮
 
 litellm/types/llms/openai.py:
@@ -459,11 +391,6 @@ litellm/types/llms/openai.py:
 litellm/types/llms/vertex_ai.py:
 ⋮
 │class Date(TypedDict):
-⋮
-
-litellm/types/proxy/litellm_pre_call_utils.py:
-⋮
-│class RedactedDict(dict):
 ⋮
 
 litellm/types/proxy/management_endpoints/common_daily_activity.py:
@@ -503,30 +430,14 @@ litellm/types/router.py:
 
 litellm/types/utils.py:
 ⋮
-│class FunctionCall(OpenAIObject):
-⋮
 │class Function(OpenAIObject):
-⋮
-│class CompletionTokensDetailsWrapper(CompletionTokensDetails):  # wrapper for older openai versions
 ⋮
 │class PromptTokensDetailsWrapper(
 │    SafeAttributeModel, PromptTokensDetails
 ⋮
 │class StreamingChoices(OpenAIObject):
 ⋮
-│class ModelResponseStream(ModelResponseBase):
-⋮
 │class ModelResponse(ModelResponseBase):
-⋮
-│class ImageObject(OpenAIImage):
-⋮
-│class LiteLLMLoggingBaseClass:
-│    """
-│    Base class for logging pre and post call
-│
-│    Meant to simplify type checking for logging obj.
-⋮
-│    def post_call(self, original_response, input=None, api_key=None, additional_args={}):
 ⋮
 
 terraform/litellm/aws/variables.tf:
@@ -560,28 +471,6 @@ terraform/provider/litellm/types.go:
 │	Additional    map[string]interface{} `json:"additional"`
 ⋮
 
-tests/agent_tests/test_a2a_agent.py:
-⋮
-│class MockA2AResponse:
-│    def __init__(self, text: str):
-│        self._payload = {
-│            "id": str(uuid4()),
-│            "jsonrpc": "2.0",
-│            "result": {
-│                "message": {
-│                    "role": "agent",
-│                    "parts": [{"kind": "text", "text": text}],
-│                    "messageId": uuid4().hex,
-│                }
-⋮
-│    def model_dump(self, mode="json", exclude_none=True):
-⋮
-
-tests/e2e/e2e_http.py:
-⋮
-│class UnauthorizedError(BaseModel):
-⋮
-
 tests/e2e/models.py:
 ⋮
 │class CustomPricing(BaseModel):
@@ -591,17 +480,6 @@ tests/litellm_utils_tests/test_get_secret.py:
 ⋮
 │class MockSecretClient:
 │    def get_secret(self, secret_name):
-⋮
-
-tests/llm_responses_api_testing/test_responses_hooks.py:
-⋮
-│def test_log_completed_response_falls_back_when_model_validate_fails(monkeypatch):
-│    class _BadSerializableResponse:
-│        @classmethod
-│        def model_validate(cls, value):
-│            raise RuntimeError("nope")
-│
-│        def model_dump(self):
 ⋮
 
 tests/llm_translation/reasoning_effort_grid/grid_spec.py:
@@ -635,6 +513,18 @@ tests/test_litellm/integrations/code_interpreter_interception/test_handler.py:
 │    def post_call(self, *args, **kwargs):
 ⋮
 
+tests/test_litellm/integrations/test_mlflow.py:
+⋮
+│def test_mlflow_stream_handler_uses_async_complete_response():
+│    modules = _mock_mlflow_modules()
+│    with patch.dict("sys.modules", modules):
+│        from litellm.integrations.mlflow import MlflowLogger
+│
+⋮
+│        class DummyDelta:
+│            def model_dump(self, exclude_none=True):
+⋮
+
 tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
 ⋮
 │def test_clean_strings_are_not_run_through_replace():
@@ -648,14 +538,6 @@ tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
 ⋮
 │    class ReplaceForbidden(str):
 │        def replace(self, *args, **kwargs):
-⋮
-
-tests/test_litellm/llms/azure/test_azure_fine_tuning_api.py:
-⋮
-│class _MockSDKResponse:
-│    def __init__(self, payload: dict):
-⋮
-│    def model_dump(self) -> dict:
 ⋮
 
 tests/test_litellm/llms/bedrock/batches/test_handler.py:
@@ -687,43 +569,6 @@ tests/test_litellm/proxy/_experimental/mcp_server/test_mcp_server.py:
 │    async def call(body: bytes):
 ⋮
 
-tests/test_litellm/proxy/guardrails/guardrail_hooks/test_noma_v2.py:
-⋮
-│class TestNomaV2Configuration:
-│    @pytest.mark.asyncio
-│    async def test_provider_specific_params_include_noma_v2_fields(self):
-│        from litellm.proxy.guardrails.guardrail_endpoints import (
-│            get_provider_specific_params,
-│        )
-│
-│        provider_params = await get_provider_specific_params()
-│        assert "noma_v2" in provider_params
-│
-│        noma_v2_params = provider_params["noma_v2"]
-⋮
-│    @pytest.mark.asyncio
-│    async def test_call_noma_scan_sanitizes_response_model_dump_object(
-│        self, noma_v2_guardrail
-│    ):
-│        import json
-│
-│        class _FakeModelResponse:
-│            def model_dump(self):
-⋮
-
-tests/test_litellm/proxy/guardrails/guardrail_hooks/test_presidio.py:
-⋮
-│@pytest.mark.asyncio
-│async def test_presidio_filter_scope_initializer(monkeypatch):
-│    """
-│    Ensure initializer respects presidio_filter_scope for input/output/both.
-⋮
-│    class DummyManager:
-│        def __init__(self):
-⋮
-│        def add_litellm_callback(self, cb):
-⋮
-
 tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
 ⋮
 │def test_data_generator_yields_sse_lines_for_dict_chunks():
@@ -738,12 +583,13 @@ tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
 │        def dict(self):
 ⋮
 
-tests/test_litellm/proxy/spend_tracking/test_spend_management_endpoints.py:
+tests/test_litellm/proxy/utils/proxy_logging/test_lifecycle.py:
 ⋮
-│class _CapturePrismaClient:
-│    def __init__(self):
-⋮
-│    def hash_token(self, token):
+│def test_convert_user_api_key_auth_to_dict_pydantic_error_raises(proxy_logging):
+│    """A ``model_dump`` that raises propagates."""
+│
+│    class _Boom:
+│        def model_dump(self):
 ⋮
 
 tests/test_litellm/repositories/test_repositories.py:
@@ -774,49 +620,21 @@ tests/test_litellm/router_utils/test_add_retry_fallback_headers.py:
 │    class Response:
 ⋮
 
-tests/test_litellm/sandbox/test_opensandbox_sandbox.py:
-⋮
-│class FakeHTTPClient:
-│    def __init__(
-│        self,
-│        *,
-│        create_json=None,
-│        sandbox_states=None,
-│        endpoint_json=None,
-│        endpoint_responses=None,
-│        execute_lines=None,
-│        delete_status=204,
-│        execute_raises=None,
-⋮
-│    async def get(self, url, headers=None, params=None, **kwargs):
-⋮
-
-ui/litellm-dashboard/src/app/(dashboard)/access-groups/components/AccessGroupsModal/AccessGroupBaseF
+ui/litellm-dashboard/src/app/(dashboard)/access-groups/_components/AccessGroupsModal/AccessGroupBase
 ⋮
 │interface AccessGroupBaseFormProps {
 │  form: FormInstance<AccessGroupFormValues>;
 │  isNameDisabled?: boolean;
 ⋮
 
-ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/add_margin_form.tsx:
+ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/add_margin_form.tsx:
 ⋮
 │                const numValue = parseFloat(value);
 ⋮
 │                const numValue = parseFloat(value);
 ⋮
 
-ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/pricing_calculator/types.ts:
-⋮
-│export interface ModelEntry {
-│  id: string;
-│  model: string;
-│  input_tokens: number;
-│  output_tokens: number;
-│  num_requests_per_day?: number;
-│  num_requests_per_month?: number;
-⋮
-
-ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/components/types.ts:
+ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/types.ts:
 ⋮
 │export interface DiscountConfig {
 │  [provider: string]: number;
@@ -858,18 +676,22 @@ ui/litellm-dashboard/src/app/(dashboard)/playground/components/compareUI/endpoin
 │
 ⋮
 
-ui/litellm-dashboard/src/components/AIHub/AgentHubTableColumns.tsx:
+ui/litellm-dashboard/src/app/(dashboard)/vector-stores/_components/CreateVectorStore.tsx:
 ⋮
-│export interface AgentHubData {
-│  agent_id?: string;
-│  protocolVersion: string;
-│  name: string;
-│  description: string;
-│  url: string;
-│  version: string;
-│  capabilities?: {
-│    streaming?: boolean;
-│    [key: string]: any;
+│                        <img
+│                          src={resolveLogoSrc(vectorStoreProviderLogoMap[providerDisplayName])}
+│                          alt={`${providerEnum} logo`}
+│                          className="w-5 h-5"
+│                          onError={(e) => {
+│                            // Create a div with provider initial as fallback
+│                            const target = e.target as HTMLImageElement;
+│                            const parent = target.parentElement;
+│                            if (parent) {
+│                              const fallbackDiv = document.createElement("div");
+│                              fallbackDiv.className =
+│                                "w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center 
+│                              fallbackDiv.textContent = providerDisplayName.charAt(0);
+│                              parent.replaceChild(fallbackDiv, target);
 ⋮
 
 ui/litellm-dashboard/src/components/CloudZeroCostTracking/types.ts:
@@ -898,15 +720,6 @@ ui/litellm-dashboard/src/components/Settings/LoggingAndAlerts/LoggingCallbacks/t
 │  LANGFUSE_SECRET_KEY: string | null;
 │  LANGFUSE_HOST: string | null;
 │  OPENMETER_API_KEY: string | null;
-⋮
-
-ui/litellm-dashboard/src/components/chat/ChatShell.tsx:
-⋮
-│interface NavItemProps {
-│  icon: React.ReactNode;
-│  label: string;
-│  onClick: () => void;
-│  active?: boolean;
 ⋮
 
 ui/litellm-dashboard/src/components/chat/ConversationList.tsx:
@@ -939,20 +752,6 @@ ui/litellm-dashboard/src/components/chat_ui/ResponseMetrics.tsx:
 │  cost?: number;
 ⋮
 
-ui/litellm-dashboard/src/components/chat_ui/mode_endpoint_mapping.tsx:
-⋮
-│export enum EndpointType {
-│  IMAGE = "image",
-│  VIDEO = "video",
-│  CHAT = "chat",
-│  RESPONSES = "responses",
-│  IMAGE_EDITS = "image_edits",
-│  ANTHROPIC_MESSAGES = "anthropic_messages",
-│  EMBEDDINGS = "embeddings",
-│  SPEECH = "speech",
-│  TRANSCRIPTION = "transcription",
-⋮
-
 ui/litellm-dashboard/src/components/chat_ui/types.ts:
 ⋮
 │export interface A2ATaskMetadata {
@@ -975,47 +774,6 @@ ui/litellm-dashboard/src/components/chat_ui/types.ts:
 │  reasoningContent?: string;
 │  timeToFirstToken?: number;
 │  totalLatency?: number;
-⋮
-
-ui/litellm-dashboard/src/components/cloudzero_export_modal.tsx:
-⋮
-│interface CloudZeroSettings {
-│  api_key: string;
-│  connection_id: string;
-⋮
-
-ui/litellm-dashboard/src/components/common_components/TableHeaderSortDropdown/TableHeaderSortDropdow
-⋮
-│export type SortState = "asc" | "desc" | false;
-│
-⋮
-
-ui/litellm-dashboard/src/components/guardrails/add_guardrail_form.tsx:
-⋮
-│interface ProviderParam {
-│  param: string;
-│  description: string;
-│  required: boolean;
-│  default_value?: string;
-│  options?: string[];
-│  type?: string;
-│  fields?: { [key: string]: ProviderParam };
-│  dict_key_options?: string[];
-│  dict_value_type?: string;
-⋮
-
-ui/litellm-dashboard/src/components/guardrails/content_filter/CompetitorIntentConfiguration.tsx:
-⋮
-│export interface CompetitorIntentConfig {
-│  competitor_intent_type: "airline" | "generic";
-│  brand_self: string[];
-│  locations?: string[];
-│  competitors?: string[];
-│  policy?: {
-│    competitor_comparison?: "refuse" | "reframe";
-│    possible_competitor_comparison?: "refuse" | "reframe";
-│  };
-│  threshold_high?: number;
 ⋮
 
 ui/litellm-dashboard/src/components/guardrails/content_filter/ContentCategoryConfiguration.tsx:
@@ -1042,57 +800,11 @@ ui/litellm-dashboard/src/components/guardrails/guardrail_info.tsx:
 │  dict_value_type?: string;
 ⋮
 
-ui/litellm-dashboard/src/components/guardrails/guardrail_optional_params.tsx:
-⋮
-│interface ProviderParam {
-│  param: string;
-│  description: string;
-│  required: boolean;
-│  default_value?: string;
-│  options?: string[];
-│  type?: string;
-│  fields?: { [key: string]: ProviderParam };
-│  dict_key_options?: string[];
-│  dict_value_type?: string;
-⋮
-
-ui/litellm-dashboard/src/components/guardrails/guardrail_provider_fields.tsx:
-⋮
-│interface ProviderParam {
-│  param: string;
-│  description: string;
-│  required: boolean;
-│  default_value?: string | number;
-│  options?: string[];
-│  type?: string;
-│  fields?: { [key: string]: ProviderParam };
-│  dict_key_options?: string[];
-│  dict_value_type?: string;
-⋮
-
 ui/litellm-dashboard/src/components/guardrails/types.ts:
 ⋮
 │export enum GuardrailDefinitionLocation {
 │  DB = "db",
 │  CONFIG = "config",
-⋮
-
-ui/litellm-dashboard/src/components/key_team_helpers/BudgetWindowsEditor.tsx:
-⋮
-│interface BudgetWindowsEditorProps {
-│  value: BudgetWindowEntry[];
-│  onChange: (v: BudgetWindowEntry[]) => void;
-⋮
-
-ui/litellm-dashboard/src/components/key_team_helpers/key_list.tsx:
-⋮
-│interface UseKeyListReturn {
-│  keys: KeyResponse[];
-│  isLoading: boolean;
-│  error: Error | null;
-│  pagination: PaginationData;
-│  refresh: (params?: Record<string, unknown>) => Promise<void>;
-│  setKeys: Setter<KeyResponse[]>;
 ⋮
 
 ui/litellm-dashboard/src/components/logging_settings_view.tsx:
@@ -1198,6 +910,19 @@ ui/litellm-dashboard/src/components/molecules/notifications_manager.tsx:
 │      if (
 ⋮
 
+ui/litellm-dashboard/src/components/networking.tsx:
+⋮
+│export interface Member {
+│  role: string;
+│  user_id: string | null;
+│  user_email?: string | null;
+│  max_budget_in_team?: number | null;
+│  tpm_limit?: number | null;
+│  rpm_limit?: number | null;
+│  budget_duration?: string | null;
+│  allowed_models?: string[] | null;
+⋮
+
 ui/litellm-dashboard/src/components/organization/organization_view.tsx:
 ⋮
 │              <Grid numItems={1} numItemsSm={2} numItemsLg={3} className="gap-6">
@@ -1231,6 +956,23 @@ ui/litellm-dashboard/src/components/provider_info_helpers.tsx:
 │  AUTO_ROUTER = "Auto Router",
 ⋮
 
+ui/litellm-dashboard/src/components/shared/charts/chart_tooltip.tsx:
+⋮
+│export type ChartTooltipProps = Pick<
+│  TooltipContentProps<TooltipValueType, string | number>,
+│  "active" | "payload" | "label"
+⋮
+
+ui/litellm-dashboard/src/components/ui/chart.tsx:
+⋮
+│export type ChartConfig = Record<
+│  string,
+│  {
+│    label?: React.ReactNode;
+│    icon?: React.ComponentType;
+│  } & ({ color?: string; theme?: never } | { color?: never; theme: Record<keyof typeof THEMES, stri
+⋮
+
 ui/litellm-dashboard/src/components/vector_store_management/types.tsx:
 ⋮
 │export interface VectorStoreMetadata {
@@ -1238,14 +980,23 @@ ui/litellm-dashboard/src/components/vector_store_management/types.tsx:
 │  [key: string]: any;
 ⋮
 
+ui/litellm-dashboard/src/components/vector_store_providers.tsx:
+⋮
+│export interface VectorStoreFieldConfig {
+│  name: string;
+│  label: string;
+│  tooltip: string;
+│  placeholder?: string;
+│  required: boolean;
+│  type?: "text" | "password" | "select";
+│  options?: { value: string; label: string }[];
+│  initialValue?: string;
+⋮
+
 ui/litellm-dashboard/src/components/view_logs/columns.tsx:
 ⋮
 │export type LogsSortField = keyof typeof LOGS_SORT_FIELD_MAP;
 │
-│export interface LogsSortProps {
-│  sortBy: LogsSortField;
-│  sortOrder: "asc" | "desc";
-│  onSortChange: (sortBy: LogsSortField, sortOrder: "asc" | "desc") => void;
 ⋮
 │export type LogEntry = {
 │  request_id: string;

@@ -37,7 +37,7 @@ from sift.modules import (
     responses,
 )
 from sift.utils import (
-    Webhook,
+    WebhookRequest,
     WebhookEvent,
     dispatch_webhook,
     webhook,
@@ -61,7 +61,7 @@ __all__ = [
     "ResponsesAPIResponse",
     "Settings",
     "SiftClient",
-    "Webhook",
+    "WebhookRequest",
     "WebhookEvent",
     "agents",
     "dispatch_webhook",

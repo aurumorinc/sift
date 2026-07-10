@@ -41,8 +41,8 @@ def test_responses_main_structured_format_integration(mock_get_agent):
             )
             
             assert resp.success is True
-            assert resp.response is not None
-            out_dict = resp.response.output[0]
+            assert resp.output is not None
+            out_dict = resp.output[0]
             if hasattr(out_dict, "model_dump"):
                 out_dict = out_dict.model_dump()
             elif hasattr(out_dict, "dict"):

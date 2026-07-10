@@ -147,8 +147,6 @@ components:
         updated_by:
           type: string
           nullable: true
-        webhook:
-          $ref: '#/components/schemas/Webhook'
           
     DSPyParams:
       type: object
@@ -354,8 +352,6 @@ components:
               type: integer
             total_tokens:
               type: integer
-        webhook:
-          $ref: '#/components/schemas/Webhook'
           
     Webhook:
       type: object
@@ -378,10 +374,39 @@ components:
             type: string
             enum: [started, completed, failed]
           default: [started, completed, failed]
+    WebhookResponse:
+      type: object
+      required:
+        - success
+        - type
+        - id
+        - webhookId
+        - data
+      properties:
+        success:
+          type: boolean
+        type:
+          type: string
+          description: Event type, e.g. agent.started, response.completed
+        id:
+          type: string
+          description: Windmill Job ID
+        webhookId:
+          type: string
+          format: uuid
         data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Empty array for started, or raw output array for completed
+        error:
+          type: string
+          nullable: true
+        metadata:
           type: object
           additionalProperties: true
-          description: Contains the serialized AgentResponse or ResponseResponse object during asynchronous dispatches.
+          nullable: true
           
     ResponsesAPIResponse:
       type: object
@@ -558,7 +583,6 @@ paths:
                     labels:
                       - "support"
                       - "production"
-                    webhook: null
                 
   /jobs/run_wait_result/p/f/sift/responses:
     post:
@@ -644,21 +668,19 @@ paths:
                   value:
                     success: true
                     error: null
-                    webhook: null
-                    response:
-                      id: "resp_abc123"
-                      object: "response"
-                      created_at: 1718000000
-                      model: "support_agent"
-                      status: "completed"
-                      output:
-                        - content:
-                            - type: "output_text"
-                              text: "To reset your password, click the 'Forgot Password' link on the login page."
-                      usage:
-                        input_tokens: 12
-                        output_tokens: 18
-                        total_tokens: 30
+                    id: "resp_abc123"
+                    object: "response"
+                    created_at: 1718000000
+                    model: "support_agent"
+                    status: "completed"
+                    output:
+                      - content:
+                          - type: "output_text"
+                            text: "To reset your password, click the 'Forgot Password' link on the login page."
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 18
+                      total_tokens: 30
 
   /jobs_u/completed/get_result_maybe/{uuid}:
     get:

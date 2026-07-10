@@ -70,9 +70,6 @@ packages/shared/src/domain/score-configs.ts:
 
 packages/shared/src/domain/scores.ts:
 ⋮
-│export type ScoreSourceType = z.infer<typeof ScoreSourceDomain>;
-│
-⋮
 │export type ScoreDataTypeType = z.infer<typeof ScoreDataTypeDomain>;
 │
 ⋮
@@ -213,6 +210,12 @@ packages/shared/src/features/prompts/parsePromptDependencyTags.ts:
 │  content: string | object,
 ⋮
 
+packages/shared/src/features/query/types.ts:
+⋮
+│export type ViewVersion = z.infer<typeof viewVersions>;
+│
+⋮
+
 packages/shared/src/features/scores/interfaces/ui/types.ts:
 ⋮
 │export type ScoreAggregate = Record<string, AggregatedScoreData>;
@@ -272,10 +275,6 @@ packages/shared/src/server/clickhouse/client.ts:
 │type ServiceClickhouseSettings = ClickHouseSettings & {
 │  enable_full_text_index?: 1;
 ⋮
-│type RequestTimeoutClickHouseSettings = ClickHouseSettings & {
-│  max_execution_time?: number;
-│  timeout_before_checking_execution_speed?: number;
-⋮
 │export class ClickHouseClientManager {
 │  private static instance: ClickHouseClientManager;
 │  private clientMap: Map<string, ClickhouseClientType> = new Map();
@@ -297,17 +296,6 @@ packages/shared/src/server/clickhouse/queryTags.ts:
 ⋮
 
 packages/shared/src/server/evals/codeEvalDispatcherTypes.ts:
-⋮
-│export type DispatchInput = {
-│  scope: CodeEvalScope;
-│  runtime: { language: CodeEvalRuntimeLanguage };
-│  execution: {
-│    jobExecutionId: string;
-│  };
-│  code: {
-│    source: string;
-│  };
-│  payload: CodeEvalPayload;
 ⋮
 │export class CodeEvalDispatcherError extends Error {
 │  public readonly code: CodeEvalDispatcherErrorCode;
@@ -572,6 +560,20 @@ web/src/components/ItemBadge.tsx:
 │  | "ANNOTATION_QUEUE"
 ⋮
 
+web/src/components/layouts/app-layout/utils/navigationFilters.types.ts:
+⋮
+│export type NavigationFilterContext = {
+│  /** Current project ID from router query params */
+│  routerProjectId: string | undefined;
+│  /** Current organization ID from router query params */
+│  routerOrganizationId: string | undefined;
+│  /** User session data including user info and environment */
+│  session: Session | null;
+│  /** Whether experimental features are enabled globally */
+│  enableExperimentalFeatures: boolean;
+│  /** Whether user is a cloud admin (bypasses most checks) */
+⋮
+
 web/src/components/layouts/app-layout/utils/pathClassification.ts:
 ⋮
 │export type PathClassification = {
@@ -656,6 +658,32 @@ web/src/components/table/data-table-controls.clienttest.tsx:
 │          onChange={() => {}}
 │          isActive
 │          isDisabled={false}
+⋮
+
+web/src/components/table/data-table-controls.tsx:
+⋮
+│                  <button
+│                    onClick={() => onOperatorChange("any of")}
+│                    className={cn(
+│                      "rounded-l px-1.5 py-0.5 transition-colors",
+│                      operator === "any of" || !operator
+│                        ? "bg-accent text-accent-foreground font-medium"
+│                        : "text-muted-foreground hover:text-foreground",
+│                    )}
+⋮
+│                  <div className="bg-border/50 w-px" />
+│                  <button
+│                    onClick={() => onOperatorChange("all of")}
+⋮
+│                  <div className="bg-border/50 w-px" />
+│                  <button
+│                    onClick={() => onOperatorChange("none of")}
+│                    className={cn(
+│                      "rounded-r px-1.5 py-0.5 transition-colors",
+│                      operator === "none of"
+│                        ? "bg-accent text-accent-foreground font-medium"
+│                        : "text-muted-foreground hover:text-foreground",
+│                    )}
 ⋮
 
 web/src/components/table/peek/store/peekPanelStore.ts:
@@ -781,6 +809,13 @@ web/src/components/ui/MarkdownViewer.tsx:
 │  children?: MarkdownAstNode[];
 ⋮
 
+web/src/components/ui/badge.tsx:
+⋮
+│export interface BadgeProps
+│  extends
+│    React.HTMLAttributes<HTMLDivElement>,
+⋮
+
 web/src/components/ui/chart.tsx:
 ⋮
 │export type ChartConfig = {
@@ -858,40 +893,27 @@ web/src/features/batch-exports/components/BatchExportsTable.tsx:
 │                    <div>Created: {new Date(createdAt).toLocaleString()}</div>
 ⋮
 
-web/src/features/blobstorage-integration/types.ts:
+web/src/features/blobstorage-integration/components/BlobStorageStatusSection.tsx:
 ⋮
-│export type BlobStorageIntegrationFormSchema = z.infer<
-│  typeof blobStorageIntegrationFormSchema
+│type BlobStorageIntegrationConfig = NonNullable<
+│  RouterOutputs["blobStorageIntegration"]["get"]["config"]
+⋮
+│              <>
+│                <br />
+│                <span className="text-xs opacity-70">
+│                  {new Date(config.lastErrorAt).toLocaleString()}
 ⋮
 
-web/src/features/blobstorage-integration/validation.ts:
+web/src/features/blobstorage-integration/exportSource.ts:
 ⋮
-│export function exportStartDateNotInFuture(d: Date | null | undefined) {
-│  return !d || d.getTime() <= Date.now() + MAX_EXPORT_START_DATE_FUTURE_MS;
-⋮
-│export function validateExportFieldGroups(
-│  data: { exportFieldGroups: unknown[] },
-│  ctx: z.RefinementCtx,
-⋮
-│export function validateAzureContainerName(
-│  data: { type: string; bucketName: string },
-│  ctx: z.RefinementCtx,
+│export type ExportSourceAvailability = {
+│  eventsExportAvailable: boolean;
+│  forceEventsExport: boolean;
 ⋮
 
 web/src/features/cloud-status-notification/types.ts:
 ⋮
 │export type CloudStatus = z.infer<typeof CloudStatus>;
-
-web/src/features/dashboard/components/EditDashboardDialog.tsx:
-⋮
-│interface EditDashboardDialogProps {
-│  open: boolean;
-│  onOpenChange: (open: boolean) => void;
-│  projectId: string;
-│  dashboardId: string;
-│  initialName: string;
-│  initialDescription: string;
-⋮
 
 web/src/features/datasets/lib/csv/types.ts:
 ⋮
@@ -917,6 +939,8 @@ web/src/features/datasets/lib/csv/types.ts:
 ⋮
 
 web/src/features/datasets/store/datasetsTableStore.ts:
+⋮
+│type RowSelectionUpdater = Updater<RowSelectionState>;
 ⋮
 │export type DatasetsTableStore = StoreApi<DatasetsTableStoreState>;
 │
@@ -959,14 +983,8 @@ web/src/features/events/server/eventsService.ts:
 │
 ⋮
 
-web/src/features/experiments/store/experimentsTableStore.ts:
-⋮
-│type RowSelectionUpdater = Updater<RowSelectionState>;
-⋮
-
 web/src/features/experiments/types/charts.ts:
 ⋮
-│export type ScoreLevel = "obs" | "experiment";
 │export type ScoreChartDataType = "numeric" | "categorical";
 │
 ⋮
@@ -1157,6 +1175,9 @@ web/src/features/scores/components/multi-select-key-values.tsx:
 
 web/src/features/search-bar/lib/ast.ts:
 ⋮
+│export type Span = { from: number; to: number };
+│
+⋮
 │export type CompareOp =
 │  | "="
 │  | "exact"
@@ -1179,6 +1200,12 @@ web/src/features/search-bar/lib/fields.ts:
 │  return OP_LABEL[op] ?? op;
 ⋮
 
+web/src/features/search-bar/lib/observed-options.ts:
+⋮
+│export type ObservedOptions = Record<string, ObservedValue[]>;
+│
+⋮
+
 web/src/features/slack/components/SlackConnectionCard.tsx:
 ⋮
 │interface SlackConnectionCardProps {
@@ -1192,14 +1219,10 @@ web/src/features/slack/components/SlackConnectionCard.tsx:
 │  showConnectButton?: boolean;
 ⋮
 
-web/src/features/trace-graph-view/components/ElkGraphRenderer.tsx:
-⋮
-│type Transform = { x: number; y: number; k: number };
-│
-⋮
-
 web/src/features/trace-graph-view/types.ts:
 ⋮
+│export type GraphViewMode = (typeof GRAPH_VIEW_MODES)[number];
+│
 │export type GraphCanvasData = {
 │  nodes: GraphNodeData[];
 │  edges: { from: string; to: string }[];
@@ -1222,14 +1245,6 @@ web/src/pages/organization/[organizationId]/settings/index.tsx:
 │const OrgSettingsPage = () => {
 │  const organization = useQueryOrganization();
 │  const router = useRouter();
-⋮
-
-web/src/pages/project/[projectId]/settings/integrations/blobstorage.tsx:
-⋮
-│                  <>
-│                    <br />
-│                    <span className="text-xs opacity-70">
-│                      {new Date(state.data.config.lastErrorAt).toLocaleString()}
 ⋮
 
 web/src/server/utils/cookies.ts:
@@ -1437,12 +1452,6 @@ worker/src/utils/RedisLock.ts:
 ### AST Map: `modules/langfuse-docs`
 
 ```python
-app/(home)/page.tsx:
-⋮
-│export default function HomePage() {
-│  return <Home />;
-⋮
-
 app/[section]/layout.tsx:
 ⋮
 │type LayoutProps = {
@@ -1450,16 +1459,36 @@ app/[section]/layout.tsx:
 │  params: Promise<{ section: string }>;
 ⋮
 
-app/changelog/page.tsx:
+app/blog/[...slug]/page.tsx:
 ⋮
 │type PageProps = {
-│  searchParams: Promise<{ page?: string }>;
+│  params: Promise<{ slug: string[] }>;
 ⋮
 
-app/guides/[[...slug]]/page.tsx:
+app/blog/page.tsx:
+⋮
+│export default function BlogIndexPage() {
+│  const pages = getBlogIndexPages();
+│
+│  return (
+│    <BlogPageClient pages={pages}>
+│      <ContentColumns
+│        leftSidebar={<BlogSidebar />}
+│        rightSidebar={<BlogAside />}
+│        className="min-h-screen"
+│        footerClassName="md:max-w-none xl:max-w-none px-6 sm:px-6 md:px-6"
+⋮
+
+app/changelog/[...slug]/page.tsx:
 ⋮
 │type PageProps = {
-│  params: Promise<{ slug?: string[] }>;
+│  params: Promise<{ slug: string[] }>;
+⋮
+
+app/cloud/layout.tsx:
+⋮
+│export default function CloudLayout({
+│  children,
 ⋮
 
 app/japan/layout.tsx:
@@ -2734,12 +2763,6 @@ lib/cloud-regions.ts:
 │
 ⋮
 
-lib/contact-sales-form.ts:
-⋮
-│export type ContactFormData = z.infer<typeof contactFormSchema>;
-│
-⋮
-
 lib/content-width.ts:
 ⋮
 │export type ContentWidthType = "docs" | "full";
@@ -3387,35 +3410,6 @@ langfuse/api/blob_storage_integrations/types/blob_storage_integrations_response.
 │class BlobStorageIntegrationsResponse(UniversalBaseModel):
 ⋮
 
-langfuse/api/comments/client.py:
-⋮
-│class CommentsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        *,
-│        page: typing.Optional[int] = None,
-│        limit: typing.Optional[int] = None,
-│        object_type: typing.Optional[str] = None,
-│        object_id: typing.Optional[str] = None,
-│        author_user_id: typing.Optional[str] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncCommentsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        *,
-│        page: typing.Optional[int] = None,
-│        limit: typing.Optional[int] = None,
-│        object_type: typing.Optional[str] = None,
-│        object_id: typing.Optional[str] = None,
-│        author_user_id: typing.Optional[str] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
 langfuse/api/comments/types/create_comment_response.py:
 ⋮
 │class CreateCommentResponse(UniversalBaseModel):
@@ -3550,9 +3544,6 @@ langfuse/api/core/http_sse/_models.py:
 ⋮
 │@dataclass(frozen=True)
 │class ServerSentEvent:
-│    event: str = "message"
-⋮
-│    def json(self) -> Any:
 ⋮
 
 langfuse/api/core/jsonable_encoder.py:
@@ -3641,36 +3632,6 @@ langfuse/api/core/serialization.py:
 │    aliases_to_field_names: typing.Dict[str, str],
 ⋮
 
-langfuse/api/dataset_items/client.py:
-⋮
-│class DatasetItemsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncDatasetItemsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-
-langfuse/api/dataset_items/raw_client.py:
-⋮
-│class RawDatasetItemsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncRawDatasetItemsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-
 langfuse/api/dataset_items/types/delete_dataset_item_response.py:
 ⋮
 │class DeleteDatasetItemResponse(UniversalBaseModel):
@@ -3684,27 +3645,6 @@ langfuse/api/dataset_items/types/paginated_dataset_items.py:
 langfuse/api/dataset_run_items/types/paginated_dataset_run_items.py:
 ⋮
 │class PaginatedDatasetRunItems(UniversalBaseModel):
-⋮
-
-langfuse/api/datasets/raw_client.py:
-⋮
-│class RawDatasetsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        dataset_name: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncRawDatasetsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        dataset_name: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
 ⋮
 
 langfuse/api/datasets/types/delete_dataset_run_response.py:
@@ -3832,6 +3772,27 @@ langfuse/api/legacy/metrics_v1/types/metrics_response.py:
 │class MetricsResponse(UniversalBaseModel):
 ⋮
 
+langfuse/api/legacy/observations_v1/client.py:
+⋮
+│class ObservationsV1Client:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        observation_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncObservationsV1Client:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        observation_id: str,
+│        *,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+
 langfuse/api/legacy/observations_v1/types/observations.py:
 ⋮
 │class Observations(UniversalBaseModel):
@@ -3857,24 +3818,24 @@ langfuse/api/llm_connections/types/paginated_llm_connections.py:
 │class PaginatedLlmConnections(UniversalBaseModel):
 ⋮
 
-langfuse/api/media/raw_client.py:
-⋮
-│class RawMediaClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncRawMediaClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, media_id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-
 langfuse/api/metrics/types/metrics_v2response.py:
 ⋮
 │class MetricsV2Response(UniversalBaseModel):
+⋮
+
+langfuse/api/models/client.py:
+⋮
+│class ModelsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
+⋮
+│class AsyncModelsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
 ⋮
 
 langfuse/api/models/types/paginated_models.py:
@@ -3925,36 +3886,6 @@ langfuse/api/organizations/types/memberships_response.py:
 langfuse/api/organizations/types/organization_projects_response.py:
 ⋮
 │class OrganizationProjectsResponse(UniversalBaseModel):
-⋮
-
-langfuse/api/projects/client.py:
-⋮
-│class ProjectsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncProjectsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-
-langfuse/api/projects/raw_client.py:
-⋮
-│class RawProjectsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncRawProjectsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, *, request_options: typing.Optional[RequestOptions] = None
 ⋮
 
 langfuse/api/projects/types/api_key_deletion_response.py:
@@ -4044,6 +3975,29 @@ langfuse/api/scim/types/scim_name.py:
 │class ScimName(UniversalBaseModel):
 ⋮
 
+langfuse/api/score_configs/client.py:
+⋮
+│class ScoreConfigsClient:
+│    def __init__(self, *, client_wrapper: SyncClientWrapper):
+⋮
+│    def get(
+│        self,
+│        *,
+│        page: typing.Optional[int] = None,
+│        limit: typing.Optional[int] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+│class AsyncScoreConfigsClient:
+│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+⋮
+│    async def get(
+│        self,
+│        *,
+│        page: typing.Optional[int] = None,
+│        limit: typing.Optional[int] = None,
+│        request_options: typing.Optional[RequestOptions] = None,
+⋮
+
 langfuse/api/score_configs/types/score_configs.py:
 ⋮
 │class ScoreConfigs(UniversalBaseModel):
@@ -4129,30 +4083,32 @@ langfuse/api/scores_v3/types/text_score_v3.py:
 │class TextScoreV3(BaseScoreV3):
 ⋮
 
-langfuse/api/sessions/raw_client.py:
+langfuse/api/sessions/types/paginated_sessions.py:
 ⋮
-│class RawSessionsClient:
+│class PaginatedSessions(UniversalBaseModel):
+⋮
+
+langfuse/api/trace/client.py:
+⋮
+│class TraceClient:
 │    def __init__(self, *, client_wrapper: SyncClientWrapper):
 ⋮
 │    def get(
 │        self,
-│        session_id: str,
+│        trace_id: str,
 │        *,
+│        fields: typing.Optional[str] = None,
 │        request_options: typing.Optional[RequestOptions] = None,
 ⋮
-│class AsyncRawSessionsClient:
+│class AsyncTraceClient:
 │    def __init__(self, *, client_wrapper: AsyncClientWrapper):
 ⋮
 │    async def get(
 │        self,
-│        session_id: str,
+│        trace_id: str,
 │        *,
+│        fields: typing.Optional[str] = None,
 │        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
-langfuse/api/sessions/types/paginated_sessions.py:
-⋮
-│class PaginatedSessions(UniversalBaseModel):
 ⋮
 
 langfuse/api/trace/types/delete_trace_response.py:
@@ -4398,12 +4354,14 @@ langfuse/openai.py:
 │    resource: OpenAiDefinition,
 │    response: Any,
 │    generation: LangfuseGeneration,
+│    model_parameters: Optional[Any] = None,
 │) -> Any:
 │    if not hasattr(response, "_iterator"):
 │        return LangfuseResponseGeneratorSync(
 │            resource=resource,
 │            response=response,
 │            generation=generation,
+│            model_parameters=model_parameters,
 ⋮
 │    def finalize_once() -> None:
 ⋮
@@ -4412,12 +4370,14 @@ langfuse/openai.py:
 │    resource: OpenAiDefinition,
 │    response: Any,
 │    generation: LangfuseGeneration,
+│    model_parameters: Optional[Any] = None,
 │) -> Any:
 │    if not hasattr(response, "_iterator"):
 │        return LangfuseResponseGeneratorAsync(
 │            resource=resource,
 │            response=response,
 │            generation=generation,
+│            model_parameters=model_parameters,
 ⋮
 │    async def finalize_once() -> None:
 ⋮
@@ -4471,6 +4431,51 @@ tests/support/retry.py:
 │    is_result_ready: Callable[[T], bool] | None = None,
 │    timeout_seconds: float = DEFAULT_RETRY_TIMEOUT_SECONDS,
 │    interval_seconds: float = DEFAULT_RETRY_INTERVAL_SECONDS,
+⋮
+
+tests/unit/test_e2e_support.py:
+⋮
+│def test_get_api_retries_not_found(monkeypatch):
+│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
+│
+⋮
+│    class FakeTraceService:
+⋮
+│    class FakeClient:
+⋮
+│def test_get_api_retries_filtered_lists(monkeypatch):
+│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
+│
+⋮
+│    class FakeTraceService:
+⋮
+│    class FakeClient:
+⋮
+│def test_get_api_retry_can_be_disabled(monkeypatch):
+│    attempts = {"count": 0}
+│
+│    class FakeTraceService:
+⋮
+│    class FakeClient:
+⋮
+│def test_raw_api_wrapper_retries_not_found_payload(monkeypatch):
+│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
+│
+⋮
+│    class FakeResponse:
+│        def __init__(self, status_code, payload):
+│            self.status_code = status_code
+│            self._payload = payload
+⋮
+│        def json(self):
+⋮
+│def test_wait_for_trace_retries_until_predicate_matches(monkeypatch):
+│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
+│
+⋮
+│    class FakeTraceService:
+⋮
+│    class FakeClient:
 ⋮
 
 tests/unit/test_openai_prompt_extraction.py:

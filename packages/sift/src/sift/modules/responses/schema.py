@@ -8,7 +8,7 @@ from litellm.types.llms.openai import (
     ResponsesAPIRequestParams,
 )
 
-from sift.utils.webhook.schema import Webhook
+from sift.utils.webhook.schema import WebhookRequest
 
 __all__ = [
     "ResponseRequest",
@@ -25,7 +25,7 @@ class ResponseRequest(BaseModel):
     model: str
     input: Union[str, List[Dict[str, Any]]]
     background: Optional[bool] = False
-    webhook: Optional[Webhook] = None
+    webhook: Optional[WebhookRequest] = None
 
     # LiteLLM ResponsesAPIOptionalRequestParams
     text: Optional[Dict[str, Any]] = None
@@ -60,10 +60,4 @@ class ResponseRequest(BaseModel):
 class ResponseResponse(ResponsesAPIResponse):
     success: bool
     error: Optional[str] = None
-    webhook: Optional[Webhook] = None
     model_config = ConfigDict(arbitrary_types_allowed=True)
-
-from sift.modules.agents.schema import AgentResponse
-Webhook.model_rebuild(_types_namespace={"AgentResponse": AgentResponse, "ResponseResponse": ResponseResponse})
-ResponseRequest.model_rebuild()
-ResponseResponse.model_rebuild()

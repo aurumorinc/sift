@@ -25,17 +25,6 @@ ai_evals/core/types.ts:
 ⋮
 │export type EvalMode = (typeof EVAL_MODES)[number];
 │
-│export interface EvalCaseRuntimeBackendPreview {
-│  args?: Record<string, unknown>;
-│  timeoutSeconds?: number;
-⋮
-│export interface EvalCaseRuntimeAppContextSpec {
-│  additional?: EvalCaseRuntimeAppAdditionalContext[];
-⋮
-│export interface EvalCaseRuntimeSpec {
-│  maxTurns?: number;
-│  backendPreview?: EvalCaseRuntimeBackendPreview;
-│  appContext?: EvalCaseRuntimeAppContextSpec;
 ⋮
 │export interface CliValidationSpec {
 │  requiredSkills?: string[];
@@ -47,21 +36,6 @@ ai_evals/core/types.ts:
 │  requiredProposedCommands?: string[];
 │  forbiddenProposedCommands?: string[];
 │  orderedProposedCommands?: string[];
-⋮
-│export interface ToolValidationSpec {
-│  requiredToolsUsed?: string[];
-│  /**
-│   * Each inner array is an alternatives group: the check passes when at least
-│   * one tool in the group was used. Use when several tools satisfy the same
-│   * intent so a model that picks any valid path passes — e.g. inspecting an
-│   * app's files via either `read_app_file` or `search_app`.
-│   */
-│  requiredToolsAnyOf?: string[][];
-│  forbiddenToolsUsed?: string[];
-⋮
-│export type EvalValidationSpec =
-│  | FlowValidationSpec
-│  | AppValidationSpec
 ⋮
 │export interface EvalCase {
 │  id: string;
@@ -147,37 +121,7 @@ backend/parsers/windmill-parser-wasm/lib/windmill_parser_wasm.generated.d.ts:
 │  decompress?: (bytes: Uint8Array) => Uint8Array;
 ⋮
 
-backend/parsers/windmill-parser/src/asset_parser.rs:
-⋮
-│pub enum AssetKind {
-│    S3Object,
-│    Resource,
-│    Ducklake,
-│    DataTable,
-│    Volume,
-⋮
-
 backend/src/monitor.rs:
-⋮
-│pub async fn reload_option_setting_with_tracing<T: FromStr + DeserializeOwned>(
-│    conn: &Connection,
-│    setting_name: &str,
-│    std_env_var: &str,
-│    lock: Arc<RwLock<Option<T>>>,
-⋮
-│pub async fn load_value_from_global_settings(
-│    db: &DB,
-│    setting_name: &str,
-⋮
-│pub async fn load_value_from_global_settings_with_conn(
-│    conn: &Connection,
-│    setting_name: &str,
-│    load_from_http: bool,
-⋮
-│impl MonitorIteration {
-│    pub fn should_run(&self, period: u8) -> bool {
-│        (self.iter + self.rd_shift as u64) % (period as u64) == 0
-│    }
 ⋮
 │async fn handle_zombie_jobs(db: &Pool<Postgres>, base_internal_url: &str, node_name: &str) {
 │    let mut zombie_jobs_uuid_restart_limit_reached = vec![];
@@ -207,6 +151,20 @@ backend/tests/scripts/test_volume_with_claude.ts:
 │  model?: string;
 ⋮
 
+backend/windmill-ai/src/ai_providers.rs:
+⋮
+│pub enum AIProvider {
+│    OpenAI,
+│    #[serde(rename = "azure_openai")]
+│    AzureOpenAI,
+│    #[serde(rename = "azure_foundry")]
+│    AzureFoundry,
+│    Anthropic,
+│    Mistral,
+│    DeepSeek,
+│    GoogleAI,
+⋮
+
 backend/windmill-ai/src/types.rs:
 ⋮
 │impl TokenUsage {
@@ -226,6 +184,42 @@ backend/windmill-ai/src/types.rs:
 │            && self.total_tokens.is_none()
 │            && self.cache_read_input_tokens.is_none()
 │            && self.cache_write_input_tokens.is_none()
+⋮
+│impl OpenAPISchema {
+│    pub fn from_str(typ: &str) -> Self {
+│        OpenAPISchema { r#type: Some(SchemaType::Single(typ.to_string())), ..Default::default() }
+│    }
+│
+│    pub fn from_str_with_enum(typ: &str, enu: &Option<Vec<String>>) -> Self {
+│        OpenAPISchema {
+│            r#type: Some(SchemaType::Single(typ.to_string())),
+│            r#enum: enu.clone(),
+│            ..Default::default()
+⋮
+│    /// - Ensuring all properties are in the required array
+│    pub fn make_strict(&mut self) {
+│        // First, flatten any allOf schemas since OpenAI strict mode doesn't support them
+│        self.flatten_all_of();
+│
+│        // Handle this schema if it's an object type
+│        if let Some(SchemaType::Single(ref type_str)) = self.r#type {
+│            if type_str == "object" {
+│                // Only set additionalProperties to false if not already set
+│                // If user provided a value (bool or schema), preserve it and let OpenAI handle it
+│                if self.additional_properties.is_none() {
+⋮
+│    /// See https://github.com/windmill-labs/windmill/issues/7759
+│    pub fn sanitize_for_google(&mut self) {
+│        let mut schema_value = match serde_json::to_value(&*self) {
+│            Ok(value) => value,
+│            Err(err) => {
+│                tracing::error!("Failed to serialize OpenAPISchema for Google AI: {err}");
+│                return;
+│            }
+│        };
+│
+│        sanitize_schema_for_google(&mut schema_value);
+│
 ⋮
 │mod tests {
 │    use super::*;
@@ -258,12 +252,6 @@ backend/windmill-api-auth/src/ee_oss.rs:
 ⋮
 
 backend/windmill-api-client/src/lib.rs:
-⋮
-│pub enum Error {
-│    /// Request error
-│    Request(reqwest::Error),
-│    /// Unexpected response status
-│    UnexpectedResponse(u16, String),
 ⋮
 │pub mod types {
 │    use super::*;
@@ -390,15 +378,6 @@ backend/windmill-common/src/auth.rs:
 │        fn get_credentials(&self) -> Result<&Credentials>;
 ⋮
 
-backend/windmill-common/src/cache.rs:
-⋮
-│pub struct RawScript {
-│    pub content: String,
-│    pub lock: Option<String>,
-│    pub meta: Option<ScriptMetadata>,
-│    pub modules: Option<std::collections::HashMap<String, ScriptModule>>,
-⋮
-
 backend/windmill-common/src/email_oss.rs:
 ⋮
 │pub async fn send_email(
@@ -407,6 +386,20 @@ backend/windmill-common/src/email_oss.rs:
 │    _to: Vec<String>,
 │    _smtp: Smtp,
 │    _client_timeout: Option<tokio::time::Duration>,
+⋮
+
+backend/windmill-common/src/error.rs:
+⋮
+│pub enum Error {
+│    #[error("Bad gateway: {0}")]
+│    BadGateway(String),
+│    #[error("Bad config: {0}")]
+│    BadConfig(String),
+│    #[error("Connecting to database: {0}")]
+│    ConnectingToDatabase(String),
+│    #[error("Not found: {0}")]
+│    NotFound(String),
+│    #[error("Not authorized: {0}")]
 ⋮
 
 backend/windmill-common/src/instance_config.rs:
@@ -503,10 +496,12 @@ backend/windmill-common/src/utils.rs:
 │    fn build_from_caller(
 │        self,
 ⋮
-│pub fn merge_nested_raw_values_to_array<
-│    'a,
-│    It1: Iterator<Item = It2>,
-│    It2: Iterator<Item = &'a Box<serde_json::value::RawValue>>,
+
+backend/windmill-common/src/worker.rs:
+⋮
+│pub fn to_raw_value<T: Serialize>(result: &T) -> Box<RawValue> {
+│    serde_json::value::to_raw_value(result)
+│        .unwrap_or_else(|_| RawValue::from_string("{}".to_string()).unwrap())
 ⋮
 
 backend/windmill-common/src/workspace_dependencies.rs:
@@ -552,14 +547,6 @@ backend/windmill-types/src/flows.rs:
 │                    "got value: {other} for field `type`, expected value: `static` or `javascript`"
 ⋮
 
-backend/windmill-types/src/lib.rs:
-⋮
-│/// windmill-types cannot depend on windmill-common (it would be circular).
-│pub fn to_raw_value<T: serde::Serialize>(result: &T) -> Box<serde_json::value::RawValue> {
-│    serde_json::value::to_raw_value(result)
-│        .unwrap_or_else(|_| serde_json::value::RawValue::from_string("{}".to_string()).unwrap())
-⋮
-
 backend/windmill-types/src/scripts.rs:
 ⋮
 │pub enum ScriptLang {
@@ -586,6 +573,36 @@ backend/windmill-types/src/scripts.rs:
 ⋮
 │pub struct ScriptHash(pub i64);
 │
+⋮
+
+backend/windmill-worker/src/duckdb_executor.rs:
+⋮
+│fn extract_data_tests(result: &RawValue) -> Vec<DataTestOutcome> {
+│    fn collect(v: &Value, out: &mut Vec<DataTestOutcome>) {
+│        if let Value::Array(arr) = v {
+│            for item in arr {
+│                if let Value::Object(o) = item {
+│                    if let Some(Value::String(name)) = o.get("test") {
+│                        let violating = o
+│                            .get("violating")
+│                            .and_then(|x| x.as_i64().or_else(|| x.as_f64().map(|f| f as i64)))
+│                            .unwrap_or(0);
+│                        // The probe serializes the sample as a JSON *string*
+⋮
+│fn extract_schema(
+│    result: &RawValue,
+│) -> Option<Vec<windmill_common::materialization::SchemaColumn>> {
+│    use windmill_common::materialization::SchemaColumn;
+│    fn collect(v: &Value) -> Option<Vec<SchemaColumn>> {
+│        let Value::Array(arr) = v else { return None };
+│        let mut out = Vec::with_capacity(arr.len());
+│        for item in arr {
+│            let o = item.as_object()?;
+│            let name = o.get("name")?.as_str()?.to_string();
+│            let data_type = o.get("type")?.as_str()?.to_string();
+│            out.push(SchemaColumn { name, data_type });
+│        }
+│        Some(out)
 ⋮
 
 backend/windmill-worker/src/worker.rs:
@@ -710,17 +727,6 @@ cli/src/core/settings.ts:
 │  skipReencrypt?: boolean;
 ⋮
 
-cli/src/core/specific_items.ts:
-⋮
-│export interface SpecificItemsConfig {
-│  variables?: string[];
-│  resources?: string[];
-│  triggers?: string[];
-│  schedules?: string[];
-│  folders?: string[];
-│  settings?: boolean;
-⋮
-
 cli/src/types.ts:
 ⋮
 │export type GlobalOptions = {
@@ -766,9 +772,46 @@ cli/windmill-utils-internal/src/parse/parse-schema.ts:
 │    type?: "string" | "number" | "bytes" | "object" | "resource";
 ⋮
 
-debugger/test_dap_server.py:
+debugger/test_dap_server_bun.ts:
 ⋮
-│class DAPTestClient:
+│class DAPTestClient {
+│	private url: string
+│	private ws: WebSocket | null = null
+│	private seq = 1
+│	private pendingRequests = new Map<
+│		number,
+│		{ resolve: (value: DAPMessage) => void; reject: (error: Error) => void }
+│	>()
+│	private events: DAPMessage[] = []
+│	private output: string[] = []
+⋮
+
+debugger/test_debug_service.ts:
+⋮
+│class TestClient {
+│	private ws: WebSocket | null = null
+│	private seq = 1
+│	private pendingRequests = new Map<
+│		number,
+│		{ resolve: (value: DAPMessage) => void; reject: (error: Error) => void }
+│	>()
+│	private events: DAPMessage[] = []
+│	private output: string[] = []
+│	private result: unknown = undefined
+⋮
+
+docker/test_windmill_extra.ts:
+⋮
+│class DAPTestClient {
+│	private ws: WebSocket | null = null
+│	private seq = 1
+│	private pendingRequests = new Map<
+│		number,
+│		{ resolve: (value: DAPMessage) => void; reject: (error: Error) => void }
+│	>()
+│	private events: DAPMessage[] = []
+│	private output: string[] = []
+│	private result: unknown = undefined
 ⋮
 
 ephemeral-backends/worktree-pool.ts:
@@ -834,45 +877,13 @@ frontend/src/lib/common.ts:
 │		type?: 'string' | 'number' | 'bytes' | 'object' | 'resource'
 ⋮
 
-frontend/src/lib/components/apps/components/helpers/eval.ts:
-⋮
-│type WmFunctor = (
-│	context,
-│	state,
-│	createProxy,
-│	goto,
-│	setTab,
-│	recompute,
-│	globalRecompute,
-│	getAgGrid,
-│	setValue,
-⋮
-
 frontend/src/lib/components/apps/svelte-grid/utils/other.ts:
 │export function throttle(func, timeFrame) {
 ⋮
 
-frontend/src/lib/components/apps/types.ts:
+frontend/src/lib/components/assets/lib.ts:
 ⋮
-│export interface CancelablePromise<T> extends Promise<T> {
-│	cancel: () => void
-⋮
-
-frontend/src/lib/components/assets/AssetGraph/boundedCascade.test.ts:
-⋮
-│type T = [producer: string, tested: string, asset: string] // `// data_test` ordering edge
-│
-⋮
-
-frontend/src/lib/components/assets/AssetGraph/types.ts:
-⋮
-│export interface AssetGraphResponse {
-│	assets: AssetGraphAssetNode[]
-│	runnables: AssetGraphRunnableNode[]
-│	edges: AssetGraphEdge[]
-│	triggers: AssetGraphTrigger[]
-│	macro_edges?: AssetGraphMacroEdge[]
-│	test_edges?: AssetGraphTestEdge[]
+│export type AssetKind = _AssetKind
 ⋮
 
 frontend/src/lib/components/common/fileInput/model.ts:
@@ -912,6 +923,20 @@ frontend/src/lib/components/copilot/chat/pasteTokens.ts:
 
 frontend/src/lib/components/copilot/chat/tokenUsage.ts:
 │export interface ChatTokenUsage {
+⋮
+
+frontend/src/lib/components/copilot/shared.ts:
+⋮
+│export type VisualChange =
+│	| {
+│			type: 'added_inline'
+│			position: {
+│				line: number
+│				column: number
+│			}
+│			value: string
+│			options?: {
+│				greenHighlight?: boolean
 ⋮
 
 frontend/src/lib/components/graph/groupedModulesProxy.svelte.ts:
@@ -967,6 +992,27 @@ frontend/src/lib/monaco_workers/graphql.worker.bundle.js:
 │`);return a.message&&!m&&(E=`${" ".repeat(g+1)}${a.message}
 │${E}`),E}e.codeFrameColumns=i}),L_={};ih(L_,{__debug:()=>d4,check:()=>h4,doc:()=>gh,format:()=>Th,f
 ⋮
+│spurious results.`)}}return!1},$h=class{constructor(p,_="GraphQL request",D={line:1,column:1}){type
+│
+│`+t.stack):new Error(t.message+`
+│
+│`+t.stack):t},0)}}addListener(t){return this.listeners.push(t),()=>{this._removeListener(t)}}emit(t
+⋮
+│`}return r.length>t&&(o+=`
+│
+│
+│... and ${r.length-t} more leaking disposables
+│
+│`),{leaks:r,details:o}}};function tc(e){return ho?.trackDisposable(e),e}function nc(e){ho?.markAsDi
+│`).slice(2).join(`
+│`))}},ac=class extends Error{constructor(t,n){super(t),this.name="ListenerLeakError",this.stack=n}}
+│`||e==="	"}var Ut;(function(e){e[e.None=0]="None",e[e.NonBasicASCII=1]="NonBasicASCII",e[e.Invisibl
+⋮
+│`)}isStronglyEqual(t,n){return this.lines[t]===this.lines[n]}};function sm(e){let t=0;for(;t<e.leng
+│`);s.lastIndex=0;let c;for(;(c=s.exec(l))!==null;){let f=l.substring(0,c.index),d=(f.match(/\n/g)||
+│`),E=g.length,T=m+E-1,v=f.lastIndexOf(`
+│`)+1,A=c.index-v+1,S=g[g.length-1],C=E===1?A+c[0].length:S.length+1,q={startLineNumber:m,startColum
+⋮
 
 frontend/src/lib/newDraftFlag.test.ts:
 ⋮
@@ -1019,6 +1065,9 @@ frontend/static/tailwind.js:
 ⋮
 │In order to be iterable, non-array objects must have a [Symbol.iterator]() method.`)}return t=r[Sym
 ⋮
+│`)){let a=this.raw(e,null,"indent");if(a.length)for(let o=0;o<s;o++)i+=a}return i}rawValue(e,t){let
+│`?(i=1,n+=1):i+=1;return{line:n,column:i}}positionBy(e){let t=this.source.start;if(e.index)t=this.p
+│`.charCodeAt(0),Nr=" ".charCodeAt(0),ji="\f".charCodeAt(0),Vi="	".charCodeAt(0),Ui="\r".charCodeAt(
 │`,"	"];return Br.split(r,e)},comma(r){return Br.split(r,[","],!0)}};Ec.exports=Br;Br.default=Br});v
 │`);i=new Array(s.length);let a=0;for(let o=0,u=s.length;o<u;o++)i[o]=a,a+=s[o].length+1;this[ma]=i}
 │https://evilmartians.com/chronicles/postcss-8-plugin-migration`),m.env.LANG&&m.env.LANG.startsWith(
@@ -1064,6 +1113,14 @@ python-client/wmill/wmill/client.py:
 typescript-client/docs/assets/main.js:
 ⋮
 │"use strict";(()=>{var Ce=Object.create;var ie=Object.defineProperty;var Oe=Object.getOwnPropertyDe
+│`,e)},t.Pipeline.load=function(e){var n=new t.Pipeline;return e.forEach(function(r){var i=t.Pipelin
+⋮
+
+typescript-client/s3Types.d.ts:
+⋮
+│export type S3ObjectRecord = {
+│    s3: string;
+│    storage?: string;
 ⋮
 
 typescript-client/s3Types.ts:
@@ -1140,13 +1197,6 @@ typescript-client/tests/sqlUtils.test.ts:
 │  preamble(): string;
 │  language: "postgresql" | "duckdb";
 │  extraArgs: Record<string, any>;
-⋮
-
-windmill-yaml-validator/src/validation/yaml-validator.ts:
-⋮
-│export type ValidationTarget =
-│  | { type: "flow" }
-│  | { type: "schedule" }
 ⋮
 
 wm-ts-nav/src/main.rs:

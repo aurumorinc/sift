@@ -45,5 +45,4 @@ def test_responses_main_catches_exception(mock_dispatch_webhook, mock_client):
     
     assert response.success is False
     assert response.error == "Mocked response error"
-    assert response.webhook is not None
-    assert str(response.webhook.url) == "http://example.com/"
+    assert not hasattr(response, "webhook")
