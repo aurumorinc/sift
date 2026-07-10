@@ -119,8 +119,7 @@ def test_agents_main_optional_args_populated(mock_dispatch_webhook, mock_get_age
     assert payload.get("labels") == ["test_label"]
     # Webhook is excluded from the payload sent to compile_and_save_agent
     assert "webhook" not in payload
-    assert response.webhook is not None
-    assert str(response.webhook.url) == "http://example.com/hook"
+    assert not hasattr(response, "webhook")
 
 
 @patch("sift.use_cases.agents.service.client")
@@ -140,5 +139,4 @@ def test_agents_main_catches_exception(mock_dispatch_webhook, mock_get_agent_saf
 
     assert response.success is False
     assert response.error == "Mocked compilation error"
-    assert response.webhook is not None
-    assert str(response.webhook.url) == "http://example.com/hook"
+    assert not hasattr(response, "webhook")
