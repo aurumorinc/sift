@@ -11,7 +11,7 @@ logger = structlog.get_logger(__name__)
 client = SiftClient()
 
 
-@webhook_dispatch
+@webhook_dispatch(event_prefix="response")
 def main(
     model: str,
     input: Union[str, List[Dict]],
@@ -49,7 +49,6 @@ def main(
             **response_dict,
             success=True,
             error=None,
-            webhook=request.webhook,
         )
         logger.info("response_processing_completed")
         return response
@@ -65,6 +64,5 @@ def main(
             output=[],
             success=False,
             error=error_msg,
-            webhook=request.webhook,
         )
         return response
