@@ -67,7 +67,7 @@ components:
             type: string
           nullable: true
         webhook:
-          $ref: '#/components/schemas/Webhook'
+          $ref: '#/components/schemas/WebhookRequest'
     
     AgentResponse:
       type: object
@@ -244,7 +244,7 @@ components:
           type: boolean
           default: false
         webhook:
-          $ref: '#/components/schemas/Webhook'
+          $ref: '#/components/schemas/WebhookRequest'
         response_format:
           type: object
           additionalProperties: true
@@ -353,7 +353,7 @@ components:
             total_tokens:
               type: integer
           
-    Webhook:
+    WebhookRequest:
       type: object
       required:
         - url
@@ -374,6 +374,7 @@ components:
             type: string
             enum: [started, completed, failed]
           default: [started, completed, failed]
+          
     WebhookResponse:
       type: object
       required:

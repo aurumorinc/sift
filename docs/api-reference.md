@@ -57,7 +57,7 @@ done
 
 ## Data Schemas
 
-### Webhook Object Schema
+### Webhook Request Schema
 ```json
 {
   "url": "https://your-domain.com/webhook",
@@ -67,8 +67,7 @@ done
   "metadata": {
     "custom_trace_id": "12345"
   },
-  "events": ["started", "completed", "failed"],
-  "data": null
+  "events": ["started", "completed", "failed"]
 }
 ```
 
@@ -97,7 +96,7 @@ done
     }
   },
   "labels": ["production"],
-  "webhook": { /* Webhook Object */ }
+  "webhook": { /* Webhook Request */ }
 }
 ```
 
@@ -121,7 +120,7 @@ done
   "model": "support_agent",
   "input": "How do I reset my password?",
   "background": false,
-  "webhook": { /* Webhook Object */ },
+  "webhook": { /* Webhook Request */ },
   
   // LiteLLM passthrough parameters
   "temperature": 0.5,
