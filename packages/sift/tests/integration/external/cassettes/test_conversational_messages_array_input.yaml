@@ -1,0 +1,74 @@
+interactions:
+- request:
+    body: "{\"contents\":[{\"role\":\"user\",\"parts\":[{\"text\":\"[[ ## messages
+      ## ]]\\nWhat is 2+2?\"}]},{\"role\":\"model\",\"parts\":[{\"text\":\"[[ ## response
+      ## ]]\\n2 + 2 equals 4.\\n\\n[[ ## completed ## ]]\\n\"}]},{\"role\":\"user\",\"parts\":[{\"text\":\"[[
+      ## messages ## ]]\\n[1] \xAB{'role': 'user', 'content': 'Hello!'}\xBB\\n[2]
+      \xAB{'role': 'assistant', 'content': 'Hi! How can I help you?'}\xBB\\n[3] \xAB{'role':
+      'user', 'content': 'What is 3+3?'}\xBB\\n\\nRespond with the corresponding output
+      fields, starting with the field `[[ ## response ## ]]`, and then ending with
+      the marker for `[[ ## completed ## ]]`.\"}]}],\"system_instruction\":{\"parts\":[{\"text\":\"Your
+      input fields are:\\n1. `messages` (str):\\nYour output fields are:\\n1. `response`
+      (str):\\nAll interactions will be structured in the following way, with the
+      appropriate values filled in.\\n\\n[[ ## messages ## ]]\\n{messages}\\n\\n[[
+      ## response ## ]]\\n{response}\\n\\n[[ ## completed ## ]]\\nIn adhering to this
+      structure, your objective is: \"}]},\"generationConfig\":{\"temperature\":1.0}}"
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '996'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/11SXXPaMBB896/QKI+UlI80lL4RCjO0cQKJJ3QKTOcGH7YSIRnpnNAy/PdKdk1M
+        9aC5uVvd3u3qEDDG16BiEQOh5V/YwmUYOxS3r2lFqMgVqpRLZmDoHVueQy12EMK9f8QXC3ZxwQza
+        TCuLPl6tlqrLGqzLcJeDtOz6cqmWqgSu9TaTSBiXSP7hv66pzpOUHkWigHKDnmH0PPseJqOHKJpM
+        e/b2tnW1mV3TxyG8zvuN/hCewvHdzX7TCW17nNHN5KWTvmX3f9rzT6pn+9BriPEABzTnNarjKV69
+        T8CNlgXjVscoK/ixAvCNUMKmDwhWKw97jO6npwW4UDHuXboVVARFa55bSDBEAmcAnGTmmXFKUKRf
+        UA11XhjQ6Xwuu9UMOwe0/tVJE8jz0lX1ttbYfnW0QtadrJnstgQp6LdfJRr9iGpeOILzuSotgppk
+        3KJ5FWuMBBrfw5KbGkzshStEK3V8QmNFKViCWydhs3vZbm4k2LTp6LGg5dUHmsQeKGffZrDb/hrH
+        u+lzHk7fbPdna5Dw4Bj8BZBPum/RAgAA
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 20:20:37 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=690
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

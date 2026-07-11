@@ -1,0 +1,121 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_sparse
+  response:
+    body:
+      string: '{"id":"86921b8a-81d1-4128-90ac-ade8553e3b64","createdAt":"2026-07-09T18:28:39.121Z","updatedAt":"2026-07-09T18:28:39.121Z","projectId":"cmqtu21zc000gad0eh2r1zyde","createdBy":"API","prompt":"","name":"vcr_test_agent_sparse","version":1,"type":"text","isActive":true,"config":{"agent_name":"vcr_test_agent_sparse","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":"What
+        is 2+2?","response":"2 + 2 = 4"}],"signature":{"instructions":"","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null}}},"labels":null},"tags":[],"labels":["production","latest"],"commitMessage":null,"resolutionGraph":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '979'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:07 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"hur54hbj68r7"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name":"vcr_test_agent_sparse","prompt":"","config":{"agent_name":"vcr_test_agent_sparse","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":"What
+      is 2+2?","response":"2 + 2 = 4"}],"signature":{"instructions":"","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null}}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '727'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: '{"id":"3c8833b2-b4f4-491a-9341-8151bc2e0ec2","createdAt":"2026-07-09T18:33:07.264Z","updatedAt":"2026-07-09T18:33:07.264Z","projectId":"cmqtu21zc000gad0eh2r1zyde","createdBy":"API","prompt":"","name":"vcr_test_agent_sparse","version":2,"type":"text","isActive":null,"config":{"agent_name":"vcr_test_agent_sparse","agent_card_params":{},"litellm_params":{"model":"gemini/gemini-3.1-flash-lite"},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":"What
+        is 2+2?","response":"2 + 2 = 4"}],"signature":{"instructions":"","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null}}},"labels":null},"tags":[],"labels":["production","latest"],"commitMessage":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '956'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:07 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"t201aa7orfqk"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 201
+      message: Created
+version: 1
