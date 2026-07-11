@@ -243,3 +243,4 @@ plans/
 .agents/skills/litellm/modules/litellm-docs
 .agents/skills/windmill/modules/windmill
 .agents/skills/worldline-python/modules/worldline-python
+.agents/skills/oort-python/modules/oort-python
