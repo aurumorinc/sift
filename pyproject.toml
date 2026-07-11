@@ -7,7 +7,7 @@ authors = [
 ]
 
 requires-python = "<3.14,>=3.11"
-dependencies = ["httpx>=0.28.1", "litellm>=1.89.4", "pydantic-settings>=2.14.2", "langfuse>=4.12.0", "dspy-ai>=3.2.1", "worldline @ git+https://github.com/aurumorinc/worldline-python.git"]
+dependencies = ["httpx>=0.28.1", "litellm>=1.89.4", "pydantic-settings>=2.14.2", "langfuse>=4.12.0", "dspy-ai>=3.2.1", "worldline @ git+https://github.com/aurumorinc/worldline-python.git", "oort-python @ git+https://github.com/aurumorinc/oort-python.git"]
 
 [tool.bumpver]
 current_version = "0.14.2"
