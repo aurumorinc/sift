@@ -2,10 +2,10 @@ import os
 from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from worldline import LoggingSettings
+from worldline.config import WorldlineSettings
 
 
-class Settings(LoggingSettings, BaseSettings):
+class Settings(WorldlineSettings, BaseSettings):
     """Sift configuration settings."""
 
     model_config = SettingsConfigDict(extra="allow", env_file=".env")

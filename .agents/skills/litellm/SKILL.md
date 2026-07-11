@@ -27,6 +27,19 @@ litellm-proxy-extras/litellm_proxy_extras/utils.py:
 │def str_to_bool(value: Optional[str]) -> bool:
 ⋮
 
+litellm-rust/crates/ai-gateway/src/auth/mod.rs:
+⋮
+│/// `LiteLLM_SpendLogs.api_key`, so realtime spend joins with the rest of LiteLLM.
+│pub fn hash_token(token: &str) -> String {
+│    let digest = Sha256::digest(token.as_bytes());
+│    let mut hex = String::with_capacity(digest.len() * 2);
+│    for byte in digest {
+│        use std::fmt::Write;
+│        let _ = write!(hex, "{byte:02x}");
+│    }
+│    hex
+⋮
+
 litellm-rust/crates/core/src/router/deployment.rs:
 ⋮
 │mod tests {
@@ -70,6 +83,11 @@ litellm/integrations/otel/model/semconv.py:
 │class Error:
 ⋮
 
+litellm/litellm_core_utils/core_helpers.py:
+⋮
+│def map_finish_reason(finish_reason: str) -> OpenAIChatCompletionFinishReason:
+⋮
+
 litellm/litellm_core_utils/get_llm_provider_logic.py:
 ⋮
 │def get_llm_provider(
@@ -78,6 +96,14 @@ litellm/litellm_core_utils/get_llm_provider_logic.py:
 │    api_base: Optional[str] = None,
 │    api_key: Optional[str] = None,
 │    litellm_params: Optional[GenericLiteLLMParams] = None,
+⋮
+
+litellm/litellm_core_utils/litellm_logging.py:
+⋮
+│class Logging(LiteLLMLoggingBaseClass):
+│    global \
+⋮
+│    def post_call(self, original_response, input=None, api_key=None, additional_args={}):
 ⋮
 
 litellm/litellm_core_utils/logging_callback_manager.py:
@@ -118,9 +144,19 @@ litellm/litellm_core_utils/sensitive_data_masker.py:
 │        excluded_keys: Optional[Set[str]] = None,
 ⋮
 
+litellm/litellm_core_utils/url_utils.py:
+⋮
+│class SSRFError(ValueError):
+⋮
+
 litellm/llms/base_llm/chat/transformation.py:
 ⋮
 │class BaseLLMException(Exception):
+⋮
+
+litellm/llms/black_forest_labs/common_utils.py:
+⋮
+│class BlackForestLabsError(BaseLLMException):
 ⋮
 
 litellm/llms/custom_httpx/http_handler.py:
@@ -188,6 +224,11 @@ litellm/models/mcp_server.py:
 │class MCPEnvVarScope(str, enum.Enum):
 ⋮
 
+litellm/models/team.py:
+⋮
+│class Member(MemberBase):
+⋮
+
 litellm/proxy/_experimental/mcp_server/outbound_credentials/oauth_token_store.py:
 ⋮
 │@dataclass(frozen=True, slots=True, repr=False)
@@ -229,7 +270,7 @@ litellm/proxy/_experimental/out/_next/static/chunks/07.fwfv-sinb5.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/081.4arb-o0e0.js:
+litellm/proxy/_experimental/out/_next/static/chunks/08o64zaid_juv.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/08yy42xvwaak6.js:
@@ -245,16 +286,20 @@ litellm/proxy/_experimental/out/_next/static/chunks/0e9hs7onyj28m.js:
 │        ${t}-move-up-enter${t}-move-up-enter-active
 │      `]:{animationPlayState:"running"},[`${t}-move-up-leave`]:{animationName:x,animationDuration:f
 ⋮
+│        `]:{animationName:i.slideDownOut},"&-hidden":{display:"none"},[o]:Object.assign(Object.assi
+│Must be valid JSON format`:r.enum?`Select from available options
+│Allowed values: ${r.enum.join(", ")}`:E)}),children:u},e)})}):null};e.s(["ALL_PROXY_MCP_SERVERS_SEN
 
 litellm/proxy/_experimental/out/_next/static/chunks/0ivj_wax-joap.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0j_yol8f7u_zk.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
 litellm/proxy/_experimental/out/_next/static/chunks/0m6zdocif1gl4.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/0nnx~7-7e5t~1.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+⋮
 
 litellm/proxy/_experimental/out/_next/static/chunks/0p.6bs58-_3lw.js:
 ⋮
@@ -271,10 +316,13 @@ litellm/proxy/_experimental/out/_next/static/chunks/0piozaeodiue..js:
 │Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0x.73w57rn4ou.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0ys10755n8os_.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/11ibt3khr2hk3.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/151r-5htw45m~.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_types.py:
@@ -309,6 +357,16 @@ litellm/proxy/guardrails/guardrail_hooks/custom_code/primitives.py:
 litellm/proxy/swagger/swagger-ui-bundle.js:
 ⋮
 │!function webpackUniversalModuleDefinition(s,o){"object"==typeof exports&&"object"==typeof module?m
+⋮
+
+litellm/proxy/utils.py:
+⋮
+│class PrismaClient:
+│    spend_log_transactions: List = []
+⋮
+│    def hash_token(self, token: str):
+⋮
+│def hash_token(token: str):
 ⋮
 
 litellm/router_strategy/budget_limiter.py:
@@ -352,6 +410,13 @@ litellm/secret_managers/main.py:
 │    default_value: Optional[Union[str, bool]] = None,
 ⋮
 
+litellm/types/caching.py:
+⋮
+│class RedisPipelineSetOperation(TypedDict):
+⋮
+│class CachedEmbedding(TypedDict):
+⋮
+
 litellm/types/completion.py:
 ⋮
 │class ChatCompletionContentPartTextParam(TypedDict, total=False):
@@ -391,6 +456,16 @@ litellm/types/llms/openai.py:
 litellm/types/llms/vertex_ai.py:
 ⋮
 │class Date(TypedDict):
+⋮
+
+litellm/types/mcp_server/mcp_server_manager.py:
+⋮
+│class MCPServer(BaseModel):
+⋮
+
+litellm/types/proxy/litellm_pre_call_utils.py:
+⋮
+│class RedactedDict(dict):
 ⋮
 
 litellm/types/proxy/management_endpoints/common_daily_activity.py:
@@ -437,7 +512,19 @@ litellm/types/utils.py:
 ⋮
 │class StreamingChoices(OpenAIObject):
 ⋮
+│class ModelResponseStream(ModelResponseBase):
+⋮
 │class ModelResponse(ModelResponseBase):
+⋮
+│class ImageObject(OpenAIImage):
+⋮
+│class LiteLLMLoggingBaseClass:
+│    """
+│    Base class for logging pre and post call
+│
+│    Meant to simplify type checking for logging obj.
+⋮
+│    def post_call(self, original_response, input=None, api_key=None, additional_args={}):
 ⋮
 
 terraform/litellm/aws/variables.tf:
@@ -471,6 +558,30 @@ terraform/provider/litellm/types.go:
 │	Additional    map[string]interface{} `json:"additional"`
 ⋮
 
+tests/agent_tests/test_a2a_agent.py:
+⋮
+│class MockA2AResponse:
+│    def __init__(self, text: str):
+│        self._payload = {
+│            "id": str(uuid4()),
+│            "jsonrpc": "2.0",
+│            "result": {
+│                "message": {
+│                    "role": "agent",
+│                    "parts": [{"kind": "text", "text": text}],
+│                    "messageId": uuid4().hex,
+│                }
+⋮
+│    def model_dump(self, mode="json", exclude_none=True):
+⋮
+
+tests/e2e/e2e_http.py:
+⋮
+│class UnauthorizedError(BaseModel):
+⋮
+│class StreamingResponse(BaseModel):
+⋮
+
 tests/e2e/models.py:
 ⋮
 │class CustomPricing(BaseModel):
@@ -482,15 +593,63 @@ tests/litellm_utils_tests/test_get_secret.py:
 │    def get_secret(self, secret_name):
 ⋮
 
+tests/llm_responses_api_testing/test_responses_hooks.py:
+⋮
+│def test_log_completed_response_falls_back_when_model_validate_fails(monkeypatch):
+│    class _BadSerializableResponse:
+│        @classmethod
+│        def model_validate(cls, value):
+│            raise RuntimeError("nope")
+│
+│        def model_dump(self):
+⋮
+
 tests/llm_translation/reasoning_effort_grid/grid_spec.py:
 ⋮
 │@dataclass(frozen=True)
 │class ModelEntry:
 ⋮
 
+tests/llm_translation/test_openai.py:
+⋮
+│@patch("litellm.main.openai_chat_completions._get_openai_client")
+│def test_openai_image_generation_forwards_organization(mock_get_openai_client):
+│    """Ensure organization flows to OpenAI client for image generation."""
+│
+│    class _DummyImages:
+│        def generate(self, **kwargs):  # type: ignore
+│            class _Resp:
+│                def model_dump(self_inner):  # minimal OpenAI ImagesResponse shape
+│                    return {
+│                        "created": 123,
+│                        "data": [{"url": "http://example.com/image.png"}],
+│                        "usage": {
+│                            "input_tokens": 0,
+│                            "output_tokens": 0,
+│                            "total_tokens": 0,
+│                        },
+⋮
+
 tests/local_testing/test_streaming.py:
 ⋮
 │class Function(BaseModel):
+⋮
+
+tests/pass_through_unit_tests/test_pass_through_unit_tests.py:
+⋮
+│@pytest.fixture
+│def mock_request():
+│    # Create a mock request with headers
+│    class QueryParams:
+│        def __init__(self):
+│            self._dict = {}
+│
+│        def __iter__(self):
+│            return iter(self._dict.items())
+│
+│        def items(self):
+│            return self._dict.items()
+│
 ⋮
 
 tests/test_litellm/caching/test_redis_semantic_cache.py:
@@ -511,18 +670,6 @@ tests/test_litellm/integrations/code_interpreter_interception/test_handler.py:
 │        self.model_call_details = {}
 ⋮
 │    def post_call(self, *args, **kwargs):
-⋮
-
-tests/test_litellm/integrations/test_mlflow.py:
-⋮
-│def test_mlflow_stream_handler_uses_async_complete_response():
-│    modules = _mock_mlflow_modules()
-│    with patch.dict("sys.modules", modules):
-│        from litellm.integrations.mlflow import MlflowLogger
-│
-⋮
-│        class DummyDelta:
-│            def model_dump(self, exclude_none=True):
 ⋮
 
 tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
@@ -549,6 +696,43 @@ tests/test_litellm/llms/bedrock/batches/test_handler.py:
 │        def split(self, _sep):
 ⋮
 
+tests/test_litellm/llms/github_copilot/test_github_copilot_transformation.py:
+⋮
+│@patch("litellm.llms.openai.openai.OpenAIChatCompletion._get_openai_client")
+⋮
+│def test_openai_handler_repairs_github_copilot_empty_choices(
+│    mock_request, mock_get_client
+│):
+│    """
+│    The OpenAI SDK handler calls convert_to_model_response_object directly on the
+│    SDK's parsed output, bypassing transform_response. convert raises APIError on
+│    empty choices, so the handler must route github_copilot responses through
+│    transform_parsed_response_dict first. Removing that wiring (or resolving a
+│    config without the override) fails this test with APIError.
+│
+│    See: https://github.com/BerriAI/litellm/issues/30927
+⋮
+│    class _FakeSDKResponse:
+│        def model_dump(self):
+│            return {
+│                "id": "msg_vrtx_01",
+│                "model": "claude-opus-4.8",
+│                "object": "chat.completion",
+│                "choices": [],
+│                "content": [{"type": "text", "text": "Hi there"}],
+│                "stop_reason": "end_turn",
+│                "usage": {"input_tokens": 12, "output_tokens": 3},
+⋮
+
+tests/test_litellm/passthrough/test_passthrough_main.py:
+⋮
+│@pytest.fixture
+│def mock_request():
+│    """Create a mock request with headers"""
+⋮
+│    class QueryParams:
+⋮
+
 tests/test_litellm/proxy/_experimental/mcp_server/test_mcp_server.py:
 ⋮
 │@pytest.mark.asyncio
@@ -569,6 +753,19 @@ tests/test_litellm/proxy/_experimental/mcp_server/test_mcp_server.py:
 │    async def call(body: bytes):
 ⋮
 
+tests/test_litellm/proxy/guardrails/guardrail_hooks/test_presidio.py:
+⋮
+│@pytest.mark.asyncio
+│async def test_presidio_filter_scope_initializer(monkeypatch):
+│    """
+│    Ensure initializer respects presidio_filter_scope for input/output/both.
+⋮
+│    class DummyManager:
+│        def __init__(self):
+⋮
+│        def add_litellm_callback(self, cb):
+⋮
+
 tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
 ⋮
 │def test_data_generator_yields_sse_lines_for_dict_chunks():
@@ -583,13 +780,11 @@ tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
 │        def dict(self):
 ⋮
 
-tests/test_litellm/proxy/utils/proxy_logging/test_lifecycle.py:
+tests/test_litellm/proxy/utils/helpers/test_model_access.py:
 ⋮
-│def test_convert_user_api_key_auth_to_dict_pydantic_error_raises(proxy_logging):
-│    """A ``model_dump`` that raises propagates."""
-│
-│    class _Boom:
-│        def model_dump(self):
+│def test_model_dump_with_preserved_fields_no_choices_returns_plain_dump():
+│    class _Bare:
+│        def model_dump(self, **_kwargs):
 ⋮
 
 tests/test_litellm/repositories/test_repositories.py:
@@ -627,11 +822,28 @@ ui/litellm-dashboard/src/app/(dashboard)/access-groups/_components/AccessGroupsM
 │  isNameDisabled?: boolean;
 ⋮
 
+ui/litellm-dashboard/src/app/(dashboard)/caching/_components/coordination_redis_settings/types.ts:
+⋮
+│export type CoordinationRedisSection = "connection" | "cluster" | "sentinel";
+│
+⋮
+
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/add_margin_form.tsx:
 ⋮
 │                const numValue = parseFloat(value);
 ⋮
 │                const numValue = parseFloat(value);
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/pricing_calculator/types.ts:
+⋮
+│export interface ModelEntry {
+│  id: string;
+│  model: string;
+│  input_tokens: number;
+│  output_tokens: number;
+│  num_requests_per_day?: number;
+│  num_requests_per_month?: number;
 ⋮
 
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/types.ts:
@@ -641,6 +853,44 @@ ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/types.ts:
 ⋮
 │export interface MarginConfig {
 │  [provider: string]: number | { percentage?: number; fixed_amount?: number };
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/guardrails/_components/content_filter/CompetitorIntentConfi
+⋮
+│export interface CompetitorIntentConfig {
+│  competitor_intent_type: "airline" | "generic";
+│  brand_self: string[];
+│  locations?: string[];
+│  competitors?: string[];
+│  policy?: {
+│    competitor_comparison?: "refuse" | "reframe";
+│    possible_competitor_comparison?: "refuse" | "reframe";
+│  };
+│  threshold_high?: number;
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/guardrails/_components/content_filter/ContentCategoryConfig
+⋮
+│interface SelectedCategory {
+│  id: string;
+│  category: string;
+│  display_name: string;
+│  action: "BLOCK" | "MASK";
+│  severity_threshold: "high" | "medium" | "low";
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/guardrails/_components/guardrail_optional_params.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
 ⋮
 
 ui/litellm-dashboard/src/app/(dashboard)/playground/components/chat_ui/A2AMetrics.tsx:
@@ -692,6 +942,20 @@ ui/litellm-dashboard/src/app/(dashboard)/vector-stores/_components/CreateVectorS
 │                                "w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center 
 │                              fallbackDiv.textContent = providerDisplayName.charAt(0);
 │                              parent.replaceChild(fallbackDiv, target);
+⋮
+
+ui/litellm-dashboard/src/components/AIHub/AgentHubTableColumns.tsx:
+⋮
+│export interface AgentHubData {
+│  agent_id?: string;
+│  protocolVersion: string;
+│  name: string;
+│  description: string;
+│  url: string;
+│  version: string;
+│  capabilities?: {
+│    streaming?: boolean;
+│    [key: string]: any;
 ⋮
 
 ui/litellm-dashboard/src/components/CloudZeroCostTracking/types.ts:
@@ -752,6 +1016,20 @@ ui/litellm-dashboard/src/components/chat_ui/ResponseMetrics.tsx:
 │  cost?: number;
 ⋮
 
+ui/litellm-dashboard/src/components/chat_ui/mode_endpoint_mapping.tsx:
+⋮
+│export enum EndpointType {
+│  IMAGE = "image",
+│  VIDEO = "video",
+│  CHAT = "chat",
+│  RESPONSES = "responses",
+│  IMAGE_EDITS = "image_edits",
+│  ANTHROPIC_MESSAGES = "anthropic_messages",
+│  EMBEDDINGS = "embeddings",
+│  SPEECH = "speech",
+│  TRANSCRIPTION = "transcription",
+⋮
+
 ui/litellm-dashboard/src/components/chat_ui/types.ts:
 ⋮
 │export interface A2ATaskMetadata {
@@ -776,28 +1054,17 @@ ui/litellm-dashboard/src/components/chat_ui/types.ts:
 │  totalLatency?: number;
 ⋮
 
-ui/litellm-dashboard/src/components/guardrails/content_filter/ContentCategoryConfiguration.tsx:
+ui/litellm-dashboard/src/components/cloudzero_export_modal.tsx:
 ⋮
-│interface SelectedCategory {
-│  id: string;
-│  category: string;
-│  display_name: string;
-│  action: "BLOCK" | "MASK";
-│  severity_threshold: "high" | "medium" | "low";
+│interface CloudZeroSettings {
+│  api_key: string;
+│  connection_id: string;
 ⋮
 
-ui/litellm-dashboard/src/components/guardrails/guardrail_info.tsx:
+ui/litellm-dashboard/src/components/common_components/TableHeaderSortDropdown/TableHeaderSortDropdow
 ⋮
-│interface ProviderParam {
-│  param: string;
-│  description: string;
-│  required: boolean;
-│  default_value?: string;
-│  options?: string[];
-│  type?: string;
-│  fields?: { [key: string]: ProviderParam };
-│  dict_key_options?: string[];
-│  dict_value_type?: string;
+│export type SortState = "asc" | "desc" | false;
+│
 ⋮
 
 ui/litellm-dashboard/src/components/guardrails/types.ts:
@@ -805,6 +1072,24 @@ ui/litellm-dashboard/src/components/guardrails/types.ts:
 │export enum GuardrailDefinitionLocation {
 │  DB = "db",
 │  CONFIG = "config",
+⋮
+
+ui/litellm-dashboard/src/components/key_team_helpers/BudgetWindowsEditor.tsx:
+⋮
+│interface BudgetWindowsEditorProps {
+│  value: BudgetWindowEntry[];
+│  onChange: (v: BudgetWindowEntry[]) => void;
+⋮
+
+ui/litellm-dashboard/src/components/key_team_helpers/key_list.tsx:
+⋮
+│interface UseKeyListReturn {
+│  keys: KeyResponse[];
+│  isLoading: boolean;
+│  error: Error | null;
+│  pagination: PaginationData;
+│  refresh: (params?: Record<string, unknown>) => Promise<void>;
+│  setKeys: Setter<KeyResponse[]>;
 ⋮
 
 ui/litellm-dashboard/src/components/logging_settings_view.tsx:
@@ -910,19 +1195,6 @@ ui/litellm-dashboard/src/components/molecules/notifications_manager.tsx:
 │      if (
 ⋮
 
-ui/litellm-dashboard/src/components/networking.tsx:
-⋮
-│export interface Member {
-│  role: string;
-│  user_id: string | null;
-│  user_email?: string | null;
-│  max_budget_in_team?: number | null;
-│  tpm_limit?: number | null;
-│  rpm_limit?: number | null;
-│  budget_duration?: string | null;
-│  allowed_models?: string[] | null;
-⋮
-
 ui/litellm-dashboard/src/components/organization/organization_view.tsx:
 ⋮
 │              <Grid numItems={1} numItemsSm={2} numItemsLg={3} className="gap-6">
@@ -954,6 +1226,12 @@ ui/litellm-dashboard/src/components/provider_info_helpers.tsx:
 │  ANTHROPIC_TEXT = "Anthropic Text",
 │  AssemblyAI = "AssemblyAI",
 │  AUTO_ROUTER = "Auto Router",
+⋮
+
+ui/litellm-dashboard/src/components/shared/DataTable/DataTableSortHeader.tsx:
+⋮
+│export type DataTableSortVariant = "header-cycle" | "dropdown-tristate";
+│
 ⋮
 
 ui/litellm-dashboard/src/components/shared/charts/chart_tooltip.tsx:
@@ -1024,6 +1302,11 @@ ui/litellm-dashboard/src/data/compliancePrompts.ts:
 
 ui/litellm-dashboard/src/lib/http/client.ts:
 ⋮
+│export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+│
+⋮
+│export type QueryParams = Record<string, QueryValue | QueryValue[]>;
+│
 │export interface RequestOptions {
 │  /** Bearer token. When present, the auth header is set automatically. */
 │  accessToken?: string | null;
@@ -1034,6 +1317,17 @@ ui/litellm-dashboard/src/lib/http/client.ts:
 │  query?: QueryParams;
 │  headers?: Record<string, string>;
 │  signal?: AbortSignal;
+⋮
+│export class ApiError extends Error {
+│  readonly status: number;
+│  readonly body: unknown;
+│
+│  constructor(message: string, status: number, body: unknown) {
+│    super(message);
+│    this.name = "ApiError";
+│    this.status = status;
+│    this.body = body;
+│  }
 ⋮
 │export interface ApiClient {
 │  request<T = any>(method: HttpMethod, path: string, options?: RequestOptions): Promise<T>;

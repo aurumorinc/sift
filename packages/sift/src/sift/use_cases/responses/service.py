@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
-from worldline import structlog
+import structlog
 
 from sift.client import SiftClient
 from sift.modules.responses.schema import ResponseRequest, ResponseResponse

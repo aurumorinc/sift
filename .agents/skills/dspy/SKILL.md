@@ -80,8 +80,6 @@ dspy/adapters/chat_adapter.py:
 ⋮
 │        def format_signature_fields_for_instructions(fields: dict[str, FieldInfo]):
 ⋮
-│    def user_message_output_requirements(self, signature: type[Signature]) -> str:
-⋮
 │    def parse(self, signature: type[Signature], completion: str) -> dict[str, Any]:
 ⋮
 │    def format_field_with_value(self, fields_with_values: dict[FieldInfoWithName, Any]) -> str:
@@ -100,8 +98,6 @@ dspy/adapters/json_adapter.py:
 │        parts = []
 ⋮
 │        def format_signature_fields_for_instructions(fields: dict[str, FieldInfo], role: str):
-⋮
-│    def user_message_output_requirements(self, signature: type[Signature]) -> str:
 ⋮
 │    def parse(self, signature: type[Signature], completion: str) -> dict[str, Any]:
 ⋮
@@ -163,12 +159,6 @@ dspy/adapters/types/citation.py:
 ⋮
 │    @classmethod
 │    def from_dict_list(cls, citations_dicts: list[dict[str, Any]]) -> "Citations":
-⋮
-
-dspy/adapters/types/document.py:
-⋮
-│@experimental(version="3.0.4")
-│class Document(Type):
 ⋮
 
 dspy/adapters/types/reasoning.py:
@@ -348,6 +338,8 @@ dspy/clients/utils_finetune.py:
 │def get_finetune_directory() -> str:
 ⋮
 │def write_lines(file_path, data):
+⋮
+│def find_data_error_chat_message(message: dict[str, Any]) -> str | None:
 ⋮
 
 dspy/core/types.py:
@@ -765,6 +757,12 @@ dspy/propose/propose_base.py:
 │    def propose_instruction_for_predictor(self):
 ⋮
 
+dspy/retrievers/databricks_rm.py:
+⋮
+│@dataclass
+│class Document:
+⋮
+
 dspy/retrievers/embeddings.py:
 ⋮
 │class Embeddings:
@@ -796,6 +794,9 @@ dspy/signatures/signature.py:
 ⋮
 │    @classmethod
 │    def append(cls, name, field, type_=None) -> type["Signature"]:
+⋮
+│    @classmethod
+│    def delete(cls, name) -> type["Signature"]:
 ⋮
 │def ensure_signature(signature: str | type[Signature], instructions=None) -> None | type[Signature]
 ⋮
@@ -880,6 +881,11 @@ dspy/utils/annotation.py:
 │def _experimental(api: Callable[P, R], version: str | None = None) -> Callable[P, R]:
 ⋮
 │def _get_min_indent_of_docstring(docstring_str: str) -> str:
+⋮
+
+dspy/utils/asyncify.py:
+⋮
+│def get_limiter():
 ⋮
 
 dspy/utils/constants.py:
@@ -1046,11 +1052,6 @@ tests/predict/test_best_of_n.py:
 │class DummyModule(dspy.Module):
 ⋮
 
-tests/predict/test_knn.py:
-⋮
-│def mock_example(question: str, answer: str) -> dspy.Example:
-⋮
-
 tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_text_mock_lm_loop_records_inputs_once():
@@ -1121,6 +1122,8 @@ tests/teleprompt/test_gepa.py:
 ⋮
 
 tests/teleprompt/test_knn_fewshot.py:
+⋮
+│def mock_example(question: str, answer: str) -> dspy.Example:
 ⋮
 │class SimpleModule(dspy.Module):
 │    def __init__(self, signature):

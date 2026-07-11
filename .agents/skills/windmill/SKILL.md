@@ -121,6 +121,16 @@ backend/parsers/windmill-parser-wasm/lib/windmill_parser_wasm.generated.d.ts:
 │  decompress?: (bytes: Uint8Array) => Uint8Array;
 ⋮
 
+backend/parsers/windmill-parser/src/asset_parser.rs:
+⋮
+│pub enum AssetKind {
+│    S3Object,
+│    Resource,
+│    Ducklake,
+│    DataTable,
+│    Volume,
+⋮
+
 backend/src/monitor.rs:
 ⋮
 │async fn handle_zombie_jobs(db: &Pool<Postgres>, base_internal_url: &str, node_name: &str) {
@@ -163,6 +173,14 @@ backend/windmill-ai/src/ai_providers.rs:
 │    Mistral,
 │    DeepSeek,
 │    GoogleAI,
+⋮
+│impl TryFrom<&str> for AIProvider {
+│    type Error = Error;
+│    fn try_from(s: &str) -> Result<Self> {
+│        let s = serde_json::from_value::<AIProvider>(serde_json::Value::String(s.to_string()))
+│            .map_err(|e| Error::BadRequest(format!("Invalid AI provider: {}", e)))?;
+│        Ok(s)
+│    }
 ⋮
 
 backend/windmill-ai/src/types.rs:
@@ -208,19 +226,6 @@ backend/windmill-ai/src/types.rs:
 │                // If user provided a value (bool or schema), preserve it and let OpenAI handle it
 │                if self.additional_properties.is_none() {
 ⋮
-│    /// See https://github.com/windmill-labs/windmill/issues/7759
-│    pub fn sanitize_for_google(&mut self) {
-│        let mut schema_value = match serde_json::to_value(&*self) {
-│            Ok(value) => value,
-│            Err(err) => {
-│                tracing::error!("Failed to serialize OpenAPISchema for Google AI: {err}");
-│                return;
-│            }
-│        };
-│
-│        sanitize_schema_for_google(&mut schema_value);
-│
-⋮
 │mod tests {
 │    use super::*;
 │    use std::collections::HashMap;
@@ -243,6 +248,19 @@ backend/windmill-ai/src/types.rs:
 │                    .collect(),
 │            ),
 │            ..Default::default()
+⋮
+
+backend/windmill-api-assets/src/lib.rs:
+⋮
+│struct AssetGraphResponse {
+│    assets: Vec<GraphAssetNode>,
+│    runnables: Vec<GraphRunnableNode>,
+│    edges: Vec<GraphEdge>,
+│    triggers: Vec<TriggerEdge>,
+│    #[serde(skip_serializing_if = "Vec::is_empty", default)]
+│    macro_edges: Vec<MacroEdge>,
+│    #[serde(skip_serializing_if = "Vec::is_empty", default)]
+│    test_edges: Vec<TestEdge>,
 ⋮
 
 backend/windmill-api-auth/src/ee_oss.rs:
@@ -290,6 +308,17 @@ backend/windmill-api-client/src/lib.rs:
 │        pub id: String,
 │        #[serde(default, skip_serializing_if = "Option::is_none")]
 │        pub mock: Option<serde_json::Value>,
+⋮
+│    pub struct RawScript {
+│        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+│        pub assets: Vec<serde_json::Value>,
+│        #[serde(default, skip_serializing_if = "Option::is_none")]
+│        pub concurrency_time_window_s: Option<f64>,
+│        #[serde(default, skip_serializing_if = "Option::is_none")]
+│        pub concurrent_limit: Option<f64>,
+│        pub content: String,
+│        #[serde(default, skip_serializing_if = "Option::is_none")]
+│        pub custom_concurrency_key: Option<String>,
 ⋮
 
 backend/windmill-common/src/auth.rs:
@@ -388,20 +417,6 @@ backend/windmill-common/src/email_oss.rs:
 │    _client_timeout: Option<tokio::time::Duration>,
 ⋮
 
-backend/windmill-common/src/error.rs:
-⋮
-│pub enum Error {
-│    #[error("Bad gateway: {0}")]
-│    BadGateway(String),
-│    #[error("Bad config: {0}")]
-│    BadConfig(String),
-│    #[error("Connecting to database: {0}")]
-│    ConnectingToDatabase(String),
-│    #[error("Not found: {0}")]
-│    NotFound(String),
-│    #[error("Not authorized: {0}")]
-⋮
-
 backend/windmill-common/src/instance_config.rs:
 ⋮
 │pub enum ScriptLang {
@@ -497,29 +512,24 @@ backend/windmill-common/src/utils.rs:
 │        self,
 ⋮
 
-backend/windmill-common/src/worker.rs:
-⋮
-│pub fn to_raw_value<T: Serialize>(result: &T) -> Box<RawValue> {
-│    serde_json::value::to_raw_value(result)
-│        .unwrap_or_else(|_| RawValue::from_string("{}".to_string()).unwrap())
-⋮
-
 backend/windmill-common/src/workspace_dependencies.rs:
 ⋮
 │fn map_err(e: String) -> error::Error {
 │    error::Error::FeatureUnavailable(e)
 ⋮
 
-backend/windmill-types/src/assets.rs:
+backend/windmill-trigger-http/src/lib.rs:
 ⋮
-│pub enum AssetKind {
-│    S3Object,
-│    Resource,
-│    // Avoid unnexpected crashes when deserializing old assets
-│    Variable, // Deprecated
-│    Ducklake,
-│    DataTable,
-│    Volume,
+│impl TryFrom<&http::Method> for HttpMethod {
+│    type Error = Error;
+│    fn try_from(method: &http::Method) -> Result<Self> {
+│        match method {
+│            &http::Method::GET => Ok(HttpMethod::Get),
+│            &http::Method::POST => Ok(HttpMethod::Post),
+│            &http::Method::PUT => Ok(HttpMethod::Put),
+│            &http::Method::DELETE => Ok(HttpMethod::Delete),
+│            &http::Method::PATCH => Ok(HttpMethod::Patch),
+│            _ => Err(Error::BadRequest("Invalid HTTP method".to_string())),
 ⋮
 
 backend/windmill-types/src/flows.rs:
@@ -535,16 +545,13 @@ backend/windmill-types/src/flows.rs:
 │    #[serde(skip_serializing_if = "Option::is_none")]
 │    pub summary: Option<String>,
 ⋮
-│impl TryFrom<UntaggedInputTransform> for InputTransform {
-│    type Error = anyhow::Error;
-│    fn try_from(value: UntaggedInputTransform) -> Result<Self, Self::Error> {
-│        let input_transform = match value.type_.as_str() {
-│            "static" => InputTransform::new_static_value(value.value.unwrap_or_else(default_null)),
-│            "javascript" => InputTransform::new_javascript_expr(&value.expr.unwrap_or_default()),
-│            "ai" => InputTransform::Ai,
-│            other => {
-│                return Err(anyhow::anyhow!(
-│                    "got value: {other} for field `type`, expected value: `static` or `javascript`"
+
+backend/windmill-types/src/lib.rs:
+⋮
+│/// windmill-types cannot depend on windmill-common (it would be circular).
+│pub fn to_raw_value<T: serde::Serialize>(result: &T) -> Box<serde_json::value::RawValue> {
+│    serde_json::value::to_raw_value(result)
+│        .unwrap_or_else(|_| serde_json::value::RawValue::from_string("{}".to_string()).unwrap())
 ⋮
 
 backend/windmill-types/src/scripts.rs:
@@ -616,9 +623,6 @@ backend/windmill-worker/src/worker.rs:
 ⋮
 
 cli/bootstrap/common.ts:
-⋮
-│export type EnumType = string[] | undefined;
-│
 ⋮
 │export interface SchemaProperty {
 │  type: string | undefined;
@@ -727,6 +731,17 @@ cli/src/core/settings.ts:
 │  skipReencrypt?: boolean;
 ⋮
 
+cli/src/core/specific_items.ts:
+⋮
+│export interface SpecificItemsConfig {
+│  variables?: string[];
+│  resources?: string[];
+│  triggers?: string[];
+│  schedules?: string[];
+│  folders?: string[];
+│  settings?: boolean;
+⋮
+
 cli/src/types.ts:
 ⋮
 │export type GlobalOptions = {
@@ -754,22 +769,9 @@ cli/test/test_backend.ts:
 │
 ⋮
 
-cli/windmill-utils-internal/src/parse/parse-schema.ts:
+debugger/test_dap_server.py:
 ⋮
-│export type EnumType =
-│  | string[]
-│  | { label: string; value: string }[]
-⋮
-│export interface SchemaProperty {
-│  type: string | undefined;
-│  description?: string;
-│  pattern?: string;
-│  default?: any;
-│  enum?: EnumType;
-│  contentEncoding?: "base64" | "binary";
-│  format?: string;
-│  items?: {
-│    type?: "string" | "number" | "bytes" | "object" | "resource";
+│class DAPTestClient:
 ⋮
 
 debugger/test_dap_server_bun.ts:
@@ -784,6 +786,45 @@ debugger/test_dap_server_bun.ts:
 │	>()
 │	private events: DAPMessage[] = []
 │	private output: string[] = []
+⋮
+│async function runComprehensiveTest(): Promise<void> {
+│	const client = new DAPTestClient()
+│	const results: TestResult[] = []
+│	let passed = 0
+│	let failed = 0
+│
+│	function assert(condition: boolean, testName: string, details?: string): void {
+│		if (condition) {
+│			console.log(`[PASS] ${testName}`)
+│			passed++
+│			results.push({ test: testName, passed: true, details })
+│		} else {
+│			console.log(`[FAIL] ${testName}${details ? ': ' + details : ''}`)
+│			failed++
+│			results.push({ test: testName, passed: false, error: details })
+│		}
+⋮
+│async function testDynamicImports(): Promise<void> {
+│	console.log('='.repeat(60))
+│	console.log('DYNAMIC IMPORT TEST')
+│	console.log('='.repeat(60))
+│	console.log('\nThis test verifies that external npm packages are automatically installed.')
+│	console.log('Make sure the server is started with: --windmill /path/to/windmill\n')
+│
+│	const client = new DAPTestClient('ws://localhost:5680')
+│	let passed = 0
+│	let failed = 0
+⋮
+│	function assert(condition: boolean, message: string, error?: string) {
+│		if (condition) {
+│			passed++
+│			console.log(`✓ ${message}`)
+│			results.push({ test: message, passed: true })
+│		} else {
+│			failed++
+│			console.log(`✗ ${message}` + (error ? `: ${error}` : ''))
+│			results.push({ test: message, passed: false, error })
+│		}
 ⋮
 
 debugger/test_debug_service.ts:
@@ -821,6 +862,11 @@ ephemeral-backends/worktree-pool.ts:
 │  path: string;
 │  inUse: boolean;
 │  currentCommit?: string;
+⋮
+
+examples/deploy/aws-ecs-terraform/rds.tf:
+⋮
+│resource "aws_db_instance" "windmill_cluster_rds" {
 ⋮
 
 examples/deploy/aws-ecs-terraform/vpc.tf:
@@ -863,8 +909,6 @@ frontend/src/lib/cancelable-promise-utils.ts:
 
 frontend/src/lib/common.ts:
 ⋮
-│export type EnumType = string[] | { value: string; label: string }[] | undefined
-│
 │export interface SchemaProperty {
 │	type: string | undefined
 │	description?: string
@@ -879,6 +923,18 @@ frontend/src/lib/common.ts:
 
 frontend/src/lib/components/apps/svelte-grid/utils/other.ts:
 │export function throttle(func, timeFrame) {
+⋮
+
+frontend/src/lib/components/apps/types.ts:
+⋮
+│export interface CancelablePromise<T> extends Promise<T> {
+│	cancel: () => void
+⋮
+
+frontend/src/lib/components/assets/AssetGraph/boundedCascade.test.ts:
+⋮
+│type T = [producer: string, tested: string, asset: string] // `// data_test` ordering edge
+│
 ⋮
 
 frontend/src/lib/components/assets/lib.ts:
@@ -1049,25 +1105,10 @@ frontend/src/lib/userScopedDb.ts:
 │	deleteDB: typeof idbDeleteDB
 ⋮
 
-frontend/src/lib/utils.ts:
-⋮
-│export function assert(msg: string, condition: boolean, value?: any) {
-│	if (!condition) {
-│		let m = 'Assertion failed: ' + msg
-│		if (value) m += '\nValue: ' + JSON.stringify(value, null, 2)
-│		m += '\nPlease alert the Windmill team about this'
-│		sendUserToast(m, true)
-│		console.error(m)
-│	}
-⋮
-
 frontend/static/tailwind.js:
 ⋮
 │In order to be iterable, non-array objects must have a [Symbol.iterator]() method.`)}return t=r[Sym
 ⋮
-│`)){let a=this.raw(e,null,"indent");if(a.length)for(let o=0;o<s;o++)i+=a}return i}rawValue(e,t){let
-│`?(i=1,n+=1):i+=1;return{line:n,column:i}}positionBy(e){let t=this.source.start;if(e.index)t=this.p
-│`.charCodeAt(0),Nr=" ".charCodeAt(0),ji="\f".charCodeAt(0),Vi="	".charCodeAt(0),Ui="\r".charCodeAt(
 │`,"	"];return Br.split(r,e)},comma(r){return Br.split(r,[","],!0)}};Ec.exports=Br;Br.default=Br});v
 │`);i=new Array(s.length);let a=0;for(let o=0,u=s.length;o<u;o++)i[o]=a,a+=s[o].length+1;this[ma]=i}
 │https://evilmartians.com/chronicles/postcss-8-plugin-migration`),m.env.LANG&&m.env.LANG.startsWith(
@@ -1121,17 +1162,6 @@ typescript-client/s3Types.d.ts:
 │export type S3ObjectRecord = {
 │    s3: string;
 │    storage?: string;
-⋮
-
-typescript-client/s3Types.ts:
-⋮
-│export type S3ObjectRecord = {
-│  /** File key/path in S3 bucket */
-│  s3: string;
-│  /** Storage backend identifier */
-│  storage?: string;
-│  /** Presigned URL query string for public access */
-│  presigned?: string;
 ⋮
 
 typescript-client/sqlUtils.d.ts:
@@ -1197,6 +1227,13 @@ typescript-client/tests/sqlUtils.test.ts:
 │  preamble(): string;
 │  language: "postgresql" | "duckdb";
 │  extraArgs: Record<string, any>;
+⋮
+
+windmill-yaml-validator/src/validation/yaml-validator.ts:
+⋮
+│export type ValidationTarget =
+│  | { type: "flow" }
+│  | { type: "schedule" }
 ⋮
 
 wm-ts-nav/src/main.rs:

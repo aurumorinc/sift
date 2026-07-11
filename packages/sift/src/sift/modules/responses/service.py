@@ -2,7 +2,7 @@ import time
 import uuid
 import dspy
 from typing import Any, Dict, List, Union
-from worldline import structlog
+import structlog
 
 from sift.modules.agents.repository.langfuse import get_agent
 from sift.modules.agents.service import AgentModule, _hydrate_multimodal_messages
