@@ -80,19 +80,6 @@ litellm/litellm_core_utils/get_llm_provider_logic.py:
 │    litellm_params: Optional[GenericLiteLLMParams] = None,
 ⋮
 
-litellm/litellm_core_utils/logging_callback_manager.py:
-⋮
-│class LoggingCallbackManager:
-│    """
-│    A centralized class that allows easy add / remove callbacks for litellm.
-│
-│    Goals of this class:
-│    - Prevent adding duplicate callbacks / success_callback / failure_callback
-│    - Keep a reasonable MAX_CALLBACKS limit (this ensures callbacks don't exponentially grow and co
-⋮
-│    def add_litellm_callback(self, callback: Union[CustomLogger, str, Callable]):
-⋮
-
 litellm/litellm_core_utils/safe_json_dumps.py:
 ⋮
 │def safe_dumps(data: Any, max_depth: int = DEFAULT_MAX_RECURSE_DEPTH) -> str:
@@ -181,11 +168,27 @@ litellm/llms/custom_httpx/httpx_handler.py:
 │def get_default_headers() -> dict:
 ⋮
 │class HTTPHandler:
+│    def __init__(self, concurrent_limit=1000):
+│        headers = get_default_headers()
+│        # Create a client with a connection pool
+│        self.client = httpx.AsyncClient(
+│            limits=httpx.Limits(
+│                max_connections=concurrent_limit,
+│                max_keepalive_connections=concurrent_limit,
+│            ),
+│            headers=headers,
+⋮
+│    async def get(self, url: str, params: Optional[dict] = None, headers: Optional[dict] = None):
 ⋮
 
 litellm/models/mcp_server.py:
 ⋮
 │class MCPEnvVarScope(str, enum.Enum):
+⋮
+
+litellm/models/team.py:
+⋮
+│class Member(MemberBase):
 ⋮
 
 litellm/proxy/_experimental/mcp_server/outbound_credentials/oauth_token_store.py:
@@ -229,9 +232,6 @@ litellm/proxy/_experimental/out/_next/static/chunks/07.fwfv-sinb5.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/081.4arb-o0e0.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
 litellm/proxy/_experimental/out/_next/static/chunks/08yy42xvwaak6.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
@@ -250,11 +250,12 @@ litellm/proxy/_experimental/out/_next/static/chunks/0ivj_wax-joap.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 ⋮
 
-litellm/proxy/_experimental/out/_next/static/chunks/0j_yol8f7u_zk.js:
-│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
-
 litellm/proxy/_experimental/out/_next/static/chunks/0m6zdocif1gl4.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+
+litellm/proxy/_experimental/out/_next/static/chunks/0nnx~7-7e5t~1.js:
+│(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
+⋮
 
 litellm/proxy/_experimental/out/_next/static/chunks/0p.6bs58-_3lw.js:
 ⋮
@@ -263,23 +264,13 @@ litellm/proxy/_experimental/out/_next/static/chunks/0p.6bs58-_3lw.js:
 litellm/proxy/_experimental/out/_next/static/chunks/0pidya1qvuvx8.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
-litellm/proxy/_experimental/out/_next/static/chunks/0piozaeodiue..js:
-⋮
-│Read more: https://nextjs.org/docs/messages/next-image-unconfigured-localpatterns`),"__NEXT_ERROR_C
-⋮
-│Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
-│Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecati
-⋮
-
-litellm/proxy/_experimental/out/_next/static/chunks/0x.73w57rn4ou.js:
+litellm/proxy/_experimental/out/_next/static/chunks/0q6~n4y84cejn.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_experimental/out/_next/static/chunks/11ibt3khr2hk3.js:
 │(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentS
 
 litellm/proxy/_types.py:
-⋮
-│def hash_token(token: str):
 ⋮
 │class UserAPIKeyAuth(LiteLLM_VerificationTokenView):  # the expected response object for user api k
 ⋮
@@ -311,6 +302,16 @@ litellm/proxy/swagger/swagger-ui-bundle.js:
 │!function webpackUniversalModuleDefinition(s,o){"object"==typeof exports&&"object"==typeof module?m
 ⋮
 
+litellm/proxy/utils.py:
+⋮
+│class PrismaClient:
+│    spend_log_transactions: List = []
+⋮
+│    def hash_token(self, token: str):
+⋮
+│def hash_token(token: str):
+⋮
+
 litellm/router_strategy/budget_limiter.py:
 ⋮
 │class _LiteLLMParamsDictView:
@@ -329,14 +330,6 @@ litellm/router_utils/add_retry_fallback_headers.py:
 │    response: object,
 │    *,
 │    create: bool = False,
-⋮
-│def get_fallback_errors_from_headers(
-│    additional_headers: dict[str, object],
-⋮
-
-litellm/rust_bridge/loader.py:
-⋮
-│def get_native_bridge() -> ModuleType | None:
 ⋮
 
 litellm/secret_managers/main.py:
@@ -439,6 +432,14 @@ litellm/types/utils.py:
 ⋮
 │class ModelResponse(ModelResponseBase):
 ⋮
+│class LiteLLMLoggingBaseClass:
+│    """
+│    Base class for logging pre and post call
+│
+│    Meant to simplify type checking for logging obj.
+⋮
+│    def post_call(self, original_response, input=None, api_key=None, additional_args={}):
+⋮
 
 terraform/litellm/aws/variables.tf:
 ⋮
@@ -482,12 +483,6 @@ tests/litellm_utils_tests/test_get_secret.py:
 │    def get_secret(self, secret_name):
 ⋮
 
-tests/llm_translation/reasoning_effort_grid/grid_spec.py:
-⋮
-│@dataclass(frozen=True)
-│class ModelEntry:
-⋮
-
 tests/local_testing/test_streaming.py:
 ⋮
 │class Function(BaseModel):
@@ -501,28 +496,6 @@ tests/test_litellm/caching/test_redis_semantic_cache.py:
 ⋮
 │    class DictInput:
 │        def dict(self):
-⋮
-
-tests/test_litellm/integrations/code_interpreter_interception/test_handler.py:
-⋮
-│class FakeLogging:
-│    def __init__(self, litellm_call_id="k1"):
-│        self.litellm_call_id = litellm_call_id
-│        self.model_call_details = {}
-⋮
-│    def post_call(self, *args, **kwargs):
-⋮
-
-tests/test_litellm/integrations/test_mlflow.py:
-⋮
-│def test_mlflow_stream_handler_uses_async_complete_response():
-│    modules = _mock_mlflow_modules()
-│    with patch.dict("sys.modules", modules):
-│        from litellm.integrations.mlflow import MlflowLogger
-│
-⋮
-│        class DummyDelta:
-│            def model_dump(self, exclude_none=True):
 ⋮
 
 tests/test_litellm/litellm_core_utils/test_safe_json_dumps.py:
@@ -549,24 +522,34 @@ tests/test_litellm/llms/bedrock/batches/test_handler.py:
 │        def split(self, _sep):
 ⋮
 
-tests/test_litellm/proxy/_experimental/mcp_server/test_mcp_server.py:
+tests/test_litellm/proxy/agent_endpoints/test_agent_headers.py:
+⋮
+│def _make_a2a_types_module():
+│    """Return (module, MessageSendParams, SendMessageRequest, SendStreamingMessageRequest)."""
+⋮
+│    def _make_cls(name):
+│        class MockCls:
+│            def __init__(self, **kwargs):
+│                self.__dict__.update(kwargs)
+│                self._kwargs = kwargs
+│
+│            def model_dump(self, mode="json", exclude_none=False):
+│                result = dict(self._kwargs)
+│                if exclude_none:
+│                    result = {k: v for k, v in result.items() if v is not None}
+⋮
+
+tests/test_litellm/proxy/guardrails/guardrail_hooks/test_presidio.py:
 ⋮
 │@pytest.mark.asyncio
-│async def test_stateful_mcp_get_stream_does_not_block_post():
+│async def test_presidio_filter_scope_initializer(monkeypatch):
 │    """
-│    A long-lived GET (server-to-client SSE stream) on a stateful session
-│    must NOT hold the per-session lock — otherwise subsequent POSTs on the
-│    same mcp-session-id hang for the lifetime of the stream.
+│    Ensure initializer respects presidio_filter_scope for input/output/both.
 ⋮
-│    async def call(method: str, body: bytes = b""):
+│    class DummyManager:
+│        def __init__(self):
 ⋮
-│@pytest.mark.asyncio
-│async def test_truncated_jsonrpc_response_with_nested_method_skips_lock():
-│    """Regression: a large JSON-RPC *response* POST whose ``result`` payload
-│    nests a ``method`` key must skip the per-session lock so it does not
-│    deadlock behind the in-flight request POST that is holding the lock while
-⋮
-│    async def call(body: bytes):
+│        def add_litellm_callback(self, cb):
 ⋮
 
 tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
@@ -583,12 +566,90 @@ tests/test_litellm/proxy/proxy_server/test_streaming_helpers.py:
 │        def dict(self):
 ⋮
 
-tests/test_litellm/proxy/utils/proxy_logging/test_lifecycle.py:
+tests/test_litellm/proxy/spend_tracking/test_spend_management_endpoints.py:
 ⋮
-│def test_convert_user_api_key_auth_to_dict_pydantic_error_raises(proxy_logging):
-│    """A ``model_dump`` that raises propagates."""
+│@pytest.mark.asyncio
+│async def test_can_team_member_view_log_not_admin(monkeypatch):
+│    # Existing team but caller is not a team admin and no /spend/logs permission -> False
+│    class MockTeam:
+│        team_id = "team_x"
+│        members_with_roles = [Member(user_id="user_1", role="user")]
+│        team_member_permissions = None
 │
-│    class _Boom:
+│        def model_dump(self):
+│            return {
+│                "team_id": self.team_id,
+│                "members_with_roles": [{"user_id": "user_1", "role": "user"}],
+│                "team_member_permissions": self.team_member_permissions,
+⋮
+│@pytest.mark.asyncio
+│async def test_can_team_member_view_log_admin(monkeypatch):
+│    # Existing team and caller is team admin -> True
+│    class MockTeam:
+│        team_id = "team_x"
+│        members_with_roles = [Member(user_id="user_1", role="admin")]
+│        team_member_permissions = None
+│
+│        def model_dump(self):
+│            return {
+│                "team_id": self.team_id,
+│                "members_with_roles": [{"user_id": "user_1", "role": "admin"}],
+│                "team_member_permissions": self.team_member_permissions,
+⋮
+│@pytest.mark.asyncio
+│async def test_ui_view_spend_logs_team_admin_can_view_team_spend(client, monkeypatch):
+│    """
+│    Team admins should be able to view team-wide spend when team_id is provided.
+⋮
+│    class TeamTable:
+│        team_id = "team_admin_team"
+⋮
+│        def model_dump(self):
+⋮
+│@pytest.mark.asyncio
+│async def test_can_team_member_view_log_with_spend_logs_permission(monkeypatch):
+│    """
+│    Non-admin team member WITH /spend/logs permission should be allowed.
+⋮
+│    class MockTeam:
+│        team_id = "team_abc"
+⋮
+│        def model_dump(self):
+⋮
+│@pytest.mark.asyncio
+│async def test_can_team_member_view_log_without_spend_logs_permission(monkeypatch):
+│    """
+│    Non-admin team member WITHOUT /spend/logs permission should be denied.
+⋮
+│    class MockTeam:
+│        team_id = "team_abc"
+⋮
+│        def model_dump(self):
+⋮
+│@pytest.mark.asyncio
+│async def test_ui_view_spend_logs_team_member_with_spend_logs_permission(
+│    client, monkeypatch
+│):
+│    """
+│    A non-admin team member with /spend/logs permission should see team-wide
+│    spend logs when filtering by that team_id.
+⋮
+│    class TeamTable:
+│        team_id = "team_perm"
+⋮
+│        def model_dump(self):
+⋮
+│@pytest.mark.asyncio
+│async def test_ui_view_spend_logs_team_member_no_permission_blocked(
+│    client, monkeypatch
+│):
+│    """
+│    A non-admin team member WITHOUT /spend/logs permission should be
+│    rejected when filtering by team_id.
+⋮
+│    class TeamTable:
+│        team_id = "team_noperm"
+⋮
 │        def model_dump(self):
 ⋮
 
@@ -627,11 +688,28 @@ ui/litellm-dashboard/src/app/(dashboard)/access-groups/_components/AccessGroupsM
 │  isNameDisabled?: boolean;
 ⋮
 
+ui/litellm-dashboard/src/app/(dashboard)/caching/_components/coordination_redis_settings/types.ts:
+⋮
+│export type CoordinationRedisSection = "connection" | "cluster" | "sentinel";
+│
+⋮
+
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/add_margin_form.tsx:
 ⋮
 │                const numValue = parseFloat(value);
 ⋮
 │                const numValue = parseFloat(value);
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/pricing_calculator/types.ts:
+⋮
+│export interface ModelEntry {
+│  id: string;
+│  model: string;
+│  input_tokens: number;
+│  output_tokens: number;
+│  num_requests_per_day?: number;
+│  num_requests_per_month?: number;
 ⋮
 
 ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/types.ts:
@@ -641,6 +719,30 @@ ui/litellm-dashboard/src/app/(dashboard)/cost-tracking/_components/types.ts:
 ⋮
 │export interface MarginConfig {
 │  [provider: string]: number | { percentage?: number; fixed_amount?: number };
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/guardrails/_components/add_guardrail_form.tsx:
+⋮
+│interface ProviderParam {
+│  param: string;
+│  description: string;
+│  required: boolean;
+│  default_value?: string;
+│  options?: string[];
+│  type?: string;
+│  fields?: { [key: string]: ProviderParam };
+│  dict_key_options?: string[];
+│  dict_value_type?: string;
+⋮
+
+ui/litellm-dashboard/src/app/(dashboard)/guardrails/_components/content_filter/ContentCategoryConfig
+⋮
+│interface SelectedCategory {
+│  id: string;
+│  category: string;
+│  display_name: string;
+│  action: "BLOCK" | "MASK";
+│  severity_threshold: "high" | "medium" | "low";
 ⋮
 
 ui/litellm-dashboard/src/app/(dashboard)/playground/components/chat_ui/A2AMetrics.tsx:
@@ -676,26 +778,22 @@ ui/litellm-dashboard/src/app/(dashboard)/playground/components/compareUI/endpoin
 │
 ⋮
 
-ui/litellm-dashboard/src/app/(dashboard)/vector-stores/_components/CreateVectorStore.tsx:
+ui/litellm-dashboard/src/app/(dashboard)/vector-stores/_components/VectorStoreForm.tsx:
 ⋮
-│                        <img
-│                          src={resolveLogoSrc(vectorStoreProviderLogoMap[providerDisplayName])}
-│                          alt={`${providerEnum} logo`}
-│                          className="w-5 h-5"
-│                          onError={(e) => {
-│                            // Create a div with provider initial as fallback
-│                            const target = e.target as HTMLImageElement;
-│                            const parent = target.parentElement;
-│                            if (parent) {
-│                              const fallbackDiv = document.createElement("div");
-│                              fallbackDiv.className =
-│                                "w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center 
-│                              fallbackDiv.textContent = providerDisplayName.charAt(0);
-│                              parent.replaceChild(fallbackDiv, target);
-⋮
-
-ui/litellm-dashboard/src/components/CloudZeroCostTracking/types.ts:
-│export interface CloudZeroSettings {
+│                    <img
+│                      src={resolveLogoSrc(vectorStoreProviderLogoMap[providerDisplayName])}
+│                      alt={`${providerEnum} logo`}
+│                      className="w-5 h-5"
+│                      onError={(e) => {
+│                        // Create a div with provider initial as fallback
+│                        const target = e.target as HTMLImageElement;
+│                        const parent = target.parentElement;
+│                        if (parent) {
+│                          const fallbackDiv = document.createElement("div");
+│                          fallbackDiv.className =
+│                            "w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text
+│                          fallbackDiv.textContent = providerDisplayName.charAt(0);
+│                          parent.replaceChild(fallbackDiv, target);
 ⋮
 
 ui/litellm-dashboard/src/components/GuardrailsMonitor/mockData.ts:
@@ -776,35 +874,18 @@ ui/litellm-dashboard/src/components/chat_ui/types.ts:
 │  totalLatency?: number;
 ⋮
 
-ui/litellm-dashboard/src/components/guardrails/content_filter/ContentCategoryConfiguration.tsx:
+ui/litellm-dashboard/src/components/cloudzero_export_modal.tsx:
 ⋮
-│interface SelectedCategory {
-│  id: string;
-│  category: string;
-│  display_name: string;
-│  action: "BLOCK" | "MASK";
-│  severity_threshold: "high" | "medium" | "low";
+│interface CloudZeroSettings {
+│  api_key: string;
+│  connection_id: string;
 ⋮
 
-ui/litellm-dashboard/src/components/guardrails/guardrail_info.tsx:
+ui/litellm-dashboard/src/components/llm_calls/fetch_models.tsx:
 ⋮
-│interface ProviderParam {
-│  param: string;
-│  description: string;
-│  required: boolean;
-│  default_value?: string;
-│  options?: string[];
-│  type?: string;
-│  fields?: { [key: string]: ProviderParam };
-│  dict_key_options?: string[];
-│  dict_value_type?: string;
-⋮
-
-ui/litellm-dashboard/src/components/guardrails/types.ts:
-⋮
-│export enum GuardrailDefinitionLocation {
-│  DB = "db",
-│  CONFIG = "config",
+│export interface ModelGroup {
+│  model_group: string;
+│  mode?: string;
 ⋮
 
 ui/litellm-dashboard/src/components/logging_settings_view.tsx:
@@ -835,24 +916,6 @@ ui/litellm-dashboard/src/components/mcp_tools/types.tsx:
 ⋮
 │export type MCPEnvVarScope = "global" | "user";
 │
-⋮
-
-ui/litellm-dashboard/src/components/model_dashboard/table.tsx:
-⋮
-│declare module "@tanstack/react-table" {
-│  interface ColumnMeta<TData, TValue> {
-│    className?: string;
-│  }
-⋮
-│interface ModelDataTableProps<TData, TValue> {
-│  data: TData[];
-│  columns: ColumnDef<TData, TValue>[];
-│  isLoading?: boolean;
-│  defaultSorting?: SortingState;
-│  pagination?: PaginationState;
-│  onPaginationChange?: OnChangeFn<PaginationState>;
-│  enablePagination?: boolean;
-│  onRowClick?: (row: TData) => void;
 ⋮
 
 ui/litellm-dashboard/src/components/molecules/message_manager.tsx:
@@ -910,19 +973,6 @@ ui/litellm-dashboard/src/components/molecules/notifications_manager.tsx:
 │      if (
 ⋮
 
-ui/litellm-dashboard/src/components/networking.tsx:
-⋮
-│export interface Member {
-│  role: string;
-│  user_id: string | null;
-│  user_email?: string | null;
-│  max_budget_in_team?: number | null;
-│  tpm_limit?: number | null;
-│  rpm_limit?: number | null;
-│  budget_duration?: string | null;
-│  allowed_models?: string[] | null;
-⋮
-
 ui/litellm-dashboard/src/components/organization/organization_view.tsx:
 ⋮
 │              <Grid numItems={1} numItemsSm={2} numItemsLg={3} className="gap-6">
@@ -954,6 +1004,12 @@ ui/litellm-dashboard/src/components/provider_info_helpers.tsx:
 │  ANTHROPIC_TEXT = "Anthropic Text",
 │  AssemblyAI = "AssemblyAI",
 │  AUTO_ROUTER = "Auto Router",
+⋮
+
+ui/litellm-dashboard/src/components/shared/DataTable/DataTableSortHeader.tsx:
+⋮
+│export type DataTableSortVariant = "header-cycle" | "dropdown-tristate";
+│
 ⋮
 
 ui/litellm-dashboard/src/components/shared/charts/chart_tooltip.tsx:
@@ -1035,20 +1091,23 @@ ui/litellm-dashboard/src/lib/http/client.ts:
 │  headers?: Record<string, string>;
 │  signal?: AbortSignal;
 ⋮
-│export interface ApiClient {
-│  request<T = any>(method: HttpMethod, path: string, options?: RequestOptions): Promise<T>;
-│  get<T = any>(path: string, options?: RequestOptions): Promise<T>;
-│  post<T = any>(path: string, options?: RequestOptions): Promise<T>;
-│  put<T = any>(path: string, options?: RequestOptions): Promise<T>;
-│  delete<T = any>(path: string, options?: RequestOptions): Promise<T>;
-│  patch<T = any>(path: string, options?: RequestOptions): Promise<T>;
-⋮
 ```
 
 ### AST Map: `modules/litellm-docs`
 
 ```python
 blog/harnesses-are-the-new-llms/diagrams.js:
+⋮
+│export function ConvergenceHero() {
+│  const W = 1200;
+│  const H = 500;
+│  const N = 40;
+│  const f1 = { x: W * 0.25, y: H * 0.5 };
+│  const f2 = { x: W * 0.75, y: H * 0.5 };
+│  const curves = Array.from({ length: N }, (_, i) => {
+│    const t = (i - N / 2) / (N / 2);
+│    const yIn = H * 0.5 + t * H * 0.45;
+│    const yOut = H * 0.5 - t * H * 0.45;
 ⋮
 │const s = {
 │  fig: { margin: '2.5rem 0', fontFamily: 'inherit' },
@@ -1082,6 +1141,17 @@ blog/harnesses-are-the-new-llms/diagrams.js:
 │    borderRadius: 4,
 │    border: open ? `1.5px dashed ${BLUE}` : '1px solid var(--ifm-color-emphasis-300)',
 │    background: open ? 'rgba(59,130,246,0.08)' : 'transparent',
+⋮
+│export function StackComparison() {
+│  return (
+│    <figure style={s.fig}>
+│      <div style={s.wrap}>
+│        <div />
+│        <div>
+│          <div style={s.colHeader}>Model stack — today</div>
+│          <div style={s.colSub}>calling models</div>
+│        </div>
+│        <div />
 ⋮
 
 blog/litellm_rust_launch/benchmark/llm_app.py:
@@ -1134,17 +1204,6 @@ blog/litellm_rust_launch/benchmark/orchestrate_compare.py:
 
 blog/litellm_rust_launch/diagrams.js:
 ⋮
-│export function RustHeader() {
-│  const N = 37, TOP = 22, BOT = 478, NODE_X = 1000, NODE_Y = 250, CREAM = '#faf9f5';
-│  const center = (N - 1) / 2;
-│  const paths = [];
-│  for (let i = 0; i < N; i++) {
-│    const t = i / (N - 1);
-│    const yl = TOP + t * (BOT - TOP);
-│    const cy = NODE_Y + (yl - NODE_Y) * 0.3;
-│    const op = 0.16 + (1 - Math.abs(i - center) / center) * (0.5 - 0.16);
-│    paths.push(
-⋮
 │const s = {
 │  fig: {margin: '2.5rem 0', fontFamily: 'inherit'},
 │  box: {borderRadius: 12, border: '1px solid #e5e7eb', background: '#fff', padding: '2rem 2.5rem'},
@@ -1154,32 +1213,6 @@ blog/litellm_rust_launch/diagrams.js:
 │    border: `1.5px solid ${border}`, borderRadius: 8, padding: '12px 18px',
 │    background: bg, color, textAlign: 'center', width: '100%', boxSizing: 'border-box',
 │  }),
-⋮
-│const SmallArrow = ({color = '#9ca3af', h = 26}) => (
-│  <svg width="2" height={h} style={{display: 'block'}} aria-hidden="true">
-│    <line x1="1" y1="0" x2="1" y2={h - 6} stroke={color} strokeWidth="1.5" />
-│    <polygon points={`1,${h} -2,${h - 7} 4,${h - 7}`} fill={color} />
-│  </svg>
-⋮
-│const RightArrow = ({color = '#6b7280', w = 40, label}) => (
-│  <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'cen
-│    {label && <span style={{fontSize: 10, color, fontWeight: 600, marginBottom: 3}}>{label}</span>}
-│    <svg width={w} height="14" viewBox={`0 0 ${w} 14`} aria-hidden="true">
-│      <path d={`M0 7h${w - 8}`} stroke={color} strokeWidth="1.5" />
-│      <path d={`M${w - 9} 1l8 6-8 6z`} fill={color} />
-│    </svg>
-│  </div>
-⋮
-│export function RustMigrationStages() {
-│  const stages = [
-│    {stage: 'Stage 0 · Today', title: 'Pure Python SDK + FastAPI proxy', foot: '100% Python', color
-│    {stage: 'Stage 1 · Core in Rust', title: 'Python drives Rust transforms via PyO3', foot: 'V0 to
-│    {stage: 'Stage 2 · Thin shell', title: 'FastAPI shell, hot path all Rust', foot: 'V4 to V5a', c
-│    {stage: 'Stage 3 · Pure Rust', title: 'axum server, Python in sidecar', foot: 'V5b', color: '#7
-│  ];
-│  const axis = [
-│    {text: '0%', color: '#2563eb'},
-│    {text: 'transforms + router', color: '#16a34a'},
 ⋮
 │export function RouteCadence() {
 │  const beats = ['1. Prove one provider', '2. Roll out all providers', '3. Fold route into the Rust
@@ -1662,6 +1695,18 @@ src/components/NavigationCards/index.js:
 
 src/components/QuickStart.js:
 ⋮
+│const QuickStartCodeBlock = ({ token }) => {
+│    return (
+│      <pre>
+│        {`
+│        from litellm import completion
+│        import os
+│  
+│        ## set ENV variables
+│        os.environ["OPENAI_API_KEY"] = "${token}"
+│        os.environ["COHERE_API_KEY"] = "${token}"
+│  
+⋮
 │  const QuickStart = () => {
 │    const [token, setToken] = useState(null);
 │  
@@ -1699,6 +1744,15 @@ src/components/SubscribeForm/index.js:
 ⋮
 
 src/components/TokenGen.js:
+⋮
+│const CodeBlock = ({ token }) => {
+│  const codeWithToken = `${token}`;
+│
+│  return (
+│    <pre>
+│      {token ? codeWithToken : ""}
+│    </pre>
+│  );
 ⋮
 │const TokenGen = () => {
 │  const [token, setToken] = useState(null);

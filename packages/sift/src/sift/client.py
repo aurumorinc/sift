@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
 
 from sift.config import Settings, settings
-from worldline import structlog
+import structlog
 
 logger = structlog.get_logger(__name__)
 

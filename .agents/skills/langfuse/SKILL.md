@@ -46,6 +46,15 @@ packages/shared/scripts/seeder/scenarios/types.ts:
 │  baseUrl: string;
 │  log: (message: string) => void;
 ⋮
+│export class SeedError extends Error {
+│  public readonly fix?: string;
+│
+│  constructor(message: string, fix?: string) {
+│    super(message);
+│    this.name = "SeedError";
+│    this.fix = fix;
+│  }
+⋮
 
 packages/shared/scripts/seeder/utils/types.ts:
 ⋮
@@ -560,20 +569,6 @@ web/src/components/ItemBadge.tsx:
 │  | "ANNOTATION_QUEUE"
 ⋮
 
-web/src/components/layouts/app-layout/utils/navigationFilters.types.ts:
-⋮
-│export type NavigationFilterContext = {
-│  /** Current project ID from router query params */
-│  routerProjectId: string | undefined;
-│  /** Current organization ID from router query params */
-│  routerOrganizationId: string | undefined;
-│  /** User session data including user info and environment */
-│  session: Session | null;
-│  /** Whether experimental features are enabled globally */
-│  enableExperimentalFeatures: boolean;
-│  /** Whether user is a cloud admin (bypasses most checks) */
-⋮
-
 web/src/components/layouts/app-layout/utils/pathClassification.ts:
 ⋮
 │export type PathClassification = {
@@ -809,13 +804,6 @@ web/src/components/ui/MarkdownViewer.tsx:
 │  children?: MarkdownAstNode[];
 ⋮
 
-web/src/components/ui/badge.tsx:
-⋮
-│export interface BadgeProps
-│  extends
-│    React.HTMLAttributes<HTMLDivElement>,
-⋮
-
 web/src/components/ui/chart.tsx:
 ⋮
 │export type ChartConfig = {
@@ -981,6 +969,11 @@ web/src/features/events/server/eventsService.ts:
 ⋮
 │type TimeFilter = z.infer<typeof timeFilter>;
 │
+⋮
+
+web/src/features/experiments/store/experimentsTableStore.ts:
+⋮
+│type RowSelectionUpdater = Updater<RowSelectionState>;
 ⋮
 
 web/src/features/experiments/types/charts.ts:
@@ -1459,10 +1452,18 @@ app/[section]/layout.tsx:
 │  params: Promise<{ section: string }>;
 ⋮
 
-app/blog/[...slug]/page.tsx:
+app/api/voice-agent/route.ts:
 ⋮
-│type PageProps = {
-│  params: Promise<{ slug: string[] }>;
+│export async function POST(_request: NextRequest) {
+│  const livekitUrl = process.env.LIVEKIT_URL;
+│  const livekitApiKey = process.env.LIVEKIT_API_KEY;
+│  const livekitApiSecret = process.env.LIVEKIT_API_SECRET;
+│
+│  if (!livekitUrl || !livekitApiKey || !livekitApiSecret) {
+│    return NextResponse.json(
+│      { error: "Voice agent is not configured" },
+│      { status: 503 },
+│    );
 ⋮
 
 app/blog/page.tsx:
@@ -1479,16 +1480,16 @@ app/blog/page.tsx:
 │        footerClassName="md:max-w-none xl:max-w-none px-6 sm:px-6 md:px-6"
 ⋮
 
-app/changelog/[...slug]/page.tsx:
-⋮
-│type PageProps = {
-│  params: Promise<{ slug: string[] }>;
-⋮
-
 app/cloud/layout.tsx:
 ⋮
 │export default function CloudLayout({
 │  children,
+⋮
+
+app/integrations/[[...slug]]/page.tsx:
+⋮
+│type PageProps = {
+│  params: Promise<{ slug?: string[] }>;
 ⋮
 
 app/japan/layout.tsx:
@@ -1715,6 +1716,19 @@ components/TocCommunity.tsx:
 │  className?: string;
 ⋮
 
+components/academy/AgentPromptCallout.tsx:
+⋮
+│export interface AgentPromptCalloutProps {
+│  /** Ribbon label, e.g. "Run with your agent". */
+│  ribbon?: string;
+│  /** Title shown above the lede. */
+│  title?: string;
+│  /** Lede paragraph beneath the title. */
+│  lede?: React.ReactNode;
+│  /** The exact text written to the clipboard. */
+│  prompt: string;
+⋮
+
 components/academy/ErrorAnalysisProcessDiagram.tsx:
 ⋮
 │function estimateInitialScale(): number {
@@ -1750,19 +1764,6 @@ components/academy/LoopDiagram.tsx:
 
 components/academy/TraceViewDiagram.tsx:
 │export interface TraceViewRow {
-⋮
-
-components/academy/japan/AgentPromptCallout.tsx:
-⋮
-│export interface AgentPromptCalloutProps {
-│  /** Ribbon label, e.g. "Run with your agent". */
-│  ribbon?: string;
-│  /** Title shown above the lede. */
-│  title?: string;
-│  /** Lede paragraph beneath the title. */
-│  lede?: React.ReactNode;
-│  /** The exact text written to the clipboard. */
-│  prompt: string;
 ⋮
 
 components/academy/japan/ErrorAnalysisProcessDiagram.tsx:
@@ -3036,41 +3037,6 @@ langfuse/_client/client.py:
 │        metadata: Optional[Any] = None,
 │        version: Optional[str] = None,
 ⋮
-│    @overload
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: float,
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-⋮
-│    @overload
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: str,
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-⋮
-│    def create_score(
-│        self,
-│        *,
-│        name: str,
-│        value: Union[float, str],
-│        session_id: Optional[str] = None,
-│        dataset_run_id: Optional[str] = None,
-│        trace_id: Optional[str] = None,
-│        observation_id: Optional[str] = None,
-│        score_id: Optional[str] = None,
-⋮
 │    def run_experiment(
 │        self,
 │        *,
@@ -3325,13 +3291,6 @@ langfuse/_utils/json_path.py:
 │def parse_path(json_path: str) -> List[Union[str, int]]:
 ⋮
 
-langfuse/_utils/parse_error.py:
-⋮
-│def generate_error_message_fern(error: Error) -> str:
-⋮
-│def generate_error_message(exception: Union[APIError, APIErrors, Exception]) -> str:
-⋮
-
 langfuse/_utils/prompt_cache.py:
 ⋮
 │class PromptCacheItem:
@@ -3506,23 +3465,6 @@ langfuse/api/core/enum.py:
 │    class StrEnum(str, enum.Enum):
 ⋮
 
-langfuse/api/core/file.py:
-⋮
-│FileContent = Union[IO[bytes], bytes, str]
-│File = Union[
-│    # file (or bytes)
-│    FileContent,
-│    # (filename, file (or bytes))
-│    Tuple[Optional[str], FileContent],
-│    # (filename, file (or bytes), content_type)
-│    Tuple[Optional[str], FileContent, Optional[str]],
-│    # (filename, file (or bytes), content_type, headers)
-│    Tuple[
-│        Optional[str],
-⋮
-│def with_content_type(*, file: File, default_content_type: str) -> File:
-⋮
-
 langfuse/api/core/force_multipart.py:
 ⋮
 │class ForceMultipartDict(Dict[str, Any]):
@@ -3576,6 +3518,8 @@ langfuse/api/core/pydantic_utilities.py:
 │    def model_construct(
 │        cls: Type["Model"], _fields_set: Optional[Set[str]] = None, **values: Any
 ⋮
+│    def json(self, **kwargs: Any) -> str:
+⋮
 │    def dict(self, **kwargs: Any) -> Dict[str, Any]:
 ⋮
 │def deep_union_pydantic_dicts(
@@ -3588,8 +3532,6 @@ langfuse/api/core/query_encoder.py:
 ⋮
 │def traverse_query_dict(
 │    dict_flat: Dict[str, Any], key_prefix: Optional[str] = None
-⋮
-│def single_query_encoder(query_key: str, query_value: Any) -> List[Tuple[str, Any]]:
 ⋮
 
 langfuse/api/core/request_options.py:
@@ -3772,27 +3714,6 @@ langfuse/api/legacy/metrics_v1/types/metrics_response.py:
 │class MetricsResponse(UniversalBaseModel):
 ⋮
 
-langfuse/api/legacy/observations_v1/client.py:
-⋮
-│class ObservationsV1Client:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        observation_id: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncObservationsV1Client:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        observation_id: str,
-│        *,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
 langfuse/api/legacy/observations_v1/types/observations.py:
 ⋮
 │class Observations(UniversalBaseModel):
@@ -3821,21 +3742,6 @@ langfuse/api/llm_connections/types/paginated_llm_connections.py:
 langfuse/api/metrics/types/metrics_v2response.py:
 ⋮
 │class MetricsV2Response(UniversalBaseModel):
-⋮
-
-langfuse/api/models/client.py:
-⋮
-│class ModelsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
-⋮
-│class AsyncModelsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self, id: str, *, request_options: typing.Optional[RequestOptions] = None
 ⋮
 
 langfuse/api/models/types/paginated_models.py:
@@ -3975,29 +3881,6 @@ langfuse/api/scim/types/scim_name.py:
 │class ScimName(UniversalBaseModel):
 ⋮
 
-langfuse/api/score_configs/client.py:
-⋮
-│class ScoreConfigsClient:
-│    def __init__(self, *, client_wrapper: SyncClientWrapper):
-⋮
-│    def get(
-│        self,
-│        *,
-│        page: typing.Optional[int] = None,
-│        limit: typing.Optional[int] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-│class AsyncScoreConfigsClient:
-│    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-⋮
-│    async def get(
-│        self,
-│        *,
-│        page: typing.Optional[int] = None,
-│        limit: typing.Optional[int] = None,
-│        request_options: typing.Optional[RequestOptions] = None,
-⋮
-
 langfuse/api/score_configs/types/score_configs.py:
 ⋮
 │class ScoreConfigs(UniversalBaseModel):
@@ -4083,32 +3966,30 @@ langfuse/api/scores_v3/types/text_score_v3.py:
 │class TextScoreV3(BaseScoreV3):
 ⋮
 
-langfuse/api/sessions/types/paginated_sessions.py:
+langfuse/api/sessions/raw_client.py:
 ⋮
-│class PaginatedSessions(UniversalBaseModel):
-⋮
-
-langfuse/api/trace/client.py:
-⋮
-│class TraceClient:
+│class RawSessionsClient:
 │    def __init__(self, *, client_wrapper: SyncClientWrapper):
 ⋮
 │    def get(
 │        self,
-│        trace_id: str,
+│        session_id: str,
 │        *,
-│        fields: typing.Optional[str] = None,
 │        request_options: typing.Optional[RequestOptions] = None,
 ⋮
-│class AsyncTraceClient:
+│class AsyncRawSessionsClient:
 │    def __init__(self, *, client_wrapper: AsyncClientWrapper):
 ⋮
 │    async def get(
 │        self,
-│        trace_id: str,
+│        session_id: str,
 │        *,
-│        fields: typing.Optional[str] = None,
 │        request_options: typing.Optional[RequestOptions] = None,
+⋮
+
+langfuse/api/sessions/types/paginated_sessions.py:
+⋮
+│class PaginatedSessions(UniversalBaseModel):
 ⋮
 
 langfuse/api/trace/types/delete_trace_response.py:
@@ -4349,38 +4230,6 @@ langfuse/openai.py:
 ⋮
 │    def get_openai_args(self) -> Any:
 ⋮
-│def _instrument_openai_stream(
-│    *,
-│    resource: OpenAiDefinition,
-│    response: Any,
-│    generation: LangfuseGeneration,
-│    model_parameters: Optional[Any] = None,
-│) -> Any:
-│    if not hasattr(response, "_iterator"):
-│        return LangfuseResponseGeneratorSync(
-│            resource=resource,
-│            response=response,
-│            generation=generation,
-│            model_parameters=model_parameters,
-⋮
-│    def finalize_once() -> None:
-⋮
-│def _instrument_openai_async_stream(
-│    *,
-│    resource: OpenAiDefinition,
-│    response: Any,
-│    generation: LangfuseGeneration,
-│    model_parameters: Optional[Any] = None,
-│) -> Any:
-│    if not hasattr(response, "_iterator"):
-│        return LangfuseResponseGeneratorAsync(
-│            resource=resource,
-│            response=response,
-│            generation=generation,
-│            model_parameters=model_parameters,
-⋮
-│    async def finalize_once() -> None:
-⋮
 
 langfuse/types.py:
 ⋮
@@ -4431,51 +4280,6 @@ tests/support/retry.py:
 │    is_result_ready: Callable[[T], bool] | None = None,
 │    timeout_seconds: float = DEFAULT_RETRY_TIMEOUT_SECONDS,
 │    interval_seconds: float = DEFAULT_RETRY_INTERVAL_SECONDS,
-⋮
-
-tests/unit/test_e2e_support.py:
-⋮
-│def test_get_api_retries_not_found(monkeypatch):
-│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
-│
-⋮
-│    class FakeTraceService:
-⋮
-│    class FakeClient:
-⋮
-│def test_get_api_retries_filtered_lists(monkeypatch):
-│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
-│
-⋮
-│    class FakeTraceService:
-⋮
-│    class FakeClient:
-⋮
-│def test_get_api_retry_can_be_disabled(monkeypatch):
-│    attempts = {"count": 0}
-│
-│    class FakeTraceService:
-⋮
-│    class FakeClient:
-⋮
-│def test_raw_api_wrapper_retries_not_found_payload(monkeypatch):
-│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
-│
-⋮
-│    class FakeResponse:
-│        def __init__(self, status_code, payload):
-│            self.status_code = status_code
-│            self._payload = payload
-⋮
-│        def json(self):
-⋮
-│def test_wait_for_trace_retries_until_predicate_matches(monkeypatch):
-│    monkeypatch.setattr("tests.support.retry.sleep", lambda _: None)
-│
-⋮
-│    class FakeTraceService:
-⋮
-│    class FakeClient:
 ⋮
 
 tests/unit/test_openai_prompt_extraction.py:

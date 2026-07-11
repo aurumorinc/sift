@@ -1,0 +1,32 @@
+name: Windmill Sync
+
+on:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  windmill-sync:
+    name: Sync to Windmill
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Windmill CLI
+        run: |
+          wget -qO wmill https://github.com/windmill-labs/windmill/releases/latest/download/wmill-linux-amd64
+          chmod +x wmill
+          sudo mv wmill /usr/local/bin/
+
+      - name: Windmill Workspace Auth & Push
+        working-directory: apps/koda-api
+        env:
+          WMILL_TOKEN: ${{ secrets.WMILL_TOKEN }}
+        run: |
+          wmill workspace add target_workspace "${{ secrets.WMILL_URL }}" "${{ secrets.WMILL_WORKSPACE }}"
+          wmill sync push --workspace target_workspace

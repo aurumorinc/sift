@@ -2477,7 +2477,7 @@ packages/sift/src/sift/client.py:
 
 packages/sift/src/sift/config.py:
 ⋮
-│class Settings(LoggingSettings, BaseSettings):
+│class Settings(WorldlineSettings, BaseSettings):
 ⋮
 
 packages/sift/src/sift/integrations/langfuse/service.py:

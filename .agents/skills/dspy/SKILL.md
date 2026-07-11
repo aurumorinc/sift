@@ -336,7 +336,15 @@ dspy/clients/openai_format.py:
 ⋮
 │def parts_to_openai_content(parts: list[Any]) -> str | list[dict[str, Any]]:
 ⋮
+│def provider_tool_call_to_part(tool_call: Any) -> LMToolCallPart:
+⋮
+│def citation_to_part(citation: Any) -> LMCitationPart:
+⋮
 │def usage_from_response(response: Any) -> LMUsage | None:
+⋮
+│def data_uri(media_type: str, data: str) -> str:
+⋮
+│def split_data_uri(value: str) -> tuple[str, str]:
 ⋮
 │def get_value(value: Any, key: str, default: Any = None) -> Any:
 ⋮
@@ -346,8 +354,6 @@ dspy/clients/openai_format.py:
 dspy/clients/utils_finetune.py:
 ⋮
 │def get_finetune_directory() -> str:
-⋮
-│def write_lines(file_path, data):
 ⋮
 
 dspy/core/types.py:
@@ -409,14 +415,6 @@ dspy/core/types.py:
 │    def from_value(cls, value: Any = None, **overrides: Any) -> LMPromptCacheConfig:
 ⋮
 │class LMConfig(BaseModel):
-│    """Common generation controls for an LM request."""
-│
-⋮
-│    @classmethod
-│    def from_kwargs(cls, **kwargs: Any) -> LMConfig:
-⋮
-│@dataclass
-│class LMRequestPatch:
 ⋮
 │class LMRequest(BaseModel):
 │    """A normalized request passed to a `LanguageModel`."""
@@ -461,8 +459,6 @@ dspy/core/types.py:
 ⋮
 
 dspy/dsp/utils/dpr.py:
-⋮
-│def DPR_tokenize(text):  # noqa: N802
 ⋮
 │def DPR_normalize(text):  # noqa: N802
 ⋮
@@ -962,6 +958,8 @@ dspy/utils/magicattr.py:
 ⋮
 │def set(obj, attr, val):
 ⋮
+│def delete(obj, attr):
+⋮
 │def lookup(obj, attr):
 ⋮
 │def _lookup_subscript_value(node):
@@ -1046,11 +1044,6 @@ tests/predict/test_best_of_n.py:
 │class DummyModule(dspy.Module):
 ⋮
 
-tests/predict/test_knn.py:
-⋮
-│def mock_example(question: str, answer: str) -> dspy.Example:
-⋮
-
 tests/predict/test_react_v2.py:
 ⋮
 │def test_react_v2_text_mock_lm_loop_records_inputs_once():
@@ -1121,6 +1114,8 @@ tests/teleprompt/test_gepa.py:
 ⋮
 
 tests/teleprompt/test_knn_fewshot.py:
+⋮
+│def mock_example(question: str, answer: str) -> dspy.Example:
 ⋮
 │class SimpleModule(dspy.Module):
 │    def __init__(self, signature):

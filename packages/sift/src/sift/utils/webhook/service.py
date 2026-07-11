@@ -5,7 +5,7 @@ import uuid
 from typing import Any, Callable, Dict, Optional
 
 import httpx
-from worldline import structlog
+import structlog
 
 from sift.utils.webhook.schema import WebhookRequest, WebhookEvent, WebhookResponse
 

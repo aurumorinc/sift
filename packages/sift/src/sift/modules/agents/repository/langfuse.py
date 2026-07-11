@@ -1,5 +1,5 @@
 from typing import Optional
-from worldline import structlog
+import structlog
 
 from sift.integrations.langfuse.service import get_langfuse_client
 from sift.modules.agents.schema import Agent

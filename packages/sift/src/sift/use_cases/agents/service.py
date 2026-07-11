@@ -2,7 +2,7 @@ import copy
 import uuid
 from typing import Dict, List, Optional
 
-from worldline import structlog
+import structlog
 
 from sift.client import SiftClient
 from sift.modules.agents.repository.langfuse import get_agent_safe

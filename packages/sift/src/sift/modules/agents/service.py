@@ -1,6 +1,6 @@
 import dspy
 from typing import Any, Dict, List, Optional
-from worldline import structlog
+import structlog
 
 logger = structlog.get_logger(__name__)
 
