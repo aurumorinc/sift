@@ -4,7 +4,6 @@ from sift import client
 from sift import config
 from sift import integrations
 from sift import modules
-from sift import utils
 
 from sift.client import (
     SiftClient,
@@ -36,13 +35,6 @@ from sift.modules import (
     predict_response,
     responses,
 )
-from sift.utils import (
-    WebhookRequest,
-    WebhookEvent,
-    dispatch_webhook,
-    webhook,
-    webhook_dispatch,
-)
 
 __all__ = [
     "__version__",
@@ -61,10 +53,7 @@ __all__ = [
     "ResponsesAPIResponse",
     "Settings",
     "SiftClient",
-    "WebhookRequest",
-    "WebhookEvent",
     "agents",
-    "dispatch_webhook",
     "client",
     "compile_and_save_agent",
     "config",
@@ -75,7 +64,4 @@ __all__ = [
     "predict_response",
     "responses",
     "settings",
-    "utils",
-    "webhook",
-    "webhook_dispatch",
 ]
