@@ -22,3 +22,6 @@
 [runemodule ".agents/skills/worldline-python/modules/worldline-python"]
 	url = https://github.com/aurumorinc/worldline-python/tree/main
 	path = .agents/skills/worldline-python/modules/worldline-python
+[runemodule ".agents/skills/oort-python/modules/oort-python"]
+	url = https://github.com/aurumorinc/oort-python/tree/main
+	path = .agents/skills/oort-python/modules/oort-python

@@ -7,7 +7,7 @@ import structlog
 from sift.client import SiftClient
 from sift.modules.agents.repository.langfuse import get_agent_safe
 from sift.modules.agents.schema import AgentRequest, AgentResponse
-from sift.utils.webhook.service import webhook_dispatch
+from oort.webhook.service import webhook_dispatch
 
 logger = structlog.get_logger(__name__)
 

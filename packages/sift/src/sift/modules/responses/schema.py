@@ -8,7 +8,7 @@ from litellm.types.llms.openai import (
     ResponsesAPIRequestParams,
 )
 
-from sift.utils.webhook.schema import WebhookRequest
+from oort.webhook.schema import WebhookRequest
 
 __all__ = [
     "ResponseRequest",

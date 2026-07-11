@@ -1,0 +1,141 @@
+interactions:
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## messages ## ]]\nWhat
+      is 2+2?"}]},{"role":"model","parts":[{"text":"[[ ## response ## ]]\n2 + 2 equals
+      4.\n\n[[ ## completed ## ]]\n"}]},{"role":"user","parts":[{"text":"[[ ## messages
+      ## ]]\nGive me a random user profile.\n\nRespond with the corresponding output
+      fields, starting with the field `[[ ## response ## ]]`, and then ending with
+      the marker for `[[ ## completed ## ]]`."}]}],"system_instruction":{"parts":[{"text":"Your
+      input fields are:\n1. `messages` (str):\nYour output fields are:\n1. `response`
+      (str):\nAll interactions will be structured in the following way, with the appropriate
+      values filled in.\n\n[[ ## messages ## ]]\n{messages}\n\n[[ ## response ## ]]\n{response}\n\n[[
+      ## completed ## ]]\nIn adhering to this structure, your objective is: "}]},"generationConfig":{"response_mime_type":"application/json","response_json_schema":{"type":"object","properties":{"name":{"type":"string"},"age":{"type":"integer"}},"required":["name","age"]},"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1031'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/11RTXOCMBC98yuYXKsdPzp+9KaVTmmLFcW2M6WHKCtEIaFJUNTxvzdAUWwOmWT3
+        7Xu7b4+arqMlph7xsASB7vUvFdH1Y35nOUYlUKkSZUgFY8zlBVucY+WtIBLSrAgdXarrLqI4Alf9
+        XTQIyRL0WURk4KJakcV+nmz1XHpCtX9EAUv8QM6IT7FMOGSkxtp+sXxj6jjmZL5bHFJjHhsHY5Z+
+        DCdj27977B+6SdfasjcVtxoj+tQX+03nBtLxej4e/sB6TwXtrlBF6nR+f186QJyFuWLEPAhL+KkE
+        oBWhRARTwILRDDZz3ibnARChHqQq3NBKgZwaJUINbIHEynN8dhbFnEWxdNgG6ANLcs+bnV7BVtnR
+        FaDV+MtLJnF4XdsrayvEYqRkSVhdXmWvakocErnPRnGMT6eyCyVw3VfphVaxDAngW7VehwDPOIRU
+        XWPuZcblphU+vgMXpDDMh0hZWG/fNuurEIugruQhl0UcRMyoANPLgOHu2cYJTwcMt9eJNem8LszI
+        NpF20n4BadoxksQCAAA=
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 20:20:39 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=723
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## messages ## ]]\nWhat
+      is 2+2?"}]},{"role":"model","parts":[{"text":"{\n  \"response\": \"2 + 2 equals
+      4.\"\n}"}]},{"role":"user","parts":[{"text":"[[ ## messages ## ]]\nGive me a
+      random user profile.\n\nRespond with a JSON object in the following order of
+      fields: `response`."}]}],"system_instruction":{"parts":[{"text":"Your input
+      fields are:\n1. `messages` (str):\nYour output fields are:\n1. `response` (str):\nAll
+      interactions will be structured in the following way, with the appropriate values
+      filled in.\n\nInputs will have the following structure:\n\n[[ ## messages ##
+      ]]\n{messages}\n\nOutputs will be a JSON object with the following fields.\n\n{\n  \"response\":
+      \"{response}\"\n}\nIn adhering to this structure, your objective is: "}]},"generationConfig":{"response_mime_type":"application/json","response_json_schema":{"additionalProperties":false,"properties":{"response":{"title":"Response","type":"string"}},"required":["response"],"title":"DSPyProgramOutputs","type":"object"},"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1064'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2VSwXKbMBC98xUaXYsztkk7iW92zIyxjWPHNE2n9LCFDSiARCXhxvH43ytwcHCr
+        g0bsPva9fbsHixAaAY9ZDBoVHZEfJkLIobnrnOAauTaJNmSCJUj9gT2dQ+dtIBpf65/oIeSEhFSi
+        KgVXGJpYSFdQ4IjMgSOZCrTJODGfwxub3EdRVYJmgo/IFDSQbcQMO1PaJksRvWcmKHPGbeIZaaaw
+        ViMyYxnjiU3WqdAikVCme5uYtsimAq6rwiT2ikXqKqQhP1L7H7GpqJJUb1nCQVcSa+Huy2bhJ+5D
+        EHjrR0f5sFqwxXIOcnM9dm++O4Oi//nJj/Vs8ns1+1RgAcyDzPv19jXIIi5unWToTO7eXNqhOp7f
+        Pz8UUCnyhrEQMeYt/NgC6DPjTKUPCErwGrYN7tfnBijjMb6acN9qCZrStFKQoI8azFzhPD1aSlGU
+        OhAZ8jtRNXMdfHFO1Tp7cAFwbt/zWmjIL1LD/tD+r7CaGlqWdxekszumS8iZ3tetBO5T0JmFIbjU
+        1XphdSyjCuWORRgwlHUNpY1qkHFtXGPaycdHlIqdDEuwMBb2nKtB7zkHlfYMPTa057X04hqY/5lv
+        oPy2W15z76Xy1/0dn7BxRq2j9RenecVgKAMAAA==
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 20:20:40 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=857
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

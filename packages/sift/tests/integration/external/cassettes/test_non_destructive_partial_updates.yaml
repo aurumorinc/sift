@@ -1,0 +1,511 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_non_destructive
+  response:
+    body:
+      string: '{"message":"Prompt not found: ''vcr_test_agent_non_destructive'' with
+        label ''production''","error":"LangfuseNotFoundError"}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '120'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:18 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"au9at39c2y3c"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_non_destructive
+  response:
+    body:
+      string: '{"message":"Prompt not found: ''vcr_test_agent_non_destructive'' with
+        label ''production''","error":"LangfuseNotFoundError"}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '120'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:19 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"au9at39c2y3c"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_non_destructive
+  response:
+    body:
+      string: '{"message":"Prompt not found: ''vcr_test_agent_non_destructive'' with
+        label ''production''","error":"LangfuseNotFoundError"}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '120'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:20 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"au9at39c2y3c"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: '{"name":"vcr_test_agent_non_destructive","prompt":"DO NOT OVERWRITE","config":{"agent_name":"vcr_test_agent_non_destructive","agent_card_params":{},"litellm_params":{},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[],"signature":{"instructions":"DO
+      NOT OVERWRITE","fields":[]},"lm":null}}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '448'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: '{"id":"c920b6dd-9586-46b5-b643-c7185ee3b237","createdAt":"2026-07-09T18:33:20.523Z","updatedAt":"2026-07-09T18:33:20.523Z","projectId":"cmqtu21zc000gad0eh2r1zyde","createdBy":"API","prompt":"DO
+        NOT OVERWRITE","name":"vcr_test_agent_non_destructive","version":1,"type":"text","isActive":null,"config":{"agent_name":"vcr_test_agent_non_destructive","agent_card_params":{},"litellm_params":{},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[],"signature":{"instructions":"DO
+        NOT OVERWRITE","fields":[]},"lm":null}}},"labels":null},"tags":[],"labels":["production","latest"],"commitMessage":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '677'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:20 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"13ai01z28f4it"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 201
+      message: Created
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_non_destructive
+  response:
+    body:
+      string: '{"id":"c920b6dd-9586-46b5-b643-c7185ee3b237","createdAt":"2026-07-09T18:33:20.523Z","updatedAt":"2026-07-09T18:33:20.523Z","projectId":"cmqtu21zc000gad0eh2r1zyde","createdBy":"API","prompt":"DO
+        NOT OVERWRITE","name":"vcr_test_agent_non_destructive","version":1,"type":"text","isActive":true,"config":{"agent_name":"vcr_test_agent_non_destructive","agent_card_params":{},"litellm_params":{},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[],"signature":{"instructions":"DO
+        NOT OVERWRITE","fields":[]},"lm":null}}},"labels":null},"tags":[],"labels":["production","latest"],"commitMessage":null,"resolutionGraph":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '700'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:20 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"rgtblctd29jg"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## messages ## ]]\nHi\n\nRespond
+      with the corresponding output fields, starting with the field `[[ ## response
+      ## ]]`, and then ending with the marker for `[[ ## completed ## ]]`."}]}],"system_instruction":{"parts":[{"text":"Your
+      input fields are:\n1. `messages` (str):\nYour output fields are:\n1. `response`
+      (str):\nAll interactions will be structured in the following way, with the appropriate
+      values filled in.\n\n[[ ## messages ## ]]\n{messages}\n\n[[ ## response ## ]]\n{response}\n\n[[
+      ## completed ## ]]\nIn adhering to this structure, your objective is: \n        DO
+      NOT OVERWRITE"}]},"generationConfig":{"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '682'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2VSXVPbMBB8969QxSuBJoaB9qXDNJkmTQM2uB3yNR3VvtgKimSkM0kmk/+OZNfB
+        AT9obu72bu92vfMIoTGTCU8YgqFfydRmCNmVr6spiSDRFuqUTeZM4xu2+naN2EIQNq6JTqfk5IRo
+        MLmSBlw8n89kH4RQn0hfrYklJwPCjOEGyVYVBFXCtt9mciar3litcgEISdVMT98RZapIM3zgqWRY
+        aHCkvWU4HKW9+ygaBGoc//g1ur2Y+GzZfwl/Yvdi+OX38/nt1WQhrjZjs15L6T9rvPZDPoHxzaZz
+        0z3vZr12+EQbVPtDPH/bgGolSsaVSkDU8H0NoAsuucnugRklHewhugsOB1AuE9jY9GevJihH08Kw
+        FEaAzHrCDsrTXFslMFJPIL+rovSk7XeqaQ0PjwCd9v86KmTiuPfSP/0w2HQtLRdNcxu+2yuZ4Lh1
+        p0S9x6jhhSU43qvWwmtIRg3oFx5DxEG7GQbt1kwnTrhStErHP6ANrwRLYWUlbPln7dZCMJO1LD2U
+        tLT+pwaJA8Z3ImDmMQ+G/9iyGAWXf7cRD0Pq7b1XpGr6/uQCAAA=
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 18:33:21 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=599
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## example_inputs ## ]]\nExample({''messages'':
+      ''Hi''}) (input_keys={''messages''})\n\n[[ ## example_output ## ]]\n{''response'':
+      ''Hello'', ''output'': None}\n\n[[ ## example_score ## ]]\nNone\n\n[[ ## example_feedback
+      ## ]]\nNone\n\n[[ ## pred_values ## ]]\n[''Hello! How can I assist you today?'']\n\nRespond
+      with the corresponding output fields, starting with the field `[[ ## evaluation_feedback
+      ## ]]`, then `[[ ## evaluation_score ## ]]`, and then ending with the marker
+      for `[[ ## completed ## ]]`."}]}],"system_instruction":{"parts":[{"text":"Your
+      input fields are:\n1. `example_inputs` (str): The inputs and context provided
+      for the task\n2. `example_output` (str): The original output or reference from
+      the dataset\n3. `example_score` (str): The score given to the reference output
+      (0.0 to 1.0)\n4. `example_feedback` (str): The feedback provided on the reference
+      output to explain its score\n5. `pred_values` (str): The newly generated creative
+      work to be evaluated\nYour output fields are:\n1. `evaluation_feedback` (str):
+      A critique of the newly generated output, checking if it improves upon or maintains
+      the quality described in the reference feedback\n2. `evaluation_score` (str):
+      A float between 0.0 and 1.0 representing the quality of the newly generated
+      output\nAll interactions will be structured in the following way, with the appropriate
+      values filled in.\n\n[[ ## example_inputs ## ]]\n{example_inputs}\n\n[[ ## example_output
+      ## ]]\n{example_output}\n\n[[ ## example_score ## ]]\n{example_score}\n\n[[
+      ## example_feedback ## ]]\n{example_feedback}\n\n[[ ## pred_values ## ]]\n{pred_values}\n\n[[
+      ## evaluation_feedback ## ]]\n{evaluation_feedback}\n\n[[ ## evaluation_score
+      ## ]]\n{evaluation_score}\n\n[[ ## completed ## ]]\nIn adhering to this structure,
+      your objective is: \n        Evaluate if the newly generated creative work improves
+      upon or maintains the quality described in the reference feedback."}]},"generationConfig":{"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '2012'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2VT21LbMBB9z1fsmAfamSSEpmEGXiFtUybkgidtuQwj22tbIEuuLrmU4d+7UggY
+        8IMt7x6ds3tWemwBRCmTGc+YRROdwDVFAB7D2+eUtCgtJXYhCtZM21fs9nlsrAlice03RdfXsLcH
+        uGTCMcuVvMsRs4SlDz58e3sj4xKh1mrJM8xogRlPPQ64AcMLyXNO5VmxgQStRQ22ZJJeCLhmVS0Q
+        lLO1s134VXL6+5iBFTOglqiJI3XaAnULvi3GJUkykE4IyDmKDD7tb/fsn8CFkvi5Hfgkrt5VRgXn
+        aAz9MdGGFYpUVVwW7cDtDBqiJQkSNaFrJsASH7Cadtaak9eQK02oEkWdOwGM2IylTrswslBRbb4+
+        E/RTpRF4mAOoPIS4DJ2FlrfukTzRVS4tofJ4qsLz0keTITVqjjLF7o28kR9mYoLC80AOu71XEPVF
+        TlryKWSj9rspl8oVpb2kQTHrNPqJD+9n5+NiOI/j0TQpdC9Orv4tr46/HPTP5+OD+d8+v5ycrr7/
+        WP/5NjxdqKp/trlYJIfrUX+QTCbjg6NKro+UPI4aUk8v69vXCiKtRFCsVIZiB3/aAaKcS27KOTKj
+        pIddxpPpSwMRlxmuKdxr7QQCdeQMK3CMltGFYC/HPiKTq9rG6gHlqXLhQnw9GmzZGhfoDeC495y3
+        yjLxJjUY7PY2iM0ZyXLRvFmNS0ddMsHtxrcSD3/HjVmQwNu6dl60GpZFdBKWPMWYo/Yc/rRlTGfe
+        uGDa1scFnVm+NaxAOtS80+8ednLBTNkheQyykUZTK2lwlHlgimLK9Kbzc6ln92487SV3CzMrotZT
+        6z9Yk6izYQQAAA==
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 18:33:22 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=995
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name":"vcr_test_agent_non_destructive","prompt":"DO NOT OVERWRITE","config":{"agent_name":"vcr_test_agent_non_destructive","agent_card_params":{},"litellm_params":{},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":"Hi","response":"Hello!
+      How can I assist you today?"}],"signature":{"instructions":"DO NOT OVERWRITE","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null}}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '754'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: '{"id":"f5548280-0c6a-423a-8eb0-70be0fbc2d8b","createdAt":"2026-07-09T18:33:22.521Z","updatedAt":"2026-07-09T18:33:22.521Z","projectId":"cmqtu21zc000gad0eh2r1zyde","createdBy":"API","prompt":"DO
+        NOT OVERWRITE","name":"vcr_test_agent_non_destructive","version":2,"type":"text","isActive":null,"config":{"agent_name":"vcr_test_agent_non_destructive","agent_card_params":{},"litellm_params":{},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"predict":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":"Hi","response":"Hello!
+        How can I assist you today?"}],"signature":{"instructions":"DO NOT OVERWRITE","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null}}},"labels":null},"tags":[],"labels":["production","latest"],"commitMessage":null}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '983'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:22 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"uhkiawpm4krb"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 201
+      message: Created
+version: 1

@@ -97,7 +97,7 @@ def test_agents_existing_agent_merge(mock_get_agent_safe, mock_client):
 
 @patch("sift.use_cases.agents.service.client")
 @patch("sift.use_cases.agents.service.get_agent_safe")
-@patch("sift.utils.webhook.service.dispatch_webhook")
+@patch("oort.webhook.service.dispatch_webhook")
 def test_agents_main_optional_args_populated(mock_dispatch_webhook, mock_get_agent_safe, mock_client):
     mock_get_agent_safe.return_value = None
 
@@ -124,7 +124,7 @@ def test_agents_main_optional_args_populated(mock_dispatch_webhook, mock_get_age
 
 @patch("sift.use_cases.agents.service.client")
 @patch("sift.use_cases.agents.service.get_agent_safe")
-@patch("sift.utils.webhook.service.dispatch_webhook")
+@patch("oort.webhook.service.dispatch_webhook")
 def test_agents_main_catches_exception(mock_dispatch_webhook, mock_get_agent_safe, mock_client):
     mock_get_agent_safe.return_value = None
     mock_client.compile_and_save_agent.side_effect = RuntimeError("Mocked compilation error")

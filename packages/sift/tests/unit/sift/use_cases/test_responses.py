@@ -33,7 +33,7 @@ def test_responses_main_extracts_agent_name(mock_client):
 
 
 @patch("sift.use_cases.responses.service.client")
-@patch("sift.utils.webhook.service.dispatch_webhook")
+@patch("oort.webhook.service.dispatch_webhook")
 def test_responses_main_catches_exception(mock_dispatch_webhook, mock_client):
     mock_client.predict_response.side_effect = ValueError("Mocked response error")
     

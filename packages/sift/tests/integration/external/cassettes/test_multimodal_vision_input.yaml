@@ -1,0 +1,76 @@
+interactions:
+- request:
+    body: "{\"contents\":[{\"role\":\"user\",\"parts\":[{\"text\":\"[[ ## messages
+      ## ]]\\nWhat is 2+2?\"}]},{\"role\":\"model\",\"parts\":[{\"text\":\"[[ ## response
+      ## ]]\\n2 + 2 equals 4.\\n\\n[[ ## completed ## ]]\\n\"}]},{\"role\":\"user\",\"parts\":[{\"text\":\"[[
+      ## messages ## ]]\\n\xAB{'role': 'user', 'content': [{'type': 'text', 'text':
+      'Describe this image.'}, {'type': 'image_url', 'image_url': 'https://raw.githubusercontent.com/aurumorinc/sift/main/README.md'}]}\xBB\\n\\nRespond
+      with the corresponding output fields, starting with the field `[[ ## response
+      ## ]]`, and then ending with the marker for `[[ ## completed ## ]]`.\"}]}],\"system_instruction\":{\"parts\":[{\"text\":\"Your
+      input fields are:\\n1. `messages` (str):\\nYour output fields are:\\n1. `response`
+      (str):\\nAll interactions will be structured in the following way, with the
+      appropriate values filled in.\\n\\n[[ ## messages ## ]]\\n{messages}\\n\\n[[
+      ## response ## ]]\\n{response}\\n\\n[[ ## completed ## ]]\\nIn adhering to this
+      structure, your objective is: \"}]},\"generationConfig\":{\"temperature\":1.0}}"
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1016'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2VT70/bMBD93r/iZL5sUiksW1Vt3xhEU1kj+iMwGEHCxJfE4NiZ7VA6xP++S7qU
+        sEVR4pzfvXf3fHkeALCUayEF9+jYF7imCMBz+2z2jPaoPW10IQpW3PpX7PZ67q0J4vGpSWLX17C3
+        BxZdZbTDZn1zk+i4QKiseZQCBZwvZ1AZqb0Db4BDxO2DMGsNmVQI726X4dFJFI5KcfseLPcFWvAF
+        10C3LHmOLW4ExGkxMxaHMAVeQq35HeUTpUCXWnmHID1wt8trUqTbqvCqQm7bAggnTFqX1DX30lAZ
+        xlJVVO49ph5SrhQVnbCVzPwwYbAuZFoAEXUyohUhKqPa3IRhRm+v0BGIew7kjeVpS07WA31oR4iy
+        1RslLNGJ3hqXmrJS6ImzdY4N/3G5MHVe+JXMNfe1xcbx8H7xPcrDZRxP52kw3pxNVxciOJxtzGIz
+        0fwoHP9KV9/0Fa4//fwxPl0f1Fd6En1VwdKU08vI/37MqvPQH7Ce1MtuffNaAbNGtYqlEag6+EsH
+        YJnU0hVL5M7oBraKz+a7BpjUAp8ofDjoBFpqVjs6mgg9b5zajR0j+8vKx+YB9bGp24EMgvGWrTfA
+        bwCT4O++N56rt7mfJ8P/iN0JyUrVn+ze0FOXXEm/aVqJw8u4dxYk8LauzotBzzLm0D7KFGOJtuFw
+        nqrmVjTGtaZtfbxA6+TWsBxLsnD/4+jDfqa4K/ZJHltZ1v1QU9EAVX664DbIj2cbf19HczWfKbfI
+        2eBl8AfkUYlB4QMAAA==
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 20:20:38 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=867
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

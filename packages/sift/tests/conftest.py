@@ -14,6 +14,7 @@ def _get_vcr_config():
             ("authorization", "DUMMY_AUTHORIZATION"),
             ("x-api-key", "DUMMY_API_KEY"),
             ("x-langfuse-public-key", "pk-lf-dummy"),
+            ("x-goog-api-key", "DUMMY_GEMINI_API_KEY"),
         ],
         "filter_query_parameters": [
             ("api_key", "DUMMY_API_KEY"),

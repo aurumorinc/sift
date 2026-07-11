@@ -1,0 +1,554 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_multi_state
+  response:
+    body:
+      string: '{"message":"Prompt not found: ''vcr_test_agent_multi_state'' with label
+        ''production''","error":"LangfuseNotFoundError"}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '116'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:11 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"a6drgfxcty38"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_multi_state
+  response:
+    body:
+      string: '{"message":"Prompt not found: ''vcr_test_agent_multi_state'' with label
+        ''production''","error":"LangfuseNotFoundError"}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '116'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:12 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"a6drgfxcty38"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: GET
+    uri: https://cloud.langfuse.com/api/public/v2/prompts/vcr_test_agent_multi_state
+  response:
+    body:
+      string: '{"message":"Prompt not found: ''vcr_test_agent_multi_state'' with label
+        ''production''","error":"LangfuseNotFoundError"}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '116'
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:12 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"a6drgfxcty38"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 404
+      message: Not Found
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## messages ## ]]\ntopic"}]},{"role":"model","parts":[{"text":"[[
+      ## response ## ]]\nstory\n\n[[ ## completed ## ]]\n"}]},{"role":"user","parts":[{"text":"[[
+      ## messages ## ]]\ntext\n\nRespond with the corresponding output fields, starting
+      with the field `[[ ## response ## ]]`, and then ending with the marker for `[[
+      ## completed ## ]]`."}]}],"system_instruction":{"parts":[{"text":"Your input
+      fields are:\n1. `messages` (str):\nYour output fields are:\n1. `response` (str):\nAll
+      interactions will be structured in the following way, with the appropriate values
+      filled in.\n\n[[ ## messages ## ]]\n{messages}\n\n[[ ## response ## ]]\n{response}\n\n[[
+      ## completed ## ]]\nIn adhering to this structure, your objective is: "}]},"generationConfig":{"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '816'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2WSQVPCMBCF7/0VnXAVB0Rl9OaUqqhAC1UZgUMkaxtMEyZJsQzDfzdpLRbtoZPZ
+        fX1v8213juuiJeaEEqxBoWt3Ziquuyvetie4Bq5NoyqZ4hpL/astn13tbCQacvsRms3cRsOVoNaC
+        K7DnxWLOC9dcz/mcl4KlSNcMNJBSgU7+uCUiixM9oTHHOpNgnf1V+DiI/XEU9QPwR9vuOOikt1pc
+        fHnPU+IF7c4ww+I9X01v7sCTYcaGJBzFr+9EnqlP3wtV0s3fHu5RLWp/OC9+J0BSsCIxFQRYJd9X
+        AvRBOVXJGLAS3Mom0Sg4XABRTiA35ZZTBRTWKFM4hgFobMDjA160loaEjsQncE9kBfj2+VXpVlvU
+        saDz09dCY3bcujw7+WeseiaWsvoGa8s1t8SM6q29SuRPo9ouTMDxXBULp4YMKZAbuoSIgrQeSpup
+        sSQWXAGt5PgCUtESWAypQdjsnLabHwyrpGnioYhF1Y/TJ1aIgQV489TtB93mKhsEybIHadhCzt75
+        BvtUl47JAgAA
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 18:33:14 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=985
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## example_inputs ## ]]\nExample({''messages'':
+      ''text''}) (input_keys={''messages''})\n\n[[ ## example_output ## ]]\n{''response'':
+      ''class'', ''output'': None}\n\n[[ ## example_score ## ]]\nNone\n\n[[ ## example_feedback
+      ## ]]\nNone\n\n[[ ## pred_values ## ]]\n[''context'']\n\nRespond with the corresponding
+      output fields, starting with the field `[[ ## evaluation_feedback ## ]]`, then
+      `[[ ## evaluation_score ## ]]`, and then ending with the marker for `[[ ## completed
+      ## ]]`."}]}],"system_instruction":{"parts":[{"text":"Your input fields are:\n1.
+      `example_inputs` (str): The inputs and context provided for the task\n2. `example_output`
+      (str): The original output or reference from the dataset\n3. `example_score`
+      (str): The score given to the reference output (0.0 to 1.0)\n4. `example_feedback`
+      (str): The feedback provided on the reference output to explain its score\n5.
+      `pred_values` (str): The newly generated creative work to be evaluated\nYour
+      output fields are:\n1. `evaluation_feedback` (str): A critique of the newly
+      generated output, checking if it improves upon or maintains the quality described
+      in the reference feedback\n2. `evaluation_score` (str): A float between 0.0
+      and 1.0 representing the quality of the newly generated output\nAll interactions
+      will be structured in the following way, with the appropriate values filled
+      in.\n\n[[ ## example_inputs ## ]]\n{example_inputs}\n\n[[ ## example_output
+      ## ]]\n{example_output}\n\n[[ ## example_score ## ]]\n{example_score}\n\n[[
+      ## example_feedback ## ]]\n{example_feedback}\n\n[[ ## pred_values ## ]]\n{pred_values}\n\n[[
+      ## evaluation_feedback ## ]]\n{evaluation_feedback}\n\n[[ ## evaluation_score
+      ## ]]\n{evaluation_score}\n\n[[ ## completed ## ]]\nIn adhering to this structure,
+      your objective is: \n        Evaluate if the newly generated creative work improves
+      upon or maintains the quality described in the reference feedback."}]},"generationConfig":{"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1987'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2VT207bQBB9z1eMzEOKRCJoSSl9BIJKo5QkWAVxUbKxJ/aS9a7ZS0iE+PfOrjEx
+        xQ++zJw9Z+aM56UFECVMpjxlFk30E+4oAvAS7j6npEVpKVGHKFgybbfY6nppvBPE4tofiu7uYGcH
+        cMWEY5YrOV0gpnOWLH344eFexjlCqdWKp5jCrNSYTj0YzQy+tIP62rZ3IVVoQCoLBbNJDpZO4brE
+        xNIpY7VLrNMIahEyM1yzohQ4Vc6Wzs724DnndErjk+OaiBikPPHlML2BZ25zMMTFFzyBJW4MKROq
+        VNJgG8gcaFdE7d0uTJCUJJcZkQhuLPgaGX+LGHoI9BX5b26Ay0QVJbU+p3BQ8gWaJMeCARrL5kSS
+        UxNcvjUVKu+C96VSBUF2mZCVmKAxvuhQplUwD+75KHEkSmuyRGxgvql0NsZi0b2X9/LTIAyhsZ7C
+        fnd/C/IVC/TOhmy0999oc+Wy3F7xTDLvuh9z/3E8GGb9SRxfjE7O/5hyPDyXbHJ+IvprHBWbeHJ1
+        /Hw6dsP+kR79dskAT+Xg9vrxl8u+Ht7cXN/+yFbzy94yaki9vr8/bCuItBJBsVApihr+WgOiBU3C
+        5BNkRkkPu4ovR+8NRFymuKbwfqsWCNSRMyzDIVpGW8De//WInC1KG6slylPlwhYc9o4qtsbWfAAc
+        H77lrbJMfEj1egd7n4jNGcly0VynxqZRl0xwu/GtxP2buDELEvhYV+1Fq2FZZFCveIIxR+056IeT
+        KdOpNy6YVvn4F7XhlWEZFmRh51v3oLMQzOQdkscgG9U7cZF6IHNixJ6KwVlntXx0w9F08D3jY5rg
+        a+sfgx/3UFYEAAA=
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 18:33:15 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=1096
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## messages ## ]]\ntext"}]},{"role":"model","parts":[{"text":"[[
+      ## response ## ]]\nclass\n\n[[ ## completed ## ]]\n"}]},{"role":"user","parts":[{"text":"[[
+      ## messages ## ]]\ntopic\n\nRespond with the corresponding output fields, starting
+      with the field `[[ ## response ## ]]`, and then ending with the marker for `[[
+      ## completed ## ]]`."}]}],"system_instruction":{"parts":[{"text":"Your input
+      fields are:\n1. `messages` (str):\nYour output fields are:\n1. `response` (str):\nAll
+      interactions will be structured in the following way, with the appropriate values
+      filled in.\n\n[[ ## messages ## ]]\n{messages}\n\n[[ ## response ## ]]\n{response}\n\n[[
+      ## completed ## ]]\nIn adhering to this structure, your objective is: "}]},"generationConfig":{"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '816'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2WSTVPCMBCG7/0VnXDU+oEfM3oUYaxaKTQyMsAhNmtJCQkmqYMy/HeT1mLRHjo7
+        u2/33X22G8/3UUoEZZQY0Ojan9iM72/Kt6tJYUAYW6hTNrkiyvxqq2fTiK3EwNp9hCYTv9XyFeiV
+        FBpcPJtNhS5ec0jNVExFJUjlcsXBAK0U6PBPt7kssrlJWCaIKRS4zt188BBl3SHGYbwes86jucje
+        45CEaXeUHNNekfT5A6af7xl+fr3Lo3s4uDm+DVmnh2n+tWjfdfpPNA0T1LDa7uLZ7wRISV46LiUF
+        Xsu3tQC9McH0fAhES+FkCe7HuwUQExTWNn3i1QZla1RokkEEhljwZIcXrZQlYbBcgOjIogR/en5V
+        dWscal9w9lM30hC+X7psH/5rrG+tLePNCzaOa7cknJlPtwruvuDGLazB/lw1C6+BDGlQHywFzEC5
+        HtrYqYmiDlwJreI4AqVZBSyDpUUYnB2dBm+c6Hlg7aG0RfWPE1InJAGPiQyS3vgyzYsoXqRs3B5E
+        yNt632KJfK3JAgAA
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 18:33:15 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=695
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"contents":[{"role":"user","parts":[{"text":"[[ ## example_inputs ## ]]\nExample({''messages'':
+      ''topic''}) (input_keys={''messages''})\n\n[[ ## example_output ## ]]\n{''response'':
+      ''story'', ''output'': None}\n\n[[ ## example_score ## ]]\nNone\n\n[[ ## example_feedback
+      ## ]]\nNone\n\n[[ ## pred_values ## ]]\n[''subject'']\n\nRespond with the corresponding
+      output fields, starting with the field `[[ ## evaluation_feedback ## ]]`, then
+      `[[ ## evaluation_score ## ]]`, and then ending with the marker for `[[ ## completed
+      ## ]]`."}]}],"system_instruction":{"parts":[{"text":"Your input fields are:\n1.
+      `example_inputs` (str): The inputs and context provided for the task\n2. `example_output`
+      (str): The original output or reference from the dataset\n3. `example_score`
+      (str): The score given to the reference output (0.0 to 1.0)\n4. `example_feedback`
+      (str): The feedback provided on the reference output to explain its score\n5.
+      `pred_values` (str): The newly generated creative work to be evaluated\nYour
+      output fields are:\n1. `evaluation_feedback` (str): A critique of the newly
+      generated output, checking if it improves upon or maintains the quality described
+      in the reference feedback\n2. `evaluation_score` (str): A float between 0.0
+      and 1.0 representing the quality of the newly generated output\nAll interactions
+      will be structured in the following way, with the appropriate values filled
+      in.\n\n[[ ## example_inputs ## ]]\n{example_inputs}\n\n[[ ## example_output
+      ## ]]\n{example_output}\n\n[[ ## example_score ## ]]\n{example_score}\n\n[[
+      ## example_feedback ## ]]\n{example_feedback}\n\n[[ ## pred_values ## ]]\n{pred_values}\n\n[[
+      ## evaluation_feedback ## ]]\n{evaluation_feedback}\n\n[[ ## evaluation_score
+      ## ]]\n{evaluation_score}\n\n[[ ## completed ## ]]\nIn adhering to this structure,
+      your objective is: \n        Evaluate if the newly generated creative work improves
+      upon or maintains the quality described in the reference feedback."}]},"generationConfig":{"temperature":1.0}}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1988'
+      content-type:
+      - application/json
+      host:
+      - generativelanguage.googleapis.com
+      user-agent:
+      - DSPy/3.2.1
+      x-goog-api-key:
+      - DUMMY_GEMINI_API_KEY
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1alpha/models/gemini-3.1-flash-lite:generateContent
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/2VT3U8aQRB/56+YnA88KARrxbZvxGok9QKVa7VR0wy3c7C47B77gRLj/97Zg0Oo
+        PJDL7G/m97E7rw2AJEctpEBPLvkG91wBeK3+45nRnrTng7rExRKtf8euf6873wzx9BKbkvt7ODgA
+        WqIK6KXRfwsiMcb8KZYfHx90NiUorVlKQQKkLoOHZ3SA4OS8VMQl523IYy8UxvKBN6XMj4BFg+dm
+        SwVZ0jmBCT62b6chlApzmholyELTeWNXzTZERk3PjCMh14ObLoxnlPsmSAdF0FUVlVoBLYJk8RwB
+        KwHpHYwtLaVfVfwqGjEFYO4DKtiEBRPSZCu7beh7KFAqx7JrZSxsTqilnhRBsX5XGu0oAqKfaFuy
+        esvU5PzGdCUe+LPmGKNjEGvfBFIxCUMOtPFxCHMRBB69nxIHxx6MnwJaivYqmzjmlNlF5Urq3MTs
+        PbUf9IP+cIUuN9y6ub9O+/gdVPeJ9Wly9N+jmJowmfqRnGj0wVJ8IBeznz/SycVNlvWHxEkti/Oz
+        wbB7nea/dHo5urnqnl/jQvRnvdHJ4NOdO+v0vlDqLm9fFn8Wd4eH4uvV1WyVuWSH6m37/fiuILFG
+        VYxzI0jV8LcakBRSSze9IXRGR9goGwy3BhKpBb1wudOoCarRSXA4oZQ88v7gdksSTn9e+sw8kT43
+        odqfz6dn62k7+7YHOO6cbADeeFR7Z6fdztGHye478/LT2tnEnSVlm6j4oUYv2cVdtnMZTLAvrA6j
+        sZNZ4sguZU6ZJBtnOM+y0YqYXJXaOsjfZJ1cJzahOWfYOmkftwqFbtpieqpok/qR90UEjgdqiIvV
+        ba81KGchHZp8lYZemjTeGv8AW17bMpEEAAA=
+    headers:
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Thu, 09 Jul 2026 18:33:16 GMT
+      server:
+      - scaffolding on HTTPServer2
+      server-timing:
+      - gfet4t7; dur=997
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+      - X-Origin
+      - Referer
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-gemini-service-tier:
+      - standard
+      x-xss-protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name":"vcr_test_agent_multi_state","prompt":"\n\n","config":{"agent_name":"vcr_test_agent_multi_state","agent_card_params":{},"litellm_params":{},"object_permission":null,"dspy_params":{"optimizer":null,"optimizer_params":null,"state":{"classify":{"traces":[],"train":[],"demos":[{"augmented":true,"messages":"text","response":"context"},{"augmented":true,"messages":"topic","response":"subject"}],"signature":{"instructions":"","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null},"generate":{"traces":[],"train":[],"demos":[],"signature":{"instructions":"","fields":[{"name":"messages","json_schema_extra":{"__dspy_field_type":"input","prefix":"Messages:","desc":"${messages}"}},{"name":"response","json_schema_extra":{"__dspy_field_type":"output","prefix":"Response:","desc":"${response}"}}]},"lm":null}}},"labels":null},"labels":["production"],"tags":null,"commitMessage":null}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - DUMMY_AUTHORIZATION
+      connection:
+      - keep-alive
+      content-length:
+      - '1078'
+      content-type:
+      - application/json
+      host:
+      - cloud.langfuse.com
+      user-agent:
+      - python-httpx/0.28.1
+      x-fern-language:
+      - Python
+      x-langfuse-public-key:
+      - pk-lf-dummy
+      x-langfuse-sdk-name:
+      - python
+      x-langfuse-sdk-version:
+      - 4.12.0
+    method: POST
+    uri: https://cloud.langfuse.com/api/public/v2/prompts
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA+1UTW/bMAz9L8SO8mDno0l0y249DBiGndYGhiIxrgrrYxIdJDH83wdZTooMA9rd
+        d6OfyPfIR8k9aAUcNmu5X+BKFAe1XBaLarEv1qvVphD7tVrOlZiJpQIGMqAgVFsCDrNy9lCUq6Lc
+        /KjWfD7n1cPnzar6CQw6rz6S5oN7RUmPqQFpflE3qy6yLMtGqBJfZqG6nBW+qX45A4ftt8dcaXxi
+        f7bPFhhYYRA4HGWoCSPVokFLtela0nUkQYnliCFqZ4FXDOjsUz7hiYCBjltJ+ojAbde2DKSzB90A
+        7yHzfIQ9Y1IEVXsRhInA+4FBqwnb1txhbp+mrj0Go2NuKeuq6M9vmeA8aaMvGK7nN+CWlPHcA+9B
+        tiJGfTinmIKQGIE/7ViKtc2hQuMS2oPoGoOWUAGn0CEDgzGKJtVcjQkYvbMxDS+dHcGBvVPpvJb3
+        pbEbB4ZhxyDqxgrqwtiutpFCJ0k7m0qBwUFjq3J7k+k3agav0dk6yhc0osYTBZE46np0bSysp7Vq
+        6zsabwke9Ak4fJ1IOCQDogQOn/or8wBDGmrSu/X9D3quoz8Ev08sd4JX6iS4S3fD5AUODBq0GKYl
+        vrO4/yb+3cQhfYg9tvHmKolmcux68JT+HCq7BQlO7xl26ckbo2kacSL4DXyB6ZsbBQAA
+    headers:
+      connection:
+      - keep-alive
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 09 Jul 2026 18:33:16 GMT
+      document-policy:
+      - js-profiling
+      etag:
+      - '"r5izffw59d10b"'
+      permissions-policy:
+      - autoplay=*, fullscreen=*, microphone=*
+      referrer-policy:
+      - strict-origin-when-cross-origin
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin, Accept-Encoding
+      x-content-type-options:
+      - nosniff
+      x-frame-options:
+      - SAMEORIGIN
+      x-robots-tag:
+      - noindex
+    status:
+      code: 201
+      message: Created
+version: 1

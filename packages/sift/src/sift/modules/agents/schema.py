@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, ConfigDict, Field
 from litellm.types.agents import AgentResponse as LiteLLMAgentResponse
 
-from sift.utils.webhook.schema import WebhookRequest
+from oort.webhook.schema import WebhookRequest
 
 
 class DSPySignatureState(BaseModel):
