@@ -80,6 +80,8 @@ dspy/adapters/chat_adapter.py:
 ⋮
 │        def format_signature_fields_for_instructions(fields: dict[str, FieldInfo]):
 ⋮
+│    def user_message_output_requirements(self, signature: type[Signature]) -> str:
+⋮
 │    def parse(self, signature: type[Signature], completion: str) -> dict[str, Any]:
 ⋮
 │    def format_field_with_value(self, fields_with_values: dict[FieldInfoWithName, Any]) -> str:
@@ -98,6 +100,8 @@ dspy/adapters/json_adapter.py:
 │        parts = []
 ⋮
 │        def format_signature_fields_for_instructions(fields: dict[str, FieldInfo], role: str):
+⋮
+│    def user_message_output_requirements(self, signature: type[Signature]) -> str:
 ⋮
 │    def parse(self, signature: type[Signature], completion: str) -> dict[str, Any]:
 ⋮
@@ -159,6 +163,12 @@ dspy/adapters/types/citation.py:
 ⋮
 │    @classmethod
 │    def from_dict_list(cls, citations_dicts: list[dict[str, Any]]) -> "Citations":
+⋮
+
+dspy/adapters/types/document.py:
+⋮
+│@experimental(version="3.0.4")
+│class Document(Type):
 ⋮
 
 dspy/adapters/types/reasoning.py:
@@ -326,7 +336,15 @@ dspy/clients/openai_format.py:
 ⋮
 │def parts_to_openai_content(parts: list[Any]) -> str | list[dict[str, Any]]:
 ⋮
+│def provider_tool_call_to_part(tool_call: Any) -> LMToolCallPart:
+⋮
+│def citation_to_part(citation: Any) -> LMCitationPart:
+⋮
 │def usage_from_response(response: Any) -> LMUsage | None:
+⋮
+│def data_uri(media_type: str, data: str) -> str:
+⋮
+│def split_data_uri(value: str) -> tuple[str, str]:
 ⋮
 │def get_value(value: Any, key: str, default: Any = None) -> Any:
 ⋮
@@ -336,10 +354,6 @@ dspy/clients/openai_format.py:
 dspy/clients/utils_finetune.py:
 ⋮
 │def get_finetune_directory() -> str:
-⋮
-│def write_lines(file_path, data):
-⋮
-│def find_data_error_chat_message(message: dict[str, Any]) -> str | None:
 ⋮
 
 dspy/core/types.py:
@@ -401,14 +415,6 @@ dspy/core/types.py:
 │    def from_value(cls, value: Any = None, **overrides: Any) -> LMPromptCacheConfig:
 ⋮
 │class LMConfig(BaseModel):
-│    """Common generation controls for an LM request."""
-│
-⋮
-│    @classmethod
-│    def from_kwargs(cls, **kwargs: Any) -> LMConfig:
-⋮
-│@dataclass
-│class LMRequestPatch:
 ⋮
 │class LMRequest(BaseModel):
 │    """A normalized request passed to a `LanguageModel`."""
@@ -453,8 +459,6 @@ dspy/core/types.py:
 ⋮
 
 dspy/dsp/utils/dpr.py:
-⋮
-│def DPR_tokenize(text):  # noqa: N802
 ⋮
 │def DPR_normalize(text):  # noqa: N802
 ⋮
@@ -757,12 +761,6 @@ dspy/propose/propose_base.py:
 │    def propose_instruction_for_predictor(self):
 ⋮
 
-dspy/retrievers/databricks_rm.py:
-⋮
-│@dataclass
-│class Document:
-⋮
-
 dspy/retrievers/embeddings.py:
 ⋮
 │class Embeddings:
@@ -794,9 +792,6 @@ dspy/signatures/signature.py:
 ⋮
 │    @classmethod
 │    def append(cls, name, field, type_=None) -> type["Signature"]:
-⋮
-│    @classmethod
-│    def delete(cls, name) -> type["Signature"]:
 ⋮
 │def ensure_signature(signature: str | type[Signature], instructions=None) -> None | type[Signature]
 ⋮
@@ -883,11 +878,6 @@ dspy/utils/annotation.py:
 │def _get_min_indent_of_docstring(docstring_str: str) -> str:
 ⋮
 
-dspy/utils/asyncify.py:
-⋮
-│def get_limiter():
-⋮
-
 dspy/utils/constants.py:
 ⋮
 │IS_TYPE_UNDEFINED = "IS_TYPE_UNDEFINED"
@@ -967,6 +957,8 @@ dspy/utils/magicattr.py:
 │def get(obj, attr, **kwargs):
 ⋮
 │def set(obj, attr, val):
+⋮
+│def delete(obj, attr):
 ⋮
 │def lookup(obj, attr):
 ⋮
