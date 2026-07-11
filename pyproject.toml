@@ -1,6 +1,6 @@
 [project]
 name = "sift-workspace"
-version = "0.14.1"
+version = "0.14.2"
 description = "Sift is an API-driven platform for defining, managing, and executing DSPy-based AI agents."
 authors = [
     {name = "Aryan Singh", email = "aryan.singh@aurumor.com"},
@@ -10,7 +10,7 @@ requires-python = "<3.14,>=3.11"
 dependencies = ["httpx>=0.28.1", "litellm>=1.89.4", "pydantic-settings>=2.14.2", "langfuse>=4.12.0", "dspy-ai>=3.2.1", "worldline @ git+https://github.com/aurumorinc/worldline-python.git"]
 
 [tool.bumpver]
-current_version = "0.14.1"
+current_version = "0.14.2"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit = false
 tag = false

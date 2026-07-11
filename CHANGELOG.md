@@ -1,11 +1,9 @@
-# Changelog v0.14.1
+# Changelog v0.14.2
 
-## Documentation
+## Improvements
 
-*   **Webhook Schema Renaming**
-    The `Webhook` schema has been renamed to `WebhookRequest` within the OpenAPI specification and developer documentation to better reflect its usage.
-    Commits: [871c223](https://github.com/aurumorinc/sift/commit/871c2233), [53f807f](https://github.com/aurumorinc/sift/commit/53f807f5)
-
-*   **Webhook Example Cleanup**
-    The unused `data` field has been removed from the `WebhookRequest` example in the documentation to prevent integration confusion.
-    Commits: [871c223](https://github.com/aurumorinc/sift/commit/871c2233), [53f807f](https://github.com/aurumorinc/sift/commit/53f807f5)
+### Codebase Architecture
+*   Refactored type definitions and utility functions to resolve circular dependency issues within the core package.
+    *   Commits: [31f6fbd](https://github.com/aurumorinc/sift/commit/31f6fbd6), [45c1098](https://github.com/aurumorinc/sift/commit/45c10980), [6d9edb9](https://github.com/aurumorinc/sift/commit/6d9edb98)
+*   Replaced the `worldline` structlog re-export with direct imports to improve dependency clarity and reduce package coupling.
+    *   Commits: [31f6fbd](https://github.com/aurumorinc/sift/commit/31f6fbd6), [45c1098](https://github.com/aurumorinc/sift/commit/45c10980), [6d9edb9](https://github.com/aurumorinc/sift/commit/6d9edb98)
