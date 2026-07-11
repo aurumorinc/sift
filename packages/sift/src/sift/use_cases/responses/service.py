@@ -4,7 +4,7 @@ import structlog
 
 from sift.client import SiftClient
 from sift.modules.responses.schema import ResponseRequest, ResponseResponse
-from sift.utils.webhook.service import webhook_dispatch
+from oort.webhook.service import webhook_dispatch
 
 logger = structlog.get_logger(__name__)
 
